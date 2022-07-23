@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block header %}{% endblock header %}
+{% block activepage %}
+<div class="inner-information-text">
+    <div class="container">
+       <h3>Sponsors</h3>
+       <ul class="breadcrumb">
+          <li><a href="{% url 'home' %}">Home</a></li>
+          <li class="active">Sponsors</li>
+       </ul>
+    </div>
+ </div>
+ {% endblock activepage%}
+{% block content %}
+ <section id="contant" class="contant main-heading team">
+    <div class="row">
+       <div class="container">
+         
+          
+        
+          
+        
+          
+         
+          {% for s in sp  %}
+          <div class="col-md-3 column">
+             <div class="card">
+                <img class="img-responsive" src="{{s.image.url}}" alt="John" style="width:100%">
+                <div class="">
+                   <h4>{{s.nom_sponsor}}</h4>
+                 
+                </div>
+             </div>
+          </div>
+          {% endfor %}
+       </div>
+    </div>
+ </section>
+{% endblock content %}
+
