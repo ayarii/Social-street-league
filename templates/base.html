@@ -43,14 +43,19 @@
       
       {% block header %}
           {% include 'parts/home_header.html' %}
+          {% block slide %}
+          
+          {% endblock slide %}
       {% endblock header %}
         
       {% block  page_header %}
         {% include 'parts/pages_header.html' %}
+        {% block backgroundimage %}
+        {% endblock backgroundimage %}
         {% block activepage %}
         {% endblock activepage %}
       {% endblock page_header %}
-       
+        
       {% block content %}
        
       {% endblock content %}

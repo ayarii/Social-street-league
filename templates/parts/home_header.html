@@ -24,16 +24,29 @@
                             </ul>
                             <!-- end social icon -->
                             <!-- button section -->
+                            {%if request.user.is_authenticated%}
                             <ul class="login">
                                 <li class="login-modal">
-                                    <a href="#" class="login"><i class="fa fa-user"></i>Login</a>
+                                    <a href="" class="login"><i class="fa fa-user"></i>My Profile</a>
                                 </li>
                                 <li>
                                     <div class="cart-option">
-                                    <a href="#"><i class="fa fa-shopping-cart"></i>Register</a>
+                                    <a href="{% url 'logout' request.user.id %}"><i class="fa fa-shopping-cart"></i>Logout</a>
                                     </div>
                                 </li>
                             </ul>
+                            {% else %}
+                            <ul class="login">
+                                <li class="login-modal">
+                                    <a href="{% url 'login' %}" class="login"><i class="fa fa-user"></i>Login</a>
+                                </li>
+                                <li>
+                                    <div class="cart-option">
+                                    <a href="{% url 'signup' %}"><i class="fa fa-shopping-cart"></i>Register</a>
+                                    </div>
+                                </li>
+                            </ul>
+                            {% endif %}
                             <!-- end button section -->
                         </div>
                         </div>
@@ -140,13 +153,17 @@
             <div class="full-slider">
             <div id="carousel-example-generic" class="carousel slide">
                 <!-- Indicators -->
+               
                 <ol class="carousel-indicators">
                     <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
                     <li data-target="#carousel-example-generic" data-slide-to="1"></li>
                     <li data-target="#carousel-example-generic" data-slide-to="2"></li>
                 </ol>
+               
                 <!-- Wrapper for slides -->
                 <div class="carousel-inner" role="listbox">
+                   {% block slide %}
+
                     <!-- First slide -->
                     <div class="item active deepskyblue" data-ride="carousel" data-interval="5000">
                         <div class="carousel-caption">
@@ -159,8 +176,10 @@
                                 </p>
                                 <button class="btn btn-primary btn-lg">Read More</button>
                             </div>
+
                         </div>
                         </div>
+                      
                     </div>
                     <!-- /.item -->
                     <!-- Second slide -->
@@ -191,6 +210,7 @@
                         </div>
                     </div>
                     <!-- /.item -->
+                    {% endblock slide %}
                 </div>
                 <!-- /.carousel-inner -->
                 <!-- Controls -->
