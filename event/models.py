@@ -12,7 +12,7 @@ class Event(models.Model):
     description_event = models.TextField(null = True, blank= True)
     image = models.ImageField(upload_to='photos/%y/%m/%d', default= 'photos/22/07/14')
     location_event = models.CharField(max_length=50)
-    #date_event = models.DateTimeField(null = True)
+    date_event = models.DateTimeField(null = True)
     Activity_event = models.ForeignKey(Activity,
     on_delete=models.CASCADE)
 
