@@ -22,16 +22,29 @@
                       </ul>
                       <!-- end social icon -->
                       <!-- button section -->
-                      <ul class="login">
-                         <li class="login-modal">
-                            <a href="{% url 'login' %}" class="login"><i class="fa fa-user"></i>Login</a>
-                         </li>
-                         <li>
-                            <div class="cart-option">
-                               <a href="{% url 'signup' %}"><i class="fa fa-shopping-cart"></i>Register</a>
-                            </div>
-                         </li>
-                      </ul>
+                      {%if request.user.is_authenticated%}
+                            <ul class="login">
+                                <li class="login-modal">
+                                    <a href="" class="login"><i class="fa fa-user"></i>My Profile</a>
+                                </li>
+                                <li>
+                                    <div class="cart-option">
+                                    <a href="{% url 'logout' request.user.id %}"><i class="fa fa-shopping-cart"></i>Logout</a>
+                                    </div>
+                                </li>
+                            </ul>
+                            {% else %}
+                            <ul class="login">
+                                <li class="login-modal">
+                                    <a href="{% url 'login' %}" class="login"><i class="fa fa-user"></i>Login</a>
+                                </li>
+                                <li>
+                                    <div class="cart-option">
+                                    <a href="{% url 'signup' %}"><i class="fa fa-shopping-cart"></i>Register</a>
+                                    </div>
+                                </li>
+                            </ul>
+                            {% endif %}
                       <!-- end button section -->
                    </div>
                 </div>
@@ -60,7 +73,7 @@
                                      <li><a href="{% url 'team' %}">Team</a></li>
                                      {% comment %} <li><a href="news.html">News</a></li> {% endcomment %}
                                      <li class="dropdown mega-dropdown">
-                                        <a href="match" class="dropdown-toggle" data-toggle="dropdown"><a href="{% url 'event' %}" >Event<span class="caret"></span></a></a>				
+                                        <a href="match" class="dropdown-toggle" data-toggle="dropdown" onclick="window.location.href='{% url 'event' %}';">Event<span class="caret"></span></a>				
                                         <ul class="dropdown-menu mega-dropdown-menu">
                                            <li class="col-sm-8">
                                               <ul>

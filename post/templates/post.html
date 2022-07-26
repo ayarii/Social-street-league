@@ -16,150 +16,165 @@
  {% endblock activepage%}
 
 {% block content %}
+<style type="text/css">
+   .deleteupdate{
+      position:absolute;
+      right:0%;
+   }
+   .deleteupdate span{
+      float:right;
+      justify-content: space-between;
+      padding: 10px;
+      position:relative;
+   }
+
+   .likecomment{
+      position:absolute;
+      left:0%;
+   }
+
+   .likecomment span{
+      justify-content: space-between;
+      padding: 10px;
+      
+   }
+   /* Planez les effets pour les boutons */
+   .form-container .btn:hover,
+   .open-button:hover {
+     opacity: 1;
+   } 
+</style>
 <section id="contant" class="contant main-heading team">
     <div class="row">
        <div class="container">
+          {% block postsview %}
           <div class="col-md-9">
-             <div class="feature-post">
-                <div class="feature-img">
-                   <img src=" {% static 'images/img-03_002.jpg' %}" class="img-responsive" alt="#" />
-                </div>
-                <div class="feature-cont">
-                   <div class="post-people">
-                      <div class="left-profile">
-                         <div class="post-info">
-                            <img src=" {% static 'images/profile-img.png' %}" alt="#" />
-                            <span>
-                               <h4>by George Kvasnikov</h4>
-                               <h5>on Jun 27, 2014</h5>
-                            </span>
-                         </div>
-                         <span class="share"></span>
-                      </div>
-                   </div>
-                   <div class="post-heading">
-                      <h3>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium</h3>
-                      <p>World CupInternational Club football teamSpanish LeagueReal Madrid Vs Barcelona SpanishNext MatchThe Match Result 
-                         UpdateWorld CUPFIFA World CUP 2015International Club football teamEngland30 Jun 10:24FranceReal Madrid Vs Barcelona SpanishManchester 
-                         City30 Nov 00:00Manchester.
-                      </p>
-                      <div class="full">
-                         <a class="btn" href="#">Read More</a>
-                      </div>
-                   </div>
-                </div>
-             </div>
-             <div class="feature-post">
-                <div class="feature-img">
-                   <img src=" {% static 'images/img-03_002.jpg' %}" class="img-responsive" alt="#" />
-                </div>
-                <div class="feature-cont">
-                   <div class="post-info">
-                      <img src=" {% static 'images/profile-img.png' %}" alt="#" />
-                      <span>
-                         <h4>by George Kvasnikov</h4>
-                         <h5>on Jun 27, 2014</h5>
+            {% for p in posts %}
+              {% if p.post_image %}
+                {% comment %} post avec image {% endcomment %}
+             <div class="feature-post small-blog">
+               <div class="col-md-5">
+                  <div class="feature-img">
+                     <img src="{{p.post_image.url}}" class="img-responsive" alt="" />
+                  </div>
+               </div>
+               <div class="col-md-7">
+                  <div class="feature-cont">
+                     {%if request.user.is_authenticated%}
+                     <div class="deleteupdate">
+                       <span onclick="window.location.href='{% url 'updatepost' p.id %}';">
+                       <i class="fa-solid fa-pencil"></i>
                       </span>
-                   </div>
-                   <div class="post-heading">
-                      <h3>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium.</p>
-                      <div class="full">
-                         <a class="btn" href="#">Read More</a>
-                      </div>
-                   </div>
-                </div>
-             </div>
-             <div class="feature-post small-blog">
-                <div class="col-md-5">
-                   <div class="feature-img">
-                      <img src=" {% static 'images/post2.png' %}" class="img-responsive" alt="#" />
-                   </div>
-                </div>
-                <div class="col-md-7">
-                   <div class="feature-cont">
-                      <div class="post-info">
-                         <img src=" {% static 'images/profile-img.png' %}" alt="#" />
-                         <span>
-                            <h4>by George Kvasnikov</h4>
-                            <h5>on Jun 27, 2014</h5>
+                      <span class="open-button" onclick="openForm()">
+                       <i class="fa-regular fa-trash-can"></i>
+                      </span>
+                      <div class="login-popup" style="position relative;text-align: center;width: 100%;">
+                        <div class="form-popup" id="popupForm" style="display: none;position: fixed;left:45%;top:20%;transform: translate(-45%,20%);border: 2px solid #666;z-index: 9;">
+                          <form action="{% url 'deletepost' p.id %}" class="form-container" style=" max-width: 600px; padding: 20px; background-color: #fff;height:150px;">
+                            <h2>want to delete this publication?</h2>
+                             <div  style = "display:flex;justify-content: space-around;right:50%;" >
+                            <button type="submit" class="btn" style=" background-color: #cc0000;color: #fff;position: fixed ;left:60%;top:50%;width: 30%">delete</button>
+                            <button type="button" class="btn cancel" onclick="closeForm()" style="background-color: #8ebf42;position: fixed ;left:10%;top:50%;width:30%">back</button> 
+                            </div>
+                          </form>
+                        </div>
+                     </div>
+                    </div>
+
+                    {% endif %}
+                     <div class="post-info">
+                        <img src=" {% static 'images/profile-img.png' %}" alt="#" />
+                        <span>
+                           <h4>by George Kvasnikov</h4>
+                           <h5>on Jun 27, 2014</h5>
+                        </span>
+                     </div>
+                     <div class="post-heading">
+                        <h3>{{p.post_title}}</h3>
+                        <p>{{p.post_description}}</p>
+                        <div class="full">
+                          <div class="likecomment">
+                             <span>
+                                <i class="fa-regular fa-heart"></i>
+                            </span>
+                            <span>
+                             <i class="fa-regular fa-comment"></i>
+                            </span>
+                          </div>
+                          <a class="btn" href="#" style="position:absolute;right:0%;">Participate</a>
+                        </div>
+                        
+                     </div>
+                  </div>
+               </div>
+            </div> 
+              {% else %}
+               {% comment %} post sans image {% endcomment %}
+             <div class="feature-post">
+               <div class="feature-cont">
+                  <div class="post-people">
+                     {% if request.user.is_authenticated %}
+                    <div class="deleteupdate">
+                       <span onclick="window.location.href='{% url 'updatepost' p.id %}';">
+                       <i class="fa-solid fa-pencil"></i>
+                      </span>
+                      <span class="open-button" onclick="openForm()">
+                       <i class="fa-regular fa-trash-can"></i>
+                      </span>
+                     </div>
+                     <div class="login-popup" style="position relative;text-align: center;width: 100%;">
+                        <div class="form-popup" id="popupForm" style="display: none;position: fixed;left:45%;top:20%;transform: translate(-45%,20%);border: 2px solid #666;z-index: 9;">
+                          <form action="{% url 'deletepost' p.id %}" class="form-container" style=" max-width: 600px; padding: 20px; background-color: #fff;height:150px;">
+                            <h2>want to delete this publication?</h2>
+                             <div  style = "display:flex;justify-content: space-around;right:50%;" >
+                            <button type="submit" class="btn" style=" background-color: #cc0000;color: #fff;position: fixed ;left:60%;top:50%;width: 30%">delete</button>
+                            <button type="button" class="btn cancel" onclick="closeForm()" style="background-color: #8ebf42;position: fixed ;left:10%;top:50%;width:30%">back</button> 
+                            </div>
+                          </form>
+                        </div>
+                     </div>
+                     <div class="left-profile">
+                        <div class="post-info">
+                           <img src=" {% static 'images/profile-img.png' %}" alt="#" />
+                           <span>
+                              <h4>by George Kvasnikov</h4>
+                              <h5>on Jun 27, 2014</h5>
+                           </span>
+                            <span class="share"></span>
+                         </div> 
+                     </div>
+                  </div>
+                  {% endif %}
+                  <div class="post-heading">
+                     <h3>{{p.post_title}}</h3>
+                     <p>{{p.post_description}}
+                     </p>
+                     <div class="full">
+                       <div class="likecomment">
+                          <span>
+                             <i class="fa-regular fa-heart"></i>
                          </span>
-                      </div>
-                      <div class="post-heading">
-                         <h3>We denounce with righteous indignation and dislike men who are so beguiled</h3>
-                         <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores 
-                          et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est 
-                          laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.</p>
-                         <div class="full">
-                            <a class="btn" href="#">Read More</a>
-                         </div>
-                      </div>
-                   </div>
-                </div>
-             </div>
-             <div class="feature-post small-blog">
-                <div class="col-md-5">
-                   <div class="feature-img">
-                      <img src=" {% static 'images/post2.png' %}" class="img-responsive" alt="#" />
-                   </div>
-                </div>
-                <div class="col-md-7">
-                   <div class="feature-cont">
-                      <div class="post-info">
-                         <img src=" {% static 'images/profile-img.png' %}" alt="#" />
                          <span>
-                            <h4>by George Kvasnikov</h4>
-                            <h5>on Jun 27, 2014</h5>
+                          <i class="fa-regular fa-comment"></i>
                          </span>
-                      </div>
-                      <div class="post-heading">
-                         <h3>We denounce with righteous indignation and dislike men who are so beguiled</h3>
-                         <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores 
-                          et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est 
-                          laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.</p>
-                         <div class="full">
-                            <a class="btn" href="#">Read More</a>
-                         </div>
-                      </div>
-                   </div>
-                </div>
-             </div>
-             <div class="feature-post small-blog">
-                <div class="col-md-5">
-                   <div class="feature-img">
-                      <img src=" {% static 'images/post2.png' %}" class="img-responsive" alt="#" />
-                   </div>
-                </div>
-                <div class="col-md-7">
-                   <div class="feature-cont">
-                      <div class="post-info">
-                         <img src=" {% static 'images/profile-img.png' %}" alt="#" />
-                         <span>
-                            <h4>by George Kvasnikov</h4>
-                            <h5>on Jun 27, 2014</h5>
-                         </span>
-                      </div>
-                      <div class="post-heading">
-                         <h3>Sydney derby takes centre stage while Tim Cahill says no to A-League</h3>
-                         <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores 
-                          et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est 
-                          laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.</p>
-                         <div class="full">
-                            <a class="btn" href="#">Read More</a>
-                         </div>
-                      </div>
-                   </div>
-                </div>
-             </div>
+                       </div>
+                       <a class="btn" href="#" style="position:relative;left:87%;">Participate</a>
+                     </div>
+                  </div>
+               </div>
+            </div>
+             {% endif %}
+             
+             {% endfor %}
           </div>
+          {% endblock postsview %}
+          {% block sidebar %}
           <div class="col-md-3">
-             <div class="blog-sidebar">
-                <div class="search-bar-blog">
-                   <form>
-                      <input type="text" placeholder="search" />
-                      <button><i class="fa fa-search" aria-hidden="true"></i></button>
-                   </form>
-                </div>
-             </div>
+               <div class="blog-sidebar" style="border: none;background: none;outline: none;">
+               <button type="button" class="btn mb-2 mb-md-0 btn-tertiary btn-block btn-round" style="background-color:hsla(46, 100%, 50%, 0.973);" >
+                  <span><a href="{% url 'addpost' %}">Add your own blog</a></span>
+               </button>
+            </div>
              <div class="blog-sidebar">
                 <h4 class="heading">Top Categories</h4>
                 <div class="category-menu">
@@ -303,7 +318,24 @@
                 </div>
              </aside>
           </div>
+          {% endblock sidebar %}
        </div>
     </div>
  </section>
+
+
+             
+          
+
+ <script>
+   function openForm() {
+     document.getElementById("popupForm").style.display = "block";
+   }
+
+   function closeForm() {
+     document.getElementById("popupForm").style.display = "none";
+   }
+ </script>
+ 
+  
 {% endblock content %}

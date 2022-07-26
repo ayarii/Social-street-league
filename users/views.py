@@ -9,18 +9,7 @@ from django.http import HttpResponse
 def signup_user(request):
     if request.user.is_authenticated:
          return redirect('home')
-    
-    #     form= CreateUserForm()
-    #     if request.method == 'POST' :
-    #         form=CreateUserForm(request)
-    #         if form.is_valid():
-    #             form.save()
-    #             user = form.cleaned_data.get('username')
-    #             message.success(request,'Account created for '+ user)
-    #             return redirect('login')
-        
-        #context={'form':form}
-        
+         
     context = {}
     if request.POST:
         form = RegistrationForm(request.POST)
