@@ -1,7 +1,7 @@
 {% load static %}
 <section id="top">
     <header>
-       <div class="container">
+       <div class="container" >
           <div class="header-top">
              <div class="row">
                 <div class="col-md-6">
@@ -25,7 +25,7 @@
                       {%if request.user.is_authenticated%}
                             <ul class="login">
                                 <li class="login-modal">
-                                    <a href="" class="login"><i class="fa fa-user"></i>My Profile</a>
+                                    <a href="{% url 'profile' request.user.id %}" class="login"><i class="fa fa-user"></i>My Profile</a>
                                 </li>
                                 <li>
                                     <div class="cart-option">
@@ -147,11 +147,10 @@
           </div>
        </div>
     </header>
-    <div class="inner-page-banner" >
-       <div class="container">
-       </div>
-    </div>
-
+    {% block imagebackground %}
+    
+    {% endblock imagebackground %}
+    
     {% block activepage %}
    
     {% endblock activepage %}
