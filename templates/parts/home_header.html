@@ -27,7 +27,7 @@
                             {%if request.user.is_authenticated%}
                             <ul class="login">
                                 <li class="login-modal">
-                                    <a href="" class="login"><i class="fa fa-user"></i>My Profile</a>
+                                    <a href="{% url 'profile' request.user.id %}" class="login"><i class="fa fa-user"></i>My Profile</a>
                                 </li>
                                 <li>
                                     <div class="cart-option">

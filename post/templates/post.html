@@ -14,78 +14,42 @@
     </div>
  </div>
  {% endblock activepage%}
-
+ {% block imagebackground %}
+ <div class="inner-page-banner" style="background-image:url('{% static 'images/new_img/img1.jpg' %}');" >
+    <div class="container">
+    </div>
+ </div>
+ {% endblock imagebackground %}
 {% block content %}
 <style type="text/css">
-   .deleteupdate{
-      position:absolute;
-      right:0%;
-   }
-   .deleteupdate span{
-      float:right;
-      justify-content: space-between;
-      padding: 10px;
-      position:relative;
-   }
 
-   .likecomment{
-      position:absolute;
-      left:0%;
-   }
-
-   .likecomment span{
-      justify-content: space-between;
-      padding: 10px;
-      
-   }
    /* Planez les effets pour les boutons */
    .form-container .btn:hover,
    .open-button:hover {
      opacity: 1;
    } 
 </style>
+
 <section id="contant" class="contant main-heading team">
-    <div class="row">
-       <div class="container">
-          {% block postsview %}
-          <div class="col-md-9">
+   <div class="row">
+      <div class="container">
+         
+         <div class="col-md-9">
             {% for p in posts %}
-              {% if p.post_image %}
-                {% comment %} post avec image {% endcomment %}
+            {% if p.post_image %}
              <div class="feature-post small-blog">
                <div class="col-md-5">
                   <div class="feature-img">
-                     <img src="{{p.post_image.url}}" class="img-responsive" alt="" />
+                     <img src={{p.post_image.url}} class="img-responsive" alt="#" />
                   </div>
                </div>
                <div class="col-md-7">
                   <div class="feature-cont">
-                     {%if request.user.is_authenticated%}
-                     <div class="deleteupdate">
-                       <span onclick="window.location.href='{% url 'updatepost' p.id %}';">
-                       <i class="fa-solid fa-pencil"></i>
-                      </span>
-                      <span class="open-button" onclick="openForm()">
-                       <i class="fa-regular fa-trash-can"></i>
-                      </span>
-                      <div class="login-popup" style="position relative;text-align: center;width: 100%;">
-                        <div class="form-popup" id="popupForm" style="display: none;position: fixed;left:45%;top:20%;transform: translate(-45%,20%);border: 2px solid #666;z-index: 9;">
-                          <form action="{% url 'deletepost' p.id %}" class="form-container" style=" max-width: 600px; padding: 20px; background-color: #fff;height:150px;">
-                            <h2>want to delete this publication?</h2>
-                             <div  style = "display:flex;justify-content: space-around;right:50%;" >
-                            <button type="submit" class="btn" style=" background-color: #cc0000;color: #fff;position: fixed ;left:60%;top:50%;width: 30%">delete</button>
-                            <button type="button" class="btn cancel" onclick="closeForm()" style="background-color: #8ebf42;position: fixed ;left:10%;top:50%;width:30%">back</button> 
-                            </div>
-                          </form>
-                        </div>
-                     </div>
-                    </div>
-
-                    {% endif %}
+                     
                      <div class="post-info">
-                        <img src=" {% static 'images/profile-img.png' %}" alt="#" />
+                        <img src="{% static 'images/profile-img.png' %}" alt="#" />
                         <span>
-                           <h4>by George Kvasnikov</h4>
+                           <h4>by {{p.user.username}}</h4>
                            <h5>on Jun 27, 2014</h5>
                         </span>
                      </div>
@@ -93,249 +57,260 @@
                         <h3>{{p.post_title}}</h3>
                         <p>{{p.post_description}}</p>
                         <div class="full">
-                          <div class="likecomment">
-                             <span>
-                                <i class="fa-regular fa-heart"></i>
-                            </span>
-                            <span>
-                             <i class="fa-regular fa-comment"></i>
-                            </span>
-                          </div>
-                          <a class="btn" href="#" style="position:absolute;right:0%;">Participate</a>
+                           <a class="btn" href="#"style="position:absolute;right:0%;">Participate</a>
                         </div>
-                        
+                        {% if p.user.id == request.user.id %}
+                        <div style="float:top;width: 100%;margin: 0;padding: 0; ">
+                           <div class="deleteupdate" style="position:absolute;right:0%; top :0%;">
+                              <span onclick="location.href='{% url 'updatepost' p.id %}';" style="float:right; justify-content: space-between;padding: 10px;position:relative;" >
+                              <i class="fa-solid fa-pencil"></i>
+                             </span>
+                             <span class="button" data-modal="modalOne"  style="float:right; justify-content: space-between;padding: 10px;position:relative;">
+                              <i class="fa-regular fa-trash-can"></i>
+                             </span>
+                           </div> 
+                        </div>
+                        {% endif %}
                      </div>
                   </div>
                </div>
-            </div> 
-              {% else %}
-               {% comment %} post sans image {% endcomment %}
-             <div class="feature-post">
+            </div>
+
+            {% else %}
+
+            <div class="feature-post">
+               <div class="feature-img">
+               </div>
                <div class="feature-cont">
                   <div class="post-people">
-                     {% if request.user.is_authenticated %}
-                    <div class="deleteupdate">
-                       <span onclick="window.location.href='{% url 'updatepost' p.id %}';">
-                       <i class="fa-solid fa-pencil"></i>
-                      </span>
-                      <span class="open-button" onclick="openForm()">
-                       <i class="fa-regular fa-trash-can"></i>
-                      </span>
-                     </div>
-                     <div class="login-popup" style="position relative;text-align: center;width: 100%;">
-                        <div class="form-popup" id="popupForm" style="display: none;position: fixed;left:45%;top:20%;transform: translate(-45%,20%);border: 2px solid #666;z-index: 9;">
-                          <form action="{% url 'deletepost' p.id %}" class="form-container" style=" max-width: 600px; padding: 20px; background-color: #fff;height:150px;">
-                            <h2>want to delete this publication?</h2>
-                             <div  style = "display:flex;justify-content: space-around;right:50%;" >
-                            <button type="submit" class="btn" style=" background-color: #cc0000;color: #fff;position: fixed ;left:60%;top:50%;width: 30%">delete</button>
-                            <button type="button" class="btn cancel" onclick="closeForm()" style="background-color: #8ebf42;position: fixed ;left:10%;top:50%;width:30%">back</button> 
-                            </div>
-                          </form>
-                        </div>
-                     </div>
+                     {% if p.user.id == request.user.id %}
+                     <div class="deleteupdate" style="position:absolute;right:0%;">
+                        <span onclick="location.href='{% url 'updatepost' p.id %}';" style="float:right; justify-content: space-between;padding: 10px;position:relative;" >
+                        <i class="fa-solid fa-pencil"></i>
+                       </span>
+                       <span  class="button" id="delete-object" data-modal="modalOne" data-object-id="{{ p.id }}" style="float:right; justify-content: space-between;padding: 10px;position:relative;">
+                        <i class="fa-regular fa-trash-can"></i>
+                        <div id="result"></div>
+                       </span>
+                      </div>
+                      {% endif %}
                      <div class="left-profile">
                         <div class="post-info">
-                           <img src=" {% static 'images/profile-img.png' %}" alt="#" />
+                           <img src="{% static 'images/profile-img.png' %}" alt="#" />
                            <span>
-                              <h4>by George Kvasnikov</h4>
+                              <h4>by {{p.user.username}}</h4>
                               <h5>on Jun 27, 2014</h5>
                            </span>
-                            <span class="share"></span>
-                         </div> 
+                        </div>
+                        <span class="share"></span>
                      </div>
                   </div>
-                  {% endif %}
                   <div class="post-heading">
-                     <h3>{{p.post_title}}</h3>
-                     <p>{{p.post_description}}
+                     <h3> {{p.post_title}} </h3>
+                     <p> {{p.post_description}}
                      </p>
                      <div class="full">
-                       <div class="likecomment">
-                          <span>
-                             <i class="fa-regular fa-heart"></i>
-                         </span>
-                         <span>
-                          <i class="fa-regular fa-comment"></i>
-                         </span>
-                       </div>
-                       <a class="btn" href="#" style="position:relative;left:87%;">Participate</a>
+                        <a class="btn" href="#" style="position:relative;left:87%;">Participate </a>
                      </div>
                   </div>
                </div>
             </div>
-             {% endif %}
-             
-             {% endfor %}
-          </div>
-          {% endblock postsview %}
-          {% block sidebar %}
-          <div class="col-md-3">
-               <div class="blog-sidebar" style="border: none;background: none;outline: none;">
-               <button type="button" class="btn mb-2 mb-md-0 btn-tertiary btn-block btn-round" style="background-color:hsla(46, 100%, 50%, 0.973);" >
-                  <span><a href="{% url 'addpost' %}">Add your own blog</a></span>
-               </button>
-            </div>
-             <div class="blog-sidebar">
-                <h4 class="heading">Top Categories</h4>
-                <div class="category-menu">
-                   <ul>
-                      <li><a href="#">Cricket</a></li>
-                      <li><a href="#">Football</a></li>
-                      <li><a href="#">Hockey</a></li>
-                      <li><a href="#">Tennis</a></li>
-                      <li><a href="#">Basketball</a></li>
-                      <li><a href="#">Golf</a></li>
-                      <li><a href="#">Cycling</a></li>
-                      <li><a href="#">Motorsports</a></li>
-                   </ul>
-                </div>
-             </div>
-             <div class="blog-sidebar">
-                <h4 class="heading">Popular News</h4>
-                <div class="category-menu">
-                   <ul>
-                      <li>
-                         <span><img src=" {% static 'images/profile-img2.png' %}" alt="#"></span>
-                         <span>
-                            <p>Two touch penalties, imaginary cards</p>
-                            <p class="date">22 Feb, 2016</p>
-                         </span>
-                      </li>
-                   </ul>
-                </div>
-             </div>
-             <aside id="sidebar" class="left-bar">
-                <div class="feature-matchs">
-                   <div class="team-btw-match">
-                      <ul>
-                         <li>
-                            <img src=" {% static 'images/img-01_002.png' %}" alt="">
-                            <span>Portugal</span>
-                         </li>
-                         <li class="vs"><span>vs</span></li>
-                         <li>
-                            <img src=" {% static 'images/img-02.png' %}" alt="">
-                            <span>Germany</span>
-                         </li>
-                      </ul>
-                      <ul>
-                         <li>
-                            <img src=" {% static 'images/img-03_002.png' %}" alt="">
-                            <span>Portugal</span>
-                         </li>
-                         <li class="vs"><span>vs</span></li>
-                         <li>
-                            <img src=" {% static 'images/img-04_003.png' %}" alt="">
-                            <span>Germany</span>
-                         </li>
-                      </ul>
-                      <ul>
-                         <li>
-                            <img src=" {% static 'images/img-05_002.png' %}" alt="">
-                            <span>Portugal</span>
-                         </li>
-                         <li class="vs"><span>vs</span></li>
-                         <li>
-                            <img src=" {% static 'images/img-06.png' %}" alt="">
-                            <span>Germany</span>
-                         </li>
-                      </ul>
-                      <ul>
-                         <li>
-                            <img src=" {% static 'images/img-07_002.png' %}" alt="">
-                            <span>Portugal</span>
-                         </li>
-                         <li class="vs"><span>vs</span></li>
-                         <li>
-                            <img src=" {% static 'images/img-08.png' %}" alt="">
-                            <span>Germany</span>
-                         </li>
-                      </ul>
+
+            {% endif %}
+
+            <div class="login-popup" style="position:relative;text-align: center;width: 100%;">
+               <div id="modalOne" class= "form-popup" style="display: none;position: fixed;left:45%;top:20%;transform: translate(-45%,20%);border: 2px solid #666;z-index: 9;">
+                 <form method="POST" action="{% url 'deletepost' p.id %}" class="form-container" style=" max-width: 600px; padding: 20px; background-color: #fff;height:150px;">
+                  {% csrf_token %}
+                  <h2>Want to delete this blog?</h2>
+                    <div style = "display:flex;justify-content: space-around;right:50%;" >
+                    <button type="submit" class="btn" style=" background-color: #cc0000;color: #fff;position: fixed ;left:60%;top:50%;width: 30%">delete</button>
+                    <a class="h"><button type="button" class="btn cancel" style="background-color: #8ebf42;position: fixed ;left:10%;top:50%;width:30%">back</button></a>
                    </div>
-                </div>
-             </aside>
-             <aside id="sidebar" class="left-bar">
-                <div class="banner-sidebar">
-                   <img class="img-responsive" src=" {% static 'images/match-banner1.jpg' %}" alt="#">
-                   <h3>Argentina vs Chile|Goals of the match | COPA </h3>
-                </div>
-             </aside>
-             <aside id="sidebar" class="right-bar">
-                <div class="banner">
-                   <img class="img-responsive" src=" {% static 'images/adds-3.jpg' %}" alt="#">
-                </div>
-             </aside>
-             <aside id="sidebar" class="left-bar">
-                <div class="feature-matchs">
-                   <table class="table table-bordered table-hover">
-                      <thead>
-                         <tr>
-                            <th>#</th>
-                            <th>Team</th>
-                            <th>P</th>
-                            <th>W</th>
-                            <th>L</th>
-                         </tr>
-                      </thead>
-                      <tbody>
-                         <tr>
-                            <td>1</td>
-                            <td><img src=" {% static 'images/img-01_004.png' %}" alt="">Liverpool</td>
-                            <td>10</td>
-                            <td>12</td>
-                            <td>20</td>
-                         </tr>
-                         <tr>
-                            <td>2</td>
-                            <td><img src=" {% static 'images/img-02_002.png' %}" alt="">Chelsea</td>
-                            <td>10</td>
-                            <td>12</td>
-                            <td>20</td>
-                         </tr>
-                         <tr>
-                            <td>3</td>
-                            <td><img src=" {% static 'images/img-03_003.png' %}" alt="">Norwich City</td>
-                            <td>20</td>
-                            <td>15</td>
-                            <td>20</td>
-                         </tr>
-                         <tr>
-                            <td>4</td>
-                            <td><img src=" {% static 'images/img-04_002.png' %}" alt="">West Brom</td>
-                            <td>60</td>
-                            <td>10</td>
-                            <td>60</td>
-                         </tr>
-                         <tr>
-                            <td>5</td>
-                            <td><img src=" {% static 'images/img-05.png' %}" alt="">sunderland</td>
-                            <td>30</td>
-                            <td>06</td>
-                            <td>30</td>
-                         </tr>
-                      </tbody>
-                   </table>
-                </div>
-             </aside>
-          </div>
-          {% endblock sidebar %}
-       </div>
-    </div>
- </section>
+                 </form>
+               </div>
+            </div>
+          {% endfor %}
+         </div>
+        
+         <div class="col-md-3">
+            <div class="blog-sidebar" style="border: none;background: none;outline: none;">
+               <div >
+                  
+                     <button type="button" class="btn mb-2 mb-md-0 btn-tertiary btn-block btn-round" style="background-color:hsla(46, 100%, 50%, 0.973);" >
+                        <span><a href="{% url 'addpost' %}">Add your own blog</a></span>
+                     </button>
+                 
+               </div>
+            </div>
+            <div class="blog-sidebar">
+               <h4 class="heading">Top Categories</h4>
+               <div class="category-menu">
+                  <ul>
+                     <li><a href="#">Cricket</a></li>
+                     <li><a href="#">Football</a></li>
+                     <li><a href="#">Hockey</a></li>
+                     <li><a href="#">Tennis</a></li>
+                     <li><a href="#">Basketball</a></li>
+                     <li><a href="#">Golf</a></li>
+                     <li><a href="#">Cycling</a></li>
+                     <li><a href="#">Motorsports</a></li>
+                  </ul>
+               </div>
+            </div>
+            <div class="blog-sidebar">
+               <h4 class="heading">Popular News</h4>
+               <div class="category-menu">
+                  <ul>
+                     <li>
+                        <span><img src="{% static 'images/profile-img2.png' %}" alt="#"></span>
+                        <span>
+                           <p>Two touch penalties, imaginary cards</p>
+                           <p class="date">22 Feb, 2016</p>
+                        </span>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+            <aside id="sidebar" class="left-bar">
+               <div class="feature-matchs">
+                  <div class="team-btw-match">
+                     <ul>
+                        <li>
+                           <img src="{% static 'images/img-01_002.png' %}" alt="">
+                           <span>Portugal</span>
+                        </li>
+                        <li class="vs"><span>vs</span></li>
+                        <li>
+                           <img src="{% static 'images/img-02.png' %}" alt="">
+                           <span>Germany</span>
+                        </li>
+                     </ul>
+                     <ul>
+                        <li>
+                           <img src="{% static 'images/img-03_002.png' %}" alt="">
+                           <span>Portugal</span>
+                        </li>
+                        <li class="vs"><span>vs</span></li>
+                        <li>
+                           <img src="{% static 'images/img-04_003.png' %}" alt="">
+                           <span>Germany</span>
+                        </li>
+                     </ul>
+                     <ul>
+                        <li>
+                           <img src="{% static 'images/img-05_002.png' %}" alt="">
+                           <span>Portugal</span>
+                        </li>
+                        <li class="vs"><span>vs</span></li>
+                        <li>
+                           <img src="{% static 'images/img-06.png' %}" alt="">
+                           <span>Germany</span>
+                        </li>
+                     </ul>
+                     <ul>
+                        <li>
+                           <img src="{% static 'images/img-07_002.png' %}" alt="">
+                           <span>Portugal</span>
+                        </li>
+                        <li class="vs"><span>vs</span></li>
+                        <li>
+                           <img src="{% static 'images/img-08.png' %}" alt="">
+                           <span>Germany</span>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+            </aside>
+            <aside id="sidebar" class="left-bar">
+               <div class="banner-sidebar">
+                  <img class="img-responsive" src="{% static 'images/match-banner1.jpg' %}" alt="#">
+                  <h3>Argentina vs Chile|Goals of the match | COPA </h3>
+               </div>
+            </aside>
+            <aside id="sidebar" class="right-bar">
+               <div class="banner">
+                  <img class="img-responsive" src="{% static 'images/adds-3.jpg' %}" alt="#">
+               </div>
+            </aside>
+            <aside id="sidebar" class="left-bar">
+               <div class="feature-matchs">
+                  <table class="table table-bordered table-hover">
+                     <thead>
+                        <tr>
+                           <th>#</th>
+                           <th>Team</th>
+                           <th>P</th>
+                           <th>W</th>
+                           <th>L</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <tr>
+                           <td>1</td>
+                           <td><img src="{% static 'images/img-01_004.png' %}" alt="">Liverpool</td>
+                           <td>10</td>
+                           <td>12</td>
+                           <td>20</td>
+                        </tr>
+                        <tr>
+                           <td>2</td>
+                           <td><img src="{% static 'images/img-02_002.png' %}" alt="">Chelsea</td>
+                           <td>10</td>
+                           <td>12</td>
+                           <td>20</td>
+                        </tr>
+                        <tr>
+                           <td>3</td>
+                           <td><img src="{% static 'images/img-03_003.png' %}" alt="">Norwich City</td>
+                           <td>20</td>
+                           <td>15</td>
+                           <td>20</td>
+                        </tr>
+                        <tr>
+                           <td>4</td>
+                           <td><img src="{% static 'images/img-04_002.png' %}" alt="">West Brom</td>
+                           <td>60</td>
+                           <td>10</td>
+                           <td>60</td>
+                        </tr>
+                        <tr>
+                           <td>5</td>
+                           <td><img src="{% static 'images/img-05.png' %}" alt="">sunderland</td>
+                           <td>30</td>
+                           <td>06</td>
+                           <td>30</td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </aside>
+         </div>
+      </div>
+   </div>
+</section>
 
-
-             
-          
-
- <script>
-   function openForm() {
-     document.getElementById("popupForm").style.display = "block";
-   }
-
-   function closeForm() {
-     document.getElementById("popupForm").style.display = "none";
-   }
+<script>
+   let modalBtns = [...document.querySelectorAll(".button")];
+   modalBtns.forEach(function (btn) {
+     btn.onclick = function () {
+       let modal = btn.getAttribute("data-modal");
+       document.getElementById(modal).style.display = "block";
+     };
+   });
+   let closeBtns = [...document.querySelectorAll(".h")];
+   closeBtns.forEach(function (btn) {
+     btn.onclick = function () {
+       let modal = btn.closest(".form-popup");
+       modal.style.display = "none";
+     };
+   });
+   
+   window.onclick = function (event) {
+     if (event.target.className === "form-popup") {
+       event.target.style.display = "none";
+     }
+   };
+   
  </script>
- 
-  
 {% endblock content %}

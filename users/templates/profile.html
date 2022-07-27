@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block header %}{% endblock header %}
+
+{% block activepage %}
+<div class="inner-information-text">
+    <div class="container">
+       <h3>PROFILE</h3>
+       <ul class="breadcrumb">
+          <li><a href="{% url 'home' %}">Home</a></li>
+          <li class="active">PROFILE</li>
+       </ul>
+    </div>
+ </div>
+ {% endblock activepage %}
+ 
+ {% block imagebackground %}
+ <div class="inner-page-banner" style="background-image:url('{% static 'images/walle.jpg' %}');" >
+    <div class="container">
+    </div>
+ </div>
+ {% endblock imagebackground %}
+
+{% block content %}
+
+
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+
+
+
+          <div class="container"  >
+            <div class="content-center">
+              <div class="cc-profile-image"><a href="#"><img src={{user.profile_image.url}} alt="Image"/></a></div>
+              <div class="h2 title">{{user.username}}</div>
+            </div>
+          </div>
+
+
+
+          <div class="container bootstrap snippets bootdey">
+            <div class="row">
+              <div class="profile-nav col-md-3">
+                  <div class="panel">
+                         <ul class="nav nav-stacked">
+                          <li class="active"><a href="#"> <i class="fa fa-user"></i> Profile</a></li>
+                          <li><a href="#"> <i class="fa fa-calendar"></i> Recent Activity <span class="label label-warning pull-right r-activity">9</span></a></li>
+                          <li><a href={% url 'updateprofile' user.id %}> <i class="fa fa-edit"></i> Edit profile</a></li>
+                      </ul>
+                  </div>
+              </div>
+            
+              <div class="profile-info col-md-9">
+                  {% comment %} <div class="panel">
+                      
+                  </div> {% endcomment %}
+                  <div class="panel">
+                      <div class="bio-graph-heading">
+                          Complete your profile 
+                      </div>
+                      <div class="panel-body bio-graph-info">
+                          <h1>Personnel Information</h1>
+                          <div class="row">
+                              <div class="bio-row">
+                                  <p><span>User Name : </span> {{user.username}} </p>
+                              </div>
+                              <div class="bio-row">
+                                  <p><span>Email : </span>{{user.email}}</p>
+                              </div>
+                              <div class="bio-row">
+                                  <p><span>Address : </span> {{user.address}}</p>
+                              </div>
+                              <div class="bio-row">
+                                  <p><span>Birthday : </span>{{user.age}}</p>
+                              </div>
+                              <div class="bio-row">
+                                  <p><span>Disponibility : </span>{{user.disponibility}}</p>
+                              </div>
+                              <div class="bio-row">
+                                <p><span>Prefer_Activities</span>
+                                  
+                                </p>
+                            </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div>
+                     
+                  </div>
+              </div>
+              
+              </div>
+
+            </div>
+
+  
+
+      
+{% endblock content %}
+

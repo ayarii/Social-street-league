@@ -1,9 +1,11 @@
 from email import message
 from django.shortcuts import redirect, render
 from django.contrib.auth import login, authenticate, logout
-from users.form import AccountAuthenticationForm, RegistrationForm
+from users.form import AccountAuthenticationForm, AccountUpdateForm, RegistrationForm
 from django.conf import settings
 from django.http import HttpResponse
+
+from users.models import User
 # Create your views here.
 
 def signup_user(request):
@@ -61,3 +63,54 @@ def logout_user(request,id):
 
 def user(request):
     return render(request,'users.html')
+
+def profile_user(request,id):
+    context = {
+                'user':User.objects.get(id=id),
+            }
+    return render(request,'profile.html',context)
+
+
+def profile_update(request, *args, **kwargs):
+	if not request.user.is_authenticated:
+		return redirect("login")
+	user_id = kwargs.get("id")
+	account = User.objects.get(id=user_id)
+	if account.id != request.user.id:
+		return HttpResponse("You cannot edit someone elses profile.")
+	context = {}
+	if request.POST:
+		form = AccountUpdateForm(request.POST, request.FILES, instance=request.user)
+		if form.is_valid():
+			form.save()
+			return redirect("profile",id=account.id)
+		else:
+			form = AccountUpdateForm(request.POST, instance=request.user,
+				initial={
+					"id": account.id,
+					"email": account.email, 
+					"username": account.username,
+					"profile_image": account.profile_image,
+					"age":account.age,
+                    "disponibility":account.disponibility,
+                    "address":account.address,
+     
+				}
+			)
+			context['form'] = form
+	else:
+		form = AccountUpdateForm(
+			initial={
+					"id": account.id,
+					"email": account.email, 
+					"username": account.username,
+					"profile_image": account.profile_image,
+					"age":account.age,
+                    "disponibility":account.disponibility,
+                    "address":account.address,
+				}
+			)
+		context['form'] = form
+	context['DATA_UPLOAD_MAX_MEMORY_SIZE'] = settings.DATA_UPLOAD_MAX_MEMORY_SIZE
+	return render(request, "updateprofile.html", context)
+    

@@ -30,7 +30,7 @@ def add_post(request):
 def update_post(request,id):
     post= Post.objects.get(id=id)
     if request.method == 'POST':
-        form = post_form(request.POST, request.FILES,instance=post)
+        form = post_form(request.POST,request.FILES,instance=post)
         if  form.is_valid:
             form.save()
             return redirect('post')
@@ -44,7 +44,8 @@ def update_post(request,id):
   
 def delete_post(request,id):
     post= Post.objects.get(id=id)
-    post.delete()
-    return redirect('post') 
+    if request.method == 'POST':
+        post.delete()
+        return redirect('post') 
     
    
