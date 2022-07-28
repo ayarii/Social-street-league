@@ -4,9 +4,16 @@ from django.contrib.auth import login, authenticate, logout
 from users.form import AccountAuthenticationForm, AccountUpdateForm, RegistrationForm
 from django.conf import settings
 from django.http import HttpResponse
-
+from django.core.files.storage import default_storage
+from django.core.files.storage import FileSystemStorage
+import os
+import json
+import base64
+from django.core import files
 from users.models import User
 # Create your views here.
+
+TEMP_PROFILE_IMAGE_NAME = "temp_profile_image.png"
 
 def signup_user(request):
     if request.user.is_authenticated:
@@ -114,3 +121,4 @@ def profile_update(request, *args, **kwargs):
 	context['DATA_UPLOAD_MAX_MEMORY_SIZE'] = settings.DATA_UPLOAD_MAX_MEMORY_SIZE
 	return render(request, "updateprofile.html", context)
     
+

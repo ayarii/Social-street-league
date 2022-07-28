@@ -1,0 +1,34 @@
+<div class="login-popup" style="position:relative;text-align: center;width: 100%;">
+    <div id="modalOne" class= "form-popup" style="display: none;position: fixed;left:45%;top:20%;transform: translate(-45%,20%);border: 2px solid #666;z-index: 9;">
+      <form method="POST" action="{% url 'deletepost' p.id %}" class="form-container" style=" max-width: 600px; padding: 20px; background-color: #fff;height:150px;">
+       {% csrf_token %}
+       <h2>Want to delete this blog?</h2>
+         <div style = "display:flex;justify-content: space-around;right:50%;" >
+         <button id="building-name" type="submit" class="btn" style=" background-color: #cc0000;color: #fff;position: fixed ;left:60%;top:50%;width: 30%">delete</button>
+         <a class="h"><button type="button" class="btn cancel" style="background-color: #8ebf42;position: fixed ;left:10%;top:50%;width:30%">back</button></a>
+        </div>
+      </form>
+    </div>
+ </div>
+<script>
+    let modalBtns = [...document.querySelectorAll(".button")];
+    modalBtns.forEach(function (btn) {
+      btn.onclick = function () {
+        let modal = btn.getAttribute("data-modal");
+        document.getElementById(modal).style.display = "block";
+      };
+    });
+    let closeBtns = [...document.querySelectorAll(".h")];
+    closeBtns.forEach(function (btn) {
+      btn.onclick = function () {
+        let modal = btn.closest(".form-popup");
+        modal.style.display = "none";
+      };
+    });
+    
+    window.onclick = function (event) {
+      if (event.target.className === "form-popup") {
+        event.target.style.display = "none";
+      }
+    };   
+  </script>
