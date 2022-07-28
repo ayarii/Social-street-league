@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block header %}{% endblock header %}
+{% block activepage %}
+<div class="inner-information-text">
+    <div class="container">
+       <h3>Teams</h3>
+       <ul class="breadcrumb">
+          <li><a href="{% url 'home' %}">Home</a></li>
+          <li class="active">Teams</li>
+       </ul>
+    </div>
+ </div>
+ {% endblock activepage%}
+
+ {% block imagebackground %}
+ <div class="inner-page-banner" style="background-image:url('{% static 'images/img-05.jpg' %}');" >
+    <div class="container">
+    </div>
+ </div>
+ {% endblock imagebackground %}
+
+{% block content %}
+<section id="contant" class="contant main-heading team">
+ <div class="aboutus">
+    <div class="container">
+       <div class="row">
+          <div class="col-md-12 col-sm-12">
+            
+             <div class="col-md-7 col-sm-7 col-xs-12">
+                <div class="full">
+                    <h3 style="position:relative;width=100%;float:left;">{{team.team_name}}</h3>
+                </div>
+             </div>
+             
+             <div class="col-md-4 col-sm-4 col-xs-10">
+                <div style="float:right;">
+                    <div class="full">
+                        {% if is_member %}
+                        <a class="btn" style="position:relative;width=100%;float:right;">You Are A Member</a>
+                        {% else %}
+                        <a class="btn" href={% url 'jointeam' team.id %} style="position:relative;width=100%;float:right;">Join Now</a>
+                        {% endif %}
+                    </div>
+                </div>
+             </div>
+
+          </div>
+       </div>
+    </div>
+ </div>
+</div>
+<section id="contant" class="contant main-heading team">
+ <div class="aboutus">
+    <div class="container">
+       <div class="row">
+          <div class="col-md-12 col-sm-12">
+            
+             <div class="col-md-7 col-sm-7 col-xs-12">
+                <div class="full">
+                   <h3>About Us </h3>
+                   <p>{{team.team_about}}
+                   </p>  
+                </div>
+             </div>
+             <div class="col-md-4 col-sm-4 col-xs-10">
+                <div style="float:right;">
+                <img class="img-responsive" src={{team.team_image.url}} alt="#" style="max-width:50%;max-height:50%;" />
+                <h3 style="left:30px">Team Logo</h3>
+                </div>
+             </div>
+          </div>
+       </div>
+    </div>
+ </div>
+</div>
+ <section id="contant" class="contant main-heading team">
+    <div class="row">
+        
+        <div class="container">
+            <div class="full" style="margin:30px">
+                <h2>Team Members</h2>
+               </div>
+            {% for m in members  %}
+            <div class="col-md-3 column" Style="max-width:20%;max-height:20%;">
+               <div class="card" >
+                  <img class="img-responsive" src={{m.profile_image.url}} alt="John" style="width:100%">
+                  <div class="" style="margin:10px;">
+                     <h5>{{m.username}}</h5>
+                  </div>
+               </div>
+            </div>
+            {% endfor %}
+         </div>
+    </div>
+ </section>
+{% endblock content %}

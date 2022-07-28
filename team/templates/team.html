@@ -33,7 +33,7 @@
                   <div class="team-column style-2" style="width:250px;height:300px;">
                      <img src={{t.team_image.url}} alt="" style="max-width:250px;max-height:400px;">
                      <div class="player-name">
-                        <div class="desination-2">Want to join ?</div>
+                        <span class="desination-2" onclick="location.href='{% url 'singleteam' t.id  %}';" style="cursor:pointer;">Want to join ?</span>
                         <h5>{{t.team_name}}</h5>
                         <span class="player-number">{{t.n_players}}</span>
                      </div>
