@@ -12,36 +12,51 @@
     </div>
  </div>
  {% endblock activepage%}
- {% block imagebackground %}
- <div class="inner-page-banner" style="background-image:url('{% static 'images/about.png' %}');" >
-    <div class="container">
-    </div>
- </div>
- {% endblock imagebackground %}
  {% block content %}
  <section id="contant" class="contant">
     <div class="container">
        <div class="row">
          <div class="col-lg-9 col-sm-12 col-xs-12">
-         {% for i in ev  %}
+            <h4>{{i}}</h4>
+         {% for i in events  %}
          
              <div class="news-post-holder">
                 <div class="col-lg-6 col-sm-6 col-xs-12">
                    <div class="news-post-widget">
-                     <img class="img-responsive" src="{{i.image.url}}" alt="">
+                     <img class="img-responsive" src="{{i.image.url}}" alt=""  width-400>
                      <div class="news-post-detail">
-                        <span class="date">20 march 2016</span>
+                        <span class="date">{{i.date_event}}</span>
                         <h4>{{i}}</h4>
-                         <p>{{i.description_event}}</p>
-                        <h2><a href="/team">Join</a></h2> 
+                        
+                         <p><a href={% url 'even' i.id %}> {{i.description_event}} </a></p>
+                        
                      </div>
                    </div>
                   </div>
                </div>
                        
-           
-  
           {% endfor %}
+          <!--
+{{ events }}<br/>
+Has Previous: {{ events.has_previous }}<br/>
+Has Next: {{ events.has_next }}<br/>
+Current_Page: {{ events.number }}<br/>
+Number of Pages: {{ events.paginator.num_pages }}<br/>
+<hr><br/><br/>
+-->
+{% if events.has_previous %}
+<a href="?page=1">&laquo; first</a>
+<a href="?page={{ events.previous_page_number }}">previous</a> 
+{% endif %}
+
+Page {{ events.number }} of {{ events.paginator.num_pages }}
+
+{% if events.has_next %}
+            <a href="?page={{ events.next_page_number }}">next</a>
+            <a href="?page={{ events.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+
+
          </div>
           <div class="col-lg-3 col-sm-6 col-xs-12">
              <div class="content-widget top-story" style="background: url(images/top-story-bg.jpg);">
@@ -65,6 +80,10 @@
           </div>
           
        </div>
+      
     </div>
+    
  </section>
+ <br/></br/>
+
  {% endblock content %}

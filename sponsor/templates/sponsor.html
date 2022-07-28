@@ -43,5 +43,28 @@
        </div>
     </div>
  </section>
+ <center>
+ {% if sp.has_other_pages %}
+    <ul class="pagination">
+   {% if sp.has_previous %}
+     <li><a href="?page={{ sp.previous_page_number }}">«</a></li>
+   {% else %}
+     <li class="disabled"><span>«</span></li>
+   {% endif %}
+   {% for i in sp.paginator.page_range %}
+     {% if sp.number == i %}
+    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+     {% else %}
+    <li><a href="?page={{ i }}">{{ i }}</a></li>
+     {% endif %}
+   {% endfor %}
+   {% if sp.has_next %}
+     <li><a href="?page={{ sp.next_page_number }}">»</a></li>
+   {% else %}
+     <li class="disabled"><span>»</span></li>
+   {% endif %}
+    </ul>
+  {% endif %}
+</center>
 {% endblock content %}
 

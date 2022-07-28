@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block header %}{% endblock header %}
+{% block activepage %}
+<div class="inner-information-text">
+    <div class="container">
+       <h3>Event</h3>
+       <ul class="breadcrumb">
+          <li><a href="{% url 'home' %}">Home</a></li>
+          <li class="active">Event</li>
+       </ul>
+    </div>
+ </div>
+ {% endblock activepage%}
+ {% block content %}
+ <section id="contant" class="contant main-heading" style="padding-bottom:0;margin-bottom:-1px;position:relative;z-index:1;">
+ <div class="aboutus">
+    <div class="container">
+       <div class="row">
+          <div class="col-md-12 col-sm-12">
+             <div class="col-md-7 col-sm-7 col-xs-12">
+                <div class="full">
+                   <h3> {{ object.title_event }}</h3>
+                   <p>
+                    {{ object.description_event }}
+                   </p>
+                   <ul class="icon-list">
+                      <li><i class="fa fa-angle-right"></i>Location: {{ object.location_event }}</li>
+                      <li><i class="fa fa-angle-right"></i>Date: {{ object.date_event }}</li>
+                      <h1><a href="/team">Join</a></h1>
+                   </ul>
+                </div>
+             </div>
+             <div class="col-md-5 col-sm-5 col-xs-12">
+                <img class="img-responsive" src="{{object.image.url}}" />
+             </div>
+          </div>
+       </div>
+    </div>
+ </div>
+</section>
+
+ {% endblock content %}
