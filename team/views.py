@@ -1,5 +1,8 @@
 from django.shortcuts import render
-
+from .models import Team
 # Create your views here.
-def test(request):
-    return render(request,'team.html')
+def display(request):
+    context = {
+                'teams':Team.objects.all(),
+            }
+    return render(request,'team.html',context)
