@@ -1,6 +1,7 @@
 from django.db import models
 from django.forms import CharField
-
+from location_field.models.plain import PlainLocationField
+from SSL.settings import LOCATION_FIELD
 from users.models import User
 
 # Create your models here.
@@ -10,6 +11,7 @@ class Post(models.Model):
     post_description = models.CharField(max_length=500)
     post_date = models.DateTimeField(auto_now=False, auto_now_add=False)
     post_location = models.CharField(max_length=200)
+    #location = PlainLocationField(based_fields=['post_location'],zoom=7, null=True, blank=True)
     post_image = models.ImageField(max_length=255, upload_to='posts_photo/', null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE ,null=True, blank=True)
     def __str__(self):

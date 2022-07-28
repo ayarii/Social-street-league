@@ -37,12 +37,14 @@ AUTHENTICATION_BACKENDS = (
 # Application definition
 
 INSTALLED_APPS = [
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'location_field.apps.DefaultConfig',
     'users',
     'activity',
     'event',
@@ -142,3 +144,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #MEDIA IS HERE
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+
+#map setting run pip install django-location-field
+
+LOCATION_FIELD = {
+    'map.provider': 'openstreetmap',
+    'provider.openstreetmap.max_zoom': 18,
+}
+

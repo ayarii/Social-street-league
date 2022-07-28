@@ -40,7 +40,7 @@
              <div class="feature-post small-blog">
                <div class="col-md-5">
                   <div class="feature-img">
-                     <img src={{p.post_image.url}} class="img-responsive" alt="#" />
+                     <img src={{p.post_image.url}} class="img-responsive" alt="#" style="max-width:100%;max-height:100%;" />
                   </div>
                </div>
                <div class="col-md-7">
@@ -56,9 +56,7 @@
                      <div class="post-heading">
                         <h3>{{p.post_title}}</h3>
                         <p>{{p.post_description}}</p>
-                        <div class="full">
-                           <a class="btn" href="#"style="position:absolute;right:0%;">Participate</a>
-                        </div>
+                        
                         {% if p.user.id == request.user.id %}
                         <div style="float:top;width: 100%;margin: 0;padding: 0; ">
                            <div class="deleteupdate" style="position:absolute;right:0%; top :0%;">
@@ -73,6 +71,9 @@
                         {% endif %}
                      </div>
                   </div>
+               </div>
+               <div class="full">
+                  <a class="btn" href="#"style="position:relative;width=100%;float:right;margin:10px">Participate</a>
                </div>
             </div>
 
@@ -109,10 +110,11 @@
                      <h3> {{p.post_title}} </h3>
                      <p> {{p.post_description}}
                      </p>
-                     <div class="full">
-                        <a class="btn" href="#" style="position:relative;left:87%;">Participate </a>
-                     </div>
+            
                   </div>
+               </div>
+               <div class="full">
+                  <a class="btn" href="#" style="position:relative;width=100%;float:right;margin:10px;margin-bottom:30px;margin-top:0px;">Participate </a>
                </div>
             </div>
               

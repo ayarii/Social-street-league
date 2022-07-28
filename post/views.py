@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-
+from django.contrib.auth.decorators import login_required
 from post.form import post_form
 from post.models import Post
 
@@ -10,6 +10,7 @@ def display(request):
             }
     return render(request,'post.html',context)
 
+@login_required(login_url='login')
 def add_post(request):
     
     if request.method == 'POST':
@@ -29,6 +30,7 @@ def add_post(request):
             }
     return render(request,'addpost.html',context)
 
+@login_required(login_url='login')
 def update_post(request,id):
     post= Post.objects.get(id=id)
     if request.method == 'POST':
@@ -43,7 +45,8 @@ def update_post(request,id):
                 'form':form,
             }
     return render(request,'updatepost.html',context)
-  
+
+@login_required(login_url='login') 
 def delete_post(request,id):
     post= Post.objects.get(id=id)
     if request.method == 'POST':
