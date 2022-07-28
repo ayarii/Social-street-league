@@ -1,5 +1,6 @@
 from django.urls import path , include
 from . import views
 urlpatterns = [
-  path('', views.test,name='event'),
+  path('', views.list_event,name='event'),
+  path('even/<int:id>', views.even, name = 'even')
 ]
