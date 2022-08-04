@@ -38,8 +38,10 @@
                 <form method="POST" style="position:right;">
                     {% csrf_token %}
                    {% for p in form  %}
+                     
                       {{p.label_tag}} 
                        {{p}}
+                       
                    {% endfor %}
                    {% for field in form %}
 					<p>

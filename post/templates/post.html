@@ -50,7 +50,7 @@
                         <img src={{p.user.profile_image.url}} alt="#" style="max-width:100%;max-height:100%;"/>
                         <span>
                            <h4>by {{p.user.username}}</h4>
-                           <h5>on Jun 27, 2014</h5>
+                           <h5>{{p.time_ago}}</h5>
                         </span>
                      </div>
                      <div class="post-heading">
@@ -100,7 +100,7 @@
                            <img src={{p.user.profile_image.url}}  alt="#" style="max-width:100%;max-height:100%;"/>
                            <span>
                               <h4>by {{p.user.username}}</h4>
-                              <h5>on Jun 27, 2014</h5>
+                              <h5>{{p.time_ago}}</h5>
                            </span>
                         </div>
                         <span class="share"></span>
@@ -110,7 +110,6 @@
                      <h3> {{p.post_title}} </h3>
                      <p> {{p.post_description}}
                      </p>
-            
                   </div>
                </div>
                <div class="full">
@@ -289,8 +288,32 @@
                </div>
             </aside>
          </div>
+
       </div>
    </div>
+   <center>
+      {% if posts.has_other_pages %}
+         <ul class="pagination">
+        {% if posts.has_previous %}
+          <li><a href="?page={{ posts.previous_page_number }}">«</a></li>
+        {% else %}
+          <li class="disabled"><span>«</span></li>
+        {% endif %}
+        {% for i in posts.paginator.page_range %}
+          {% if posts.number == i %}
+         <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+          {% else %}
+         <li><a href="?page={{ i }}">{{ i }}</a></li>
+          {% endif %}
+        {% endfor %}
+        {% if posts.has_next %}
+          <li><a href="?page={{ posts.next_page_number }}">»</a></li>
+        {% else %}
+          <li class="disabled"><span>»</span></li>
+        {% endif %}
+         </ul>
+       {% endif %}
+   </center>
 </section>
 
 <script>

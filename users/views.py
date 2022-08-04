@@ -72,8 +72,11 @@ def user(request):
     return render(request,'users.html')
 
 def profile_user(request,id):
+    user = User.objects.get(id=id)
+    activities=user.prefer_activity.all()
     context = {
                 'user':User.objects.get(id=id),
+                'activities':activities
             }
     return render(request,'profile.html',context)
 
@@ -81,7 +84,7 @@ def profile_user(request,id):
 def profile_update(request, *args, **kwargs):
 	if not request.user.is_authenticated:
 		return redirect("login")
-	user_id = kwargs.get("id")
+	user_id = kwargs.get("id") 
 	account = User.objects.get(id=user_id)
 	if account.id != request.user.id:
 		return HttpResponse("You cannot edit someone elses profile.")
@@ -101,7 +104,7 @@ def profile_update(request, *args, **kwargs):
 					"age":account.age,
                     "disponibility":account.disponibility,
                     "address":account.address,
-     
+                    
 				}
 			)
 			context['form'] = form

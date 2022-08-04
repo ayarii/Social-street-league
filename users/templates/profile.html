@@ -88,9 +88,11 @@
                                   <p><span>Disponibility : </span>{{user.disponibility}}</p>
                               </div>
                               <div class="bio-row">
-                                <p><span>Prefer_Activities</span>
-                                  
+                                <p><span>Prefer_Activities</span> 
                                 </p>
+                                {% for a in activities %}
+                                {{a.title_activity}}
+                                {% endfor %}
                             </div>
                           </div>
                       </div>

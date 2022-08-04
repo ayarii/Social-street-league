@@ -29,7 +29,7 @@
            
             <div class="container">
                {% for t in teams %}
-               <div class="col-md-3" >
+               <div class="col-md-3" style="margin-top:10px;margin-bottom:10px;">
                   <div class="team-column style-2" style="width:250px;height:300px;">
                      <img src={{t.team_image.url}} alt="" style="max-width:250px;max-height:400px;">
                      <div class="player-name">
@@ -37,27 +37,36 @@
                         <h5>{{t.team_name}}</h5>
                         <span class="player-number">{{t.n_players}}</span>
                      </div>
-                     <div class="overlay">
-                        <div class="team-detail-hover position-center-x">
-                           <p>Lacus vulputate torquent mollis venenatis quisque suspendisse fermentum primis,</p>
-                           <ul class="social-icons style-4 style-5">
-                              <li><a class="facebook" href="#" tabindex="0"><i class="fa fa-facebook"></i></a></li>
-                              <li><a class="twitter" href="#" tabindex="0"><i class="fa fa-twitter"></i></a></li>
-                              <li><a class="youtube" href="#" tabindex="0"><i class="fa fa-youtube-play"></i></a></li>
-                              <li><a class="pinterest" href="#" tabindex="0"><i class="fa fa-pinterest-p"></i></a></li>
-                           </ul>
-                           <a class="btn blue-btn" href=" /soccer/team-detail.html" tabindex="0">View Detail</a>
-                        </div>
-                     </div>
                   </div>
                </div>
                {% endfor %}
-            </div>
-            
+            </div>  
          </div>
-        
       </div>
     </div>
  </section>
+ <center>
+   {% if teams.has_other_pages %}
+      <ul class="pagination">
+     {% if teams.has_previous %}
+       <li><a href="?page={{ teams.previous_page_number }}">«</a></li>
+     {% else %}
+       <li class="disabled"><span>«</span></li>
+     {% endif %}
+     {% for i in teams.paginator.page_range %}
+       {% if teams.number == i %}
+      <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+       {% else %}
+      <li><a href="?page={{ i }}">{{ i }}</a></li>
+       {% endif %}
+     {% endfor %}
+     {% if teams.has_next %}
+       <li><a href="?page={{ teams.next_page_number }}">»</a></li>
+     {% else %}
+       <li class="disabled"><span>»</span></li>
+     {% endif %}
+      </ul>
+    {% endif %}
+</center>
 {% endblock content %}
 

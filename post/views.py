@@ -1,12 +1,23 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse_lazy
 from post.form import post_form
 from post.models import Post
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Create your views here.
 def display(request):
+    post_list=Post.objects.all()
+    page = request.GET.get('page', 1)
+    paginator = Paginator(post_list,5)
+    try:
+        posts = paginator.page(page)
+    except PageNotAnInteger:
+        posts = paginator.page(1)
+    except EmptyPage:
+        posts = paginator.page(paginator.num_pages)
     context = {
-                'posts':Post.objects.all(),
+                'posts':posts,
             }
     return render(request,'post.html',context)
 
@@ -53,4 +64,6 @@ def delete_post(request,id):
         post.delete()
         return redirect('post') 
     
+    
+
    

@@ -65,7 +65,7 @@ class AccountUpdateForm(forms.ModelForm):
              'age': forms.NumberInput(attrs={'class':'form-control'}),
              'disponibility': forms.TextInput(attrs={'class':'form-control'}),
              'address':forms.TextInput(attrs={'class':'form-control'}),
-             'prefer_activity' : forms.SelectMultiple(),
+             'prefer_activity' : forms.CheckboxSelectMultiple(),
          }
     def clean_email(self):
         email = self.cleaned_data['email'].lower()
