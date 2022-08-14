@@ -13,9 +13,12 @@ def list_event(request):
     p = Paginator(event_list, 3)
     page = request.GET.get('page')
     events = p.get_page(page)
+    nums = "a" * events.paginator.num_pages
+
 
     context = {'event_list': event_list,
-    'events': events}
+    'events': events,
+    'nums': nums}
     return render(request,'event.html',context
      )
 
