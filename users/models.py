@@ -1,8 +1,9 @@
+from datetime import date
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from activity.models import Activity
 from event.models import Event
-
+from dateutil.relativedelta import relativedelta
 from team.models import Team
 # Create your models here.
 
@@ -45,7 +46,8 @@ class User(AbstractBaseUser):
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     profile_image = models.ImageField(max_length=255, upload_to='users_photo', null=True, blank=True, default='users_photo/default_user.jpg')
-    age = models.IntegerField(null=True, blank=False)
+    birth_date= models.DateField(null=True, blank=False)
+    #age = models.IntegerField(null=True, blank=False)
     disponibility=models.CharField(max_length=50,null=True, blank=False)
     address = models.CharField(max_length=50,null=True, blank=False)
     user_teams = models.ManyToManyField(Team)
@@ -67,3 +69,8 @@ class User(AbstractBaseUser):
 	# Does this user have permission to view this app? (ALWAYS YES FOR SIMPLICITY)
     def has_module_perms(self, app_label):
         return True
+    
+    def user_age(self):
+        today = date.today()
+        delta = relativedelta(today,self.birth_date)
+        return str(delta.years)

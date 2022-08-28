@@ -23,49 +23,94 @@
 
 {% block content %}
 
+<style type="text/css">
+	.image-container{
+		max-width: 250px;
+		height:auto;
+		position: relative;
+		left:40%;
+	}
+	.field-heading{
+		color: #737373;
+	}
+	#id_confirm{
+		color: green;
+	}
+	#id_confirm:hover {
+		opacity: 0.3;
+	}
+	#id_cancel:hover {
+		opacity: 0.3;
+	}
+	#id_cancel{
+		color: red;
+	}
+	.material-icons{
+		font-size: 30px;
+	}
+	.material-icons:hover{
+		cursor: pointer;
+	}
+    .form-signin {
+        width: 100%;
+        max-width: 330px;
+        padding: 15px;
+        margin: auto;
+      }
+      .form-signin .checkbox {
+        font-weight: 400;
+      }
+      .form-signin .form-control {
+        position: relative;
+        box-sizing: border-box;
+        height: auto;
+        padding: 10px;
+        font-size: 16px;
+      }
+      .form-signin .form-control:focus {
+        z-index: 2;
+      }
+      .form-signin input[type="password"] {
+        margin-bottom: 10px;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+      .h3{
+        text-align: center;
+      }
+</style>	
 
 <link rel="stylesheet" href="{% static 'css/profile.css' %}">
 
-
-           
-
-          <div class="container"  >
+        <div class="container"  >
             <div class="content-center">
               <div class="cc-profile-image"><a href="#">
-                <div class="mb-2" id="id_image_crop_confirm">
-                    <span id="id_cancel" class="material-icons">cancel</span>
-                    <span id="id_confirm" class="material-icons">check</span>
-                </div>
-                <div class="image-container" id="id_image_container">
-                    <img class="border border-dark rounded-circle img-fluid mx-auto profile-image" id="id_profile_image_display" src="{{user.profile_image.url}}" alt="codingwithmitch logo">
-                  <div class="middle" id="id_middle_container">
-                      <div class="text" id="id_text">Edit</div>
-                  </div>
-                </div>
+                
+                    <img class="border border-dark rounded-circle img-fluid mx-auto profile-image" src="{{user.profile_image.url}}" alt="">
               </a></div>
               <div class="h2 title">{{user.username}}</div>
             </div>
           </div>
-
-
 
           <div class="container bootstrap snippets bootdey">
             <div class="row">
               <div class="profile-nav col-md-3">
                   <div class="panel">
                          <ul class="nav nav-stacked">
-                          <li class="active"><a href="#"> <i class="fa fa-user"></i> Profile</a></li>
-                          <li><a href="#"> <i class="fa fa-calendar"></i> Recent Activity <span class="label label-warning pull-right r-activity">9</span></a></li>
-                          <li><a href={% url 'updateprofile' user.id %}> <i class="fa fa-edit"></i> Edit profile</a></li>
+                          <li class="active profile" id="profilact" style="cursor:pointer;"><a> <i class="fa fa-user"></i> Profile</a></li>
+                          <li class="recent" id="recentact" style="cursor:pointer;"><a> <i class="fa fa-calendar recent"></i> Recent Activity <span class="label label-warning pull-right r-activity">9</span></a></li>
+                          <li class="edit" id="editact" style="cursor:pointer;"><a > <i class="fa fa-edit "></i> Edit profile</a></li>
+                          <li class="password" id="passwordact" style="cursor:pointer;"><a> <i class="fa-solid fa-key"></i> Change Password</a></li>
                       </ul>
                   </div>
               </div>
             
-              <div class="profile-info col-md-9">
+               <div class="profile-info col-md-9">
                   {% comment %} <div class="panel">
                       
                   </div> {% endcomment %}
                   <div class="panel">
+                    <div class="myprofile">
                       <div class="bio-graph-heading">
                           Complete your profile 
                       </div>
@@ -82,7 +127,7 @@
                                   <p><span>Address : </span> {{user.address}}</p>
                               </div>
                               <div class="bio-row">
-                                  <p><span>Birthday : </span>{{user.age}}</p>
+                                  <p><span>Age : </span>{{user.user_age}}</p>
                               </div>
                               <div class="bio-row">
                                   <p><span>Disponibility : </span>{{user.disponibility}}</p>
@@ -96,16 +141,588 @@
                             </div>
                           </div>
                       </div>
+                    </div>
+                    <div class="editprofile" style="display:none;">
+                        <div class="bio-graph-heading">
+                            Edit your profile 
+                        </div>
+                        <div class="container-fluid">
+                            <div class="row justify-content-center">
+                                <div class="card profile-card">
+                                  <div class="card-body">
+                                      <div class="d-flex flex-column justify-content-center p-4">
+                                          <div class="mb-2" id="id_image_crop_confirm">
+                                              <span id="id_cancel" class="material-icons"><i class="fa-solid fa-circle-x"></i></span>
+                                              <span id="id_confirm" class="material-icons"><i class="fa-solid fa-check"></i></span>
+                                          </div>
+                                          <div class="image-container" id="id_image_container">
+                                              <img style="max-width:75%;right:30%;" id="id_profile_image_display" src="{{user.profile_image.url}}" alt="">
+                                            <div class="middle" id="id_middle_container">
+                                                <div class="text" id="id_text">Edit</div>
+                                            </div>
+                                          </div>
+                                          <form method="post">
+                                                {% csrf_token %}
+            
+                                                {{form.profile_image}}
+                                        
+                                                {{form.username.label_tag}} 
+                                                {{form.username}}
+                            
+                                                {{form.email.label_tag}} 
+                                                {{form.email}}
+                            
+                                                {{form.birth_date.label_tag}} 
+                                                {{form.birth_date}}
+                            
+                                                {{form.disponibility.label_tag}} 
+                                                {{form.disponibility}}
+                            
+                                                {{form.address.label_tag}} 
+                                                {{form.address}}
+                            
+                                                {{form.prefer_activity.label_tag}} 
+                                                {{form.prefer_activity}}
+                                        
+                                            {% for field in form %}
+                                            <p>
+                                            {% for error in field.errors %}
+                                            <p style="color: red">{{ error }}</p>
+                                            {% endfor %}
+                                            </p>
+                                            {% endfor %}
+                                            {% if form.non_field_errors %}
+                                            <div style="color: red">
+                                            <p>{{form.non_field_errors}}</p>
+                                            </div>
+                            
+                                            {% endif %}
+                                            <div style=" height: 45px; margin: 35px 0;">
+                                            <input style="height: 100%;
+                                            width: 100%;
+                                            border-radius: 5px;
+                                            border: none;
+                                            color: #fff;
+                                            font-size: 18px;
+                                            font-weight: 500;
+                                            letter-spacing: 1px;
+                                            cursor: pointer;
+                                            transition: all 0.3s ease;
+                                            background: linear-gradient(135deg, #ffcb05, #ec1c24);" type="submit" value="Edit">
+                                            </div> 
+                                        </form>
+                        
+                                      </div>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="changepassword" style="display:none;height:350px;" >
+                        <form id="id_password_change_form" method="POST" class="form-signin" action="{% url 'password_change'%}">{% csrf_token %}
+                            <h1 class="h3 mb-3 font-weight-normal">Change password</h1>
+                              <input name="old_password" class="form-control" placeholder="Old password" type="password" id="id_old_password" required="true">
+                              <input name="new_password1" class="form-control" placeholder="New password" type="password" id="id_new_password1" required="true">
+                              <input name="new_password2" class="form-control" placeholder="Confirm password" type="password" id="id_new_password2" required="true">
+                          
+                              {% for field in form %}
+                                {% for error in field.errors %}
+                                  <p style="color: red">{{ error }}</p>
+                                {% endfor %}
+                              {% endfor %}
+                          
+                            <button id="id_submit_btn" class="btn btn-lg btn-primary btn-block" style="height:15%;
+                            width: 100%;
+                            border-radius: 5px;
+                            border: none;
+                            color: #fff;
+                            font-size: 18px;
+                            font-weight: 500;
+                            letter-spacing: 1px;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                            background: linear-gradient(135deg, #ffcb05, #ec1c24);" type="submit">Update</button>  
+                        </form>
+                    </div>
+                    <div class="recentactivity" style="display:none;">
+                        <ul class="nav nav-tabs">
+                            <li class="active blog">
+                              <a href="#tab1" data-toggle="tab">Blogs</a>
+                            </li>
+                            <li class="team">
+                              <a href="#tab1" data-toggle="tab">Teams</a>
+                            </li>
+                            <li class="event" >
+                              <a href="#tab1" data-toggle="tab">Events</a>
+                            </li>
+                        </ul>
+                        <div class="myblog" >
+                            <section id="contant" class="contant main-heading">
+                                <div class="row">
+                                   <div class="container">
+                                      <div class="col-md-9">
+                                         {% for p in blogs %}
+                                         {% if p.post_image %}
+                                          <div class="feature-post small-blog">
+                                            <div class="col-md-5">
+                                               <div class="feature-img">
+                                                  <img src={{p.post_image.url}} class="img-responsive" alt="#" style="max-width:100%;max-height:100%;" />
+                                               </div>
+                                            </div>
+                                            <div class="col-md-7">
+                                               <div class="feature-cont">
+                                                  
+                                                  <div class="post-info">
+                                                     <img src={{p.user.profile_image.url}} alt="#" style="max-width:100%;max-height:100%;"/>
+                                                     <span>
+                                                        <h4>by {{p.user.username}}</h4>
+                                                        <h5>{{p.time_ago}}</h5>
+                                                     </span>
+                                                  </div>
+                                                  <div class="post-heading">
+                                                     <h3>{{p.post_title}}</h3>
+                                                     <p>{{p.post_description}}</p>
+                                                     
+                                                     {% if p.user.id == request.user.id %}
+                                                     <div style="float:top;width: 100%;margin: 0;padding: 0; ">
+                                                        <div class="deleteupdate" style="position:absolute;right:0%; top :0%;">
+                                                           <span onclick="location.href='{% url 'updatepost' p.id %}';" style="float:right; justify-content: space-between;padding: 10px;position:relative;" >
+                                                           <i class="fa-solid fa-pencil"></i>
+                                                          </span>
+                                                          <span class="button" data-toggle="modal" data-target="#building-modal" id="delete-object" data-modal="modalOne" data-id="{{ p.id }}"  style="float:right; justify-content: space-between;padding: 10px;position:relative;">
+                                                           <i class="fa-regular fa-trash-can"></i>
+                                                          </span>
+                                                        </div> 
+                                                     </div>
+                                                     {% endif %}
+                                                  </div>
+                                               </div>
+                                            </div>
+                                            <div class="full">
+                                               <a class="btn" href="#"style="position:relative;width=100%;float:right;margin:10px">Participate</a>
+                                            </div>
+                                         </div>
+                             
+                                         {% else %}
+                             
+                                         <div class="feature-post">
+                                            <div class="feature-img">
+                                            </div>
+                                            <div class="feature-cont">
+                                               <div class="post-people">
+                                                  {% if p.user.id == request.user.id %}
+                                                  <div class="deleteupdate" style="position:absolute;right:0%;">
+                                                     <span onclick="location.href='{% url 'updatepost' p.id %}';" style="float:right; justify-content: space-between;padding: 10px;position:relative;" >
+                                                     <i class="fa-solid fa-pencil"></i>
+                                                    </span>
+                                                    <span  class="button" data-toggle="modal" data-target="#building-modal" id="delete-object" data-modal="modalOne" data-id="{{ p.id }}" style="float:right; justify-content: space-between;padding: 10px;position:relative;">
+                                                     <i class="fa-regular fa-trash-can"></i>
+                                                     <div id="result"></div>
+                                                    </span>
+                                                   </div>
+                                                   {% endif %}
+                                                  <div class="left-profile">
+                                                     <div class="post-info">
+                                                        <img src={{p.user.profile_image.url}}  alt="#" style="max-width:100%;max-height:100%;"/>
+                                                        <span>
+                                                           <h4>by {{p.user.username}}</h4>
+                                                           <h5>{{p.time_ago}}</h5>
+                                                        </span>
+                                                     </div>
+                                                     <span class="share"></span>
+                                                  </div>
+                                               </div>
+                                               <div class="post-heading">
+                                                  <h3> {{p.post_title}} </h3>
+                                                  <p> {{p.post_description}}
+                                                  </p>
+                                               </div>
+                                            </div>
+                                            <div class="full">
+                                               <a class="btn" href="#" style="position:relative;width=100%;float:right;margin:10px;margin-bottom:30px;margin-top:0px;">Participate </a>
+                                            </div>
+                                         </div>
+                                           
+                                         {% endif %}
+                             
+                                         <div class="login-popup" style="position:relative;text-align: center;width: 100%;">
+                                            <div id="modalOne" class= "form-popup" style="display: none;position: fixed;left:45%;top:20%;transform: translate(-45%,20%);border: 2px solid #666;z-index: 9;">
+                                              <form method="POST" action="{% url 'deletepost' p.id %}" class="form-container" style=" max-width: 600px; padding: 20px; background-color: #fff;height:150px;">
+                                               {% csrf_token %}
+                                               <h2>Want to delete this blog?</h2>
+                                                 <div style = "display:flex;justify-content: space-around;right:50%;" >
+                                                 <button id="building-name" type="submit" class="btn" style=" background-color: #cc0000;color: #fff;position: fixed ;left:60%;top:50%;width: 30%">delete</button>
+                                                 <a class="h"><button type="button" class="btn cancel" style="background-color: #8ebf42;position: fixed ;left:10%;top:50%;width:30%">back</button></a>
+                                                </div>
+                                              </form>
+                                            </div>
+                                         </div>
+                             
+                                       {% endfor %}
+                                      </div>
+                                   </div>
+                                </div>
+                             </section>
+                        </div>
+                        <div class="myteam" style="display:none;width:100%;">
+                            <section id="contant" class="contant main-heading team">
+                                <div class="row">
+                                  <div class="container">
+                                     <div id="team-slider" >
+                                        <div class="container">
+                                           {% for t in teams %}
+                                           <div class="col-md-3 column" style="margin-top:10px;margin-bottom:10px;margin-left:10%;">
+                                              <div class="team-column style-2" style="width:250px;height:300px;">
+                                                 <img src={{t.team_image.url}} alt="" style="max-width:250px;max-height:400px;">
+                                                 <div class="player-name">
+                                                    <span class="desination-2" onclick="location.href='{% url 'singleteam' t.id  %}';" style="cursor:pointer;">Want to join ?</span>
+                                                    <h5>{{t.team_name}}</h5>
+                                                    <span class="player-number">{{t.n_players}}</span>
+                                                 </div>
+                                              </div>
+                                           </div>
+                                           {% endfor %}
+                                        </div>  
+                                     </div>
+                                  </div>
+                                </div>
+                             </section>
+                        </div>
+                        <div class="myevent" style="display:none;">
+                            <section id="contant" class="contant">
+                                <div class="container">
+                                   <div class="row">
+                                     <div class="col-lg-9 col-sm-12 col-xs-12">
+                                     {% for e in events  %}
+                                     <div class="news-post-holder">
+                                        <div class="col-lg-6 col-sm-6 col-xs-12">
+                                           <div class="news-post-widget">
+                                             <img  src="{{e.image.url}}" alt=""   height="200px" width="100%"  style="object-fit:cover" >
+                                             <div class="news-post-detail">
+                                                <span class="date">{{e.date_event}}</span>
+                                                <h2><a href="">{{e.title_event}}</a></h2>
+                                                <p><h5>Location : {{e.location_event}}</h5></p>
+                                             </div>
+                                           </div>
+                                        </div>
+                                    </div>           
+                                    {% endfor %}
+                                   </div> 
+                                  </div>
+                            
+                                </div> 
+                            </section>
+                        </div>
+                    </div>
                   </div>
-                  <div>
-                     
-                  </div>
-              </div>
+                  
+               </div>
               
               </div>
 
-            </div>
+        </div>
 
-  
+        <script type="text/javascript">
+
+            var cropper;
+            var imageFile;
+            var base64ImageString;
+            var cropX;
+            var cropX;
+            var cropWidth;
+            var cropHeight;
+        
+            enableImageOverlay()
+        
+            function enableImageOverlay(){
+                var text = document.getElementById("id_text")
+                text.style.backgroundColor = "#fbc02d"
+                text.style.color = "white"
+                text.style.fontSize = "12px"
+                text.style.padding = "12px 24px"
+                text.style.cursor = "pointer"
+        
+                var profileImage = document.getElementById("id_profile_image")
+                profileImage.style.opacity = "1"
+                profileImage.style.display = "block"
+                profileImage.style.width = "100%"
+                profileImage.style.height = "auto"
+                profileImage.style.transition = ".5s ease"
+                profileImage.style.backfaceVisibility  = "hidden"
+                profileImage.style.cursor = "pointer"
+        
+                var middleContainer = document.getElementById("id_middle_container")
+                middleContainer.style.transition = ".5s ease"
+                middleContainer.style.opacity = "0"
+                middleContainer.style.position = "absolute"
+                middleContainer.style.top = "50%"
+                middleContainer.style.left = "40%"
+                middleContainer.style.transform = "translate(-50%, -50%)"
+                middleContainer.style.textAlign = "center"
+        
+                var imageContainer = document.getElementById("id_image_container")
+                imageContainer.addEventListener("mouseover", function( event ) { 
+                    profileImage.style.opacity = "0.3"
+                    middleContainer.style.opacity = "1"
+                })
+        
+                imageContainer.addEventListener("mouseout", function( event ) { 
+                    profileImage.style.opacity = "1"
+                    middleContainer.style.opacity = "0"
+                })
+        
+                imageContainer.addEventListener("click", function(event){
+                    document.getElementById('id_profile_image').click();
+                });
+        
+                var cropConfirm = document.getElementById("id_image_crop_confirm")
+                cropConfirm.classList.remove("d-flex")
+                cropConfirm.classList.remove("flex-row")
+                cropConfirm.classList.remove("justify-content-between")
+                cropConfirm.classList.add("d-none")
+                
+            }
+        
+            function disableImageOverlay(){
+                var profileImage = document.getElementById("id_profile_image_display")
+                var middleContainer = document.getElementById("id_middle_container")
+                var imageContainer = document.getElementById("id_image_container")
+                var text = document.getElementById("id_text")
+        
+                imageContainer.removeEventListener("mouseover", function( event ) { 
+                    profileImage.style.opacity = "0.3"
+                    middleContainer.style.opacity = "1"
+                })
+        
+                imageContainer.removeEventListener("mouseout", function( event ) { 
+                    profileImage.style.opacity = "1"
+                    middleContainer.style.opacity = "0"
+                })
+        
+                profileImage.style.opacity = "1"
+                middleContainer.style.opacity = "0"
+                text.style.cursor = "default"
+                text.style.opacity = "0"
+        
+                document.getElementById('id_image_container').removeEventListener("click", function(event){
+                    event.preventDefault();
+                    // do nothing
+                });
+                document.getElementById('id_profile_image').addEventListener("click", function(event){
+                    event.preventDefault();
+                    // do nothing
+                });
+        
+                var cropConfirm = document.getElementById("id_image_crop_confirm")
+                cropConfirm.classList.remove("d-none")
+                cropConfirm.classList.add("d-flex")
+                cropConfirm.classList.add("flex-row")
+                cropConfirm.classList.add("justify-content-between")
+        
+                var confirm = document.getElementById("id_confirm")
+                confirm.addEventListener("click", function(event){
+                    console.log("Sending crop data for processing...")
+                    cropImage(
+                        imageFile, 
+                        cropX, 
+                        cropY, 
+                        cropWidth,
+                        cropHeight
+                    )
+                })
+        
+                var cancel = document.getElementById("id_cancel")
+                cancel.addEventListener("click", function(event){
+                    console.log("Reloading window...")
+                    window.location.reload();
+                })
+            }
+        
+            /* return null if invalid or base64String if valid */
+            function isImageSizeValid(image){
+                //console.log("max size: {{DATA_UPLOAD_MAX_MEMORY_SIZE}}")
+                // console.log(image)
+                var startIndex = image.indexOf("base64,") + 7;
+                var base64str = image.substr(startIndex);
+                var decoded = atob(base64str);
+                console.log("FileSize: " + decoded.length);
+                
+                return base64str
+            }
+        
+            function cropImage(image, x, y, width, height){
+                base64ImageString = isImageSizeValid(image)
+        
+                if(base64ImageString != null){
+                    var requestData = {
+                        "csrfmiddlewaretoken": "{{ csrf_token }}",
+                        "image": base64ImageString,
+                        "cropX": cropX,
+                        "cropY": cropY,
+                        "cropWidth": cropWidth,
+                        "cropHeight": cropHeight
+                    }
+                    displayLoadingSpinner(true)
+                    $.ajax({
+                        type: 'POST',
+                        dataType: "json",
+                        url: "{% url 'crop_image' id=request.user.id %}",
+                        data: requestData,
+                        timeout: 10000,
+                        success: function(data) {
+                            if(data.result == "success"){
+                                document.getElementById("id_cancel").click()
+                            }
+                            else if(data.result == "error"){
+                                alert(data.exception)
+                                document.getElementById("id_cancel").click()
+                            }
+                        },
+                        error: function(data) {
+                            console.error("ERROR...", data)
+                        },
+                        complete: function(data){
+                            displayLoadingSpinner(false)
+                        }
+                    });
+                }
+                else{
+                    alert("Upload an image smaller than 10 MB");
+                    document.getElementById("id_cancel").click()
+                }
+            }
+        
+            /*
+                Called when a new image is selected from file chooser dialog
+            */
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+        
+                    reader.onload = function (e) {
+                        disableImageOverlay()
+                        var image = e.target.result
+                        var imageField = document.getElementById('id_profile_image_display')
+                        imageField.src = image
+                        cropper = new Cropper(imageField, {
+                            aspectRatio: 1/1,
+                            crop(event) {
+                                // console.log("CROP START")
+                                // console.log("x: " + event.detail.x);
+                                // console.log("y: " + event.detail.y);
+                                // console.log("width: " + event.detail.width);
+                                // console.log("height: " + event.detail.height);
+                                setImageCropProperties(
+                                    image,
+                                    event.detail.x,
+                                    event.detail.y,
+                                    event.detail.width,
+                                    event.detail.height
+                                )
+                            },
+                        });
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                }
+            };
+        
+            function setImageCropProperties(image, x, y, width, height){
+                imageFile = image
+                cropX = x
+                cropY = y
+                cropWidth = width
+                cropHeight = height
+            }
+        
+        </script>
+
+        <script type="text/javascript">
+            $(".edit").click(function(){
+                $(".recentactivity").hide()
+                $(".changepassword").hide()
+                $(".myprofile").hide()
+                $(".editprofile").show()
+                $('#editact').addClass('active');
+                $('#profilact').removeClass('active');
+                $('#recentact').removeClass('active');
+                $('#passwordact').removeClass('active');
+            });
+            
+            $(".profile").click(function(){
+                $(".recentactivity").hide()
+               $(".changepassword").hide()
+               $(".editprofile").hide()
+               $(".myprofile").show()
+               $('#profilact').addClass('active');
+               $('#editact').removeClass('active');
+               $('#recentact').removeClass('active');
+               $('#passwordact').removeClass('active');
+            });
+            $(".password").click(function(){
+                $(".recentactivity").hide()
+                $(".editprofile").hide()
+                $(".myprofile").hide()
+                $(".changepassword").show()
+                $('#passwordact').addClass('active');
+                $('#editact').removeClass('active');
+                $('#recentact').removeClass('active');
+                $('#profilact').removeClass('active');
+            });
+            $(".recent").click(function(){
+                $(".changepassword").hide()
+                $(".myprofile").hide()
+                $(".editprofile").hide()
+                $(".recentactivity").show()
+                $('#recentact').addClass('active');
+                $('#editact').removeClass('active');
+                $('#passwordact').removeClass('active');
+                $('#profilact').removeClass('active');
+            });
+
+            $(".blog").click(function(){
+                $(".myteam").hide()
+                $(".myevent").hide()
+                $(".myblog").show()
+            });
+
+            $(".team").click(function(){
+                $(".myevent").hide()
+                $(".myblog").hide()
+                $(".myteam").show()
+            });
+
+            $(".event").click(function(){
+                $(".myblog").hide()
+                $(".myteam").hide()
+                $(".myevent").show()
+            });
+        </script>
+        <script>
+            let modalBtns = [...document.querySelectorAll(".button")];
+            modalBtns.forEach(function (btn) {
+              btn.onclick = function () {
+                let modal = btn.getAttribute("data-modal");
+                document.getElementById(modal).style.display = "block";
+              };
+            });
+            let closeBtns = [...document.querySelectorAll(".h")];
+            closeBtns.forEach(function (btn) {
+              btn.onclick = function () {
+                let modal = btn.closest(".form-popup");
+                modal.style.display = "none";
+              };
+            });
+            
+            window.onclick = function (event) {
+              if (event.target.className === "form-popup") {
+                event.target.style.display = "none";
+              }
+            };  
+            {% comment %} $('.button').click(function(){
+               $('#building-name').html($(this).data('id'));
+              
+           });  {% endcomment %}
+         </script>
 {% endblock content %}
 
+{% comment %} onclick="location.href='{% url 'password_change'  %}';" {% endcomment %}
