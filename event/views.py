@@ -1,11 +1,28 @@
 from difflib import context_diff
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Event
 from django.core.paginator import Paginator
+from .forms import EventForm
 # Create your views here.
 
 #def Display(request):
     #return render(request,'event.html' ,{'ev' : Event.objects.all()} )
+def addev(request):
+
+    if request.method == 'POST':
+        form = EventForm(request.POST, request.FILES)
+        if  form.is_valid():
+            form.save()
+            return redirect ('/addev?submitted=True')
+        else:
+            context = {
+                'form': EventForm,
+            }
+        return render(request,'addev.html',context)
+    context = {
+                'form': EventForm,
+            }
+    return render(request,'addev.html',context)
 
 def list_event(request):
     event_list = Event.objects.all()
