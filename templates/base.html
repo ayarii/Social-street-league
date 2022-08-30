@@ -1,4 +1,5 @@
 {% load static %}
+{% load leaflet_tags %}
 <!DOCTYPE html>
 <html lang="en">
    <!-- Basic -->
@@ -32,7 +33,17 @@
    <script src="https://kit.fontawesome.com/4e45933f98.js" crossorigin="anonymous"></script>
    <link href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
    <!-- end font family -->
-       
+    
+   <!-- leaflet css  -->
+   {% leaflet_css plugins="ALL" %} 
+   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@v0.74.0/dist/L.Control.Locate.min.css" />
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.74.4/dist/L.Control.Locate.min.css" />
+   <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+   {% leaflet_css plugins="forms" %}
+   
    <link rel="stylesheet" href="{% static 'css/3dslider.css' %}"/>
    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
    <link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
@@ -77,24 +88,160 @@
       {% endblock popup %}
         {% include 'parts/footer.html' %}
         <a href="home" data-scroll class="dmtop global-radius"><i class="fa fa-angle-up"></i></a>
-        <!-- ALL JS FILES -->
-        <script src="{% static 'js/all.js' %}"></script>
-        <!-- ALL PLUGINS -->
-        <script src="{% static 'js/custom.js' %}"></script>
-        <script type="module" src="{% static 'cropperjs/dist/cropper.min.js' %}"></script>
-        <script type="text/javascript">
-          function displayLoadingSpinner(isDisplayed){
-            var spinner = document.getElementById("id_loading_spinner")
-            if(isDisplayed){
-              spinner.style.display = "block"
-            }
-            else{
-              spinner.style.display = "none"
-            }
-          }
-        </script>
-       
-        
+      
     </body>
   </div>
 </html>
+
+<!-- ALL JS FILES -->
+<script src="{% static 'js/all.js' %}"></script>
+<!-- ALL PLUGINS -->
+<script src="{% static 'js/custom.js' %}"></script>
+<script type="module" src="{% static 'cropperjs/dist/cropper.min.js' %}"></script>
+<script type="text/javascript">
+  function displayLoadingSpinner(isDisplayed){
+    var spinner = document.getElementById("id_loading_spinner")
+    if(isDisplayed){
+      spinner.style.display = "block"
+    }
+    else{
+      spinner.style.display = "none"
+    }
+  }
+</script>
+
+<!-- leaflet js  -->
+{% leaflet_js plugins="forms" %}
+{% leaflet_js plugins="ALL" %}
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.74.0/dist/L.Control.Locate.min.js" charset="utf-8"></script>
+<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@v0.74.0/dist/L.Control.Locate.min.js" charset="utf-8"></script>
+
+<script>
+
+    var markerOptions = {
+        clickable: true,
+        draggable: true
+     }
+    var marker ;
+
+    // Map initialization 
+    var map = L.map('postmap', { minZoom:3,maxZoom: 20,DEFAULT_ZOOM: 12}).locate({setView: true, maxZoom: 12}).on('locationfound', function(e){
+        marker = L.marker([e.latitude, e.longitude],markerOptions);
+        var lat = marker.getLatLng().lat;
+        var lon = marker.getLatLng().lng;    
+        marker.on('dragend', function() {
+            var lat = marker.getLatLng().lat;
+            var lon = marker.getLatLng().lng;
+            map.setView([lat,lon]);
+            document.getElementById('lat').value = lat;
+            document.getElementById('long').value = lon;   
+           });
+        map.addLayer(marker);
+        document.getElementById('lat').value = lat;
+        document.getElementById('long').value = lon;
+        })
+        .on('locationerror', function(e){
+        console.log(e);
+        alert("Location access denied.");
+        });
+
+     //osm layer
+    var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    });
+    osm.addTo(map);
+
+    //go to my current place 
+    L.control.locate({
+        drawCircle: false,
+        showPopup:false,
+    }).addTo(map);   
+    
+    //recherche location
+    L.Control.geocoder({
+        defaultMarkGeocode: false,
+      }).on('markgeocode', function(e) {
+         var latlng = e.geocode.center;
+         
+         marker = L.marker(latlng,markerOptions).addTo(map).on('dragend', function() {
+            var lat = marker.getLatLng().lat;
+            var lon = marker.getLatLng().lng;
+            map.setView([lat,lon]);
+            document.getElementById('lat').value = lat;
+            document.getElementById('long').value = lon; 
+           });
+           var lat = marker.getLatLng().lat;
+           var lon = marker.getLatLng().lng;
+           map.setView([lat,lon]);
+           document.getElementById('lat').value = lat;
+           document.getElementById('long').value = lon;
+         map.fitBounds(e.geocode.bbox);
+      }).addTo(map);
+
+</script>
+
+<script>
+
+  var markerOptions = {
+      clickable: true,
+      draggable: true
+   }
+  var marker ;
+
+  // Map initialization 
+  var map = L.map('usermap', { minZoom:3,maxZoom: 20,DEFAULT_ZOOM: 12}).locate({setView: true, maxZoom: 12}).on('locationfound', function(e){
+      marker = L.marker([e.latitude, e.longitude],markerOptions);
+      var lat = marker.getLatLng().lat;
+      var lon = marker.getLatLng().lng;    
+      marker.on('dragend', function() {
+          var lat = marker.getLatLng().lat;
+          var lon = marker.getLatLng().lng;
+          map.setView([lat,lon]);
+          document.getElementById('lat').value = lat;
+          document.getElementById('long').value = lon;   
+         });
+      map.addLayer(marker);
+      document.getElementById('lat').value = lat;
+      document.getElementById('long').value = lon;
+      })
+      .on('locationerror', function(e){
+      console.log(e);
+      alert("Location access denied.");
+      });
+
+   //osm layer
+  var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  });
+  osm.addTo(map);
+
+  //go to my current place 
+  L.control.locate({
+      drawCircle: false,
+      showPopup:false,
+  }).addTo(map);   
+  
+  //recherche location
+  L.Control.geocoder({
+      defaultMarkGeocode: false,
+    }).on('markgeocode', function(e) {
+       var latlng = e.geocode.center;
+       
+       marker = L.marker(latlng,markerOptions).addTo(map).on('dragend', function() {
+          var lat = marker.getLatLng().lat;
+          var lon = marker.getLatLng().lng;
+          map.setView([lat,lon]);
+          document.getElementById('lat').value = lat;
+          document.getElementById('long').value = lon; 
+         });
+         var lat = marker.getLatLng().lat;
+         var lon = marker.getLatLng().lng;
+         map.setView([lat,lon]);
+         document.getElementById('lat').value = lat;
+         document.getElementById('long').value = lon;
+       map.fitBounds(e.geocode.bbox);
+    }).addTo(map);
+
+</script>

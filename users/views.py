@@ -23,6 +23,8 @@ import base64
 from django.core import files
 from users.models import User
 from post.models import Post
+from geopy.geocoders import Nominatim
+from geopy.point import Point
 # Create your views here.
 
 TEMP_PROFILE_IMAGE_NAME = "default_user.jpg"
@@ -156,6 +158,7 @@ def user(request):
 
 
 def profile_user(request, *args, **kwargs):
+    geolocator = Nominatim(user_agent="testproject")
     user_id = kwargs.get("id")
     user=User.objects.get(id=user_id)
     context = {}
@@ -173,7 +176,12 @@ def profile_user(request, *args, **kwargs):
     if request.POST:
         form = AccountUpdateForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid(): 
-            form.save()
+            Latitude = request.POST.get('lat',False)
+            Longitude = request.POST.get('long',False)
+            location = geolocator.reverse(Point(Latitude , Longitude))
+            userr = form.save(commit=False)
+            userr.address = location.raw['display_name']
+            userr.save()
             return redirect("profile",id=account.id)
         else:
             form = AccountUpdateForm(request.POST, instance=request.user,

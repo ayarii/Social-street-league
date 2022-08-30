@@ -64,10 +64,24 @@
                  <div class="post-heading">
                  <form method="POST" style="position:right;" enctype="multipart/form-data">
                   {% csrf_token %}
-                 {% for p in form  %}
-                    {{p.label_tag}} 
-                     {{p}}
-                 {% endfor %}
+                  
+                     {{form.label_tag.post_title}} 
+                     {{form.post_title}}
+
+                     {{form.label_tag.post_description}} 
+                     {{form.post_description}}
+
+                     {{form.label_tag.post_date}} 
+                     {{form.post_date}}
+
+                     {{form.label_tag.post_image}} 
+                     {{form.post_image}}
+                     
+                     
+                     <input type="text" name="lat" id="lat" size=12 value="" style="display:none;">
+                     <input type="text" name="long" id="long" size=12 value="" style="display:none;">
+
+                     <div id="postmap" style="width:750px;height:400px;"></div>
                  <div style=" height: 45px; margin: 35px 0;">
                   <input style="height: 100%;
                   width: 100%;

@@ -41,6 +41,10 @@ AUTHENTICATION_BACKENDS = (
     'users.backends.CaseInsensitiveModelBackend',
     )
 
+
+GDAL_LIBRARY_PATH = r'D:\stage\SSL\Lib\site-packages\osgeo\gdal304.dll'
+GEOS_LIBRARY_PATH = r'D:\stage\SSL\Lib\site-packages\osgeo\geos_c.dll'
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -51,7 +55,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'location_field.apps.DefaultConfig',
+    'leaflet',
+    'django.contrib.gis',
+    'djgeojson',
     'users',
     'activity',
     'event',
@@ -154,10 +160,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 
 #map setting run pip install django-location-field
 
-LOCATION_FIELD = {
-    'map.provider': 'openstreetmap',
-    'provider.openstreetmap.max_zoom': 18,
-}
+
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'

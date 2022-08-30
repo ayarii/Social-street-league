@@ -58,13 +58,14 @@ class AccountUpdateForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'profile_image','birth_date','disponibility','address','prefer_activity')
+        fields = ('username', 'email', 'profile_image','birth_date','disponibility','prefer_activity')
         widgets = {
              'email':forms.EmailInput(attrs={'class':'form-control'}),
              'username': forms.TextInput(attrs={'class':'form-control'}),
              'birth_date':forms.DateInput(attrs={'class': 'form-control ' ,'type': 'date'}),
              'disponibility': forms.TextInput(attrs={'class':'form-control'}),
-             'address':forms.TextInput(attrs={'class':'form-control'}),
+             'lat':forms.TextInput(attrs={'class':'form-control'}),
+             'long': forms.TextInput(attrs={'class':'form-control'}),
              'prefer_activity' : forms.CheckboxSelectMultiple(),
              'profile_image': forms.FileInput(attrs={'class':'d-none','id':'id_profile_image','onchange':'readURL(this)','name':'profile_image','style':'display: none;'})
          }
@@ -92,7 +93,7 @@ class AccountUpdateForm(forms.ModelForm):
         # account.profile_image = self.cleaned_data['profile_image']
         account.birth_date = self.cleaned_data['birth_date']
         account.disponibility = self.cleaned_data['disponibility']
-        account.address = self.cleaned_data['address']
+        #account.address = self.cleaned_data['address']
         if commit:
             account.save()
         return account

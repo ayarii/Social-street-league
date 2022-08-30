@@ -178,9 +178,10 @@
                                                 {{form.disponibility.label_tag}} 
                                                 {{form.disponibility}}
                             
-                                                {{form.address.label_tag}} 
-                                                {{form.address}}
-                            
+                                                <input type="text" name="lat" id="lat" size=12 value="" style="display:none;">
+                                                <input type="text" name="long" id="long" size=12 value="" style="display:none;">
+                                                <div id="usermap" style="width:600px;height:400px;"></div>
+
                                                 {{form.prefer_activity.label_tag}} 
                                                 {{form.prefer_activity}}
                                         
@@ -209,7 +210,8 @@
                                             cursor: pointer;
                                             transition: all 0.3s ease;
                                             background: linear-gradient(135deg, #ffcb05, #ec1c24);" type="submit" value="Edit">
-                                            </div> 
+                                            </div>
+                                            
                                         </form>
                         
                                       </div>
@@ -421,7 +423,7 @@
               </div>
 
         </div>
-
+        
         <script type="text/javascript">
 
             var cropper;
@@ -635,7 +637,7 @@
             }
         
         </script>
-
+        
         <script type="text/javascript">
             $(".edit").click(function(){
                 $(".recentactivity").hide()
