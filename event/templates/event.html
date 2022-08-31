@@ -31,6 +31,11 @@
                <div class="news-post-widget">
                  <img  src="{{i.image.url}}" alt=""   height="200px" width="100%"  style="object-fit:cover" >
                  <div class="news-post-detail">
+                  {% if idd == i.id  %}
+                  
+                  <span class="date" style="color: red;">Recommanded for you</span>
+               </br>
+                  {% endif  %}
                     <span class="date">{{i.date_event}}</span>
                     <h4>{{i}}</h4>
                     
