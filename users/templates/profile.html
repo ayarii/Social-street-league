@@ -24,33 +24,6 @@
 {% block content %}
 
 <style type="text/css">
-	.image-container{
-		max-width: 250px;
-		height:auto;
-		position: relative;
-		left:40%;
-	}
-	.field-heading{
-		color: #737373;
-	}
-	#id_confirm{
-		color: green;
-	}
-	#id_confirm:hover {
-		opacity: 0.3;
-	}
-	#id_cancel:hover {
-		opacity: 0.3;
-	}
-	#id_cancel{
-		color: red;
-	}
-	.material-icons{
-		font-size: 30px;
-	}
-	.material-icons:hover{
-		cursor: pointer;
-	}
     .form-signin {
         width: 100%;
         max-width: 330px;
@@ -78,20 +51,209 @@
       .h3{
         text-align: center;
       }
+
+       .avatar-upload {
+         position: relative;
+         max-width: 205px;
+         margin: 50px auto;
+       }
+       .avatar-upload .avatar-edit {
+         position: absolute;
+         right: 14px;
+         z-index: 1;
+         top: 10px;
+       }
+       .avatar-upload .avatar-edit input {
+         display: none;
+       }
+       .avatar-upload .avatar-edit input + label {
+         display: inline-block;
+         width: 34px;
+         height: 34px;
+         margin-bottom: 0;
+         border-radius: 100%;
+         background: #FFFFFF;
+         border: 1px solid transparent;
+         box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.12);
+         cursor: pointer;
+         font-weight: normal;
+         transition: all 0.2s ease-in-out;
+       }
+       .avatar-upload .avatar-edit input + label:hover {
+         background: #f1f1f1;
+         border-color: #d6d6d6;
+       }
+       .avatar-upload .avatar-edit input + label:after {
+         content: "\f040";
+         font-family: 'FontAwesome';
+         color: #757575;
+         position: absolute;
+         top: 5px;
+         left: 0;
+         right: 0;
+         text-align: center;
+         margin: auto;
+       }
+       .avatar-upload .avatar-preview {
+         width: 192px;
+         height: 192px;
+         position: relative;
+         border-radius: 100%;
+         border: 6px solid #F8F8F8;
+         box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.1);
+       }
+       .avatar-upload .avatar-preview > div {
+         width: 100%;
+         height: 100%;
+         border-radius: 100%;
+         background-size: cover;
+         background-repeat: no-repeat;
+         background-position: center;
+       }
+       .container2 .btn {
+           position: absolute;
+           top: 90%;
+           left: 50%;
+           transform: translate(-50%, -50%);
+           -ms-transform: translate(-50%, -50%);
+         
+           color: white;
+           font-size: 16px;
+           border: none;
+           cursor: pointer;
+           border-radius: 5px;
+           text-align: center;
+       }
+       #image {
+         display: block;
+         max-width: 100%;
+     }
+
+
+     .avatar-confirm  {
+      position: absolute;
+      right: 10px;
+      z-index: 1;
+      bottom: 10px;
+    }
+   
+    .avatar-confirm input {
+      display: inline-block;
+      width: 34px;
+      height: 34px;
+      margin-bottom: 0;
+      border-radius: 100%;
+      background: #FFFFFF;
+      border: 1px solid transparent;
+      box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.12);
+      cursor: pointer;
+      font-weight: normal;
+      transition: all 0.2s ease-in-out;
+    }
+    .avatar-confirm input:hover {
+      border-color: #d6d6d6;
+    }
+    .avatar-confirm i {
+      content: "\f00c";
+      font-family: 'FontAwesome';
+      color: #21a400;
+      position: absolute;
+      top: 10px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      margin: auto;
+    }
+
+    .avatar-cancel  {
+      position: absolute;
+      left: 8px;
+      z-index: 1;
+      bottom: 10px;
+    }
+   
+    .avatar-cancel input {
+      display: inline-block;
+      width: 34px;
+      height: 34px;
+      margin-bottom: 0;
+      border-radius: 100%;
+      background: #FFFFFF;
+      border: 1px solid transparent;
+      box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.12);
+      cursor: pointer;
+      font-weight: normal;
+      transition: all 0.2s ease-in-out;
+    }
+    .avatar-cancel input:hover {
+      border-color: #d6d6d6;
+    }
+    .avatar-cancel i {
+      content: "\f00d";
+      font-family: 'FontAwesome';
+      color: #d8302f;
+      position: absolute;
+      top: 10px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      margin: auto;
+    }
+       
 </style>	
 
 <link rel="stylesheet" href="{% static 'css/profile.css' %}">
 
         <div class="container"  >
             <div class="content-center">
-              <div class="cc-profile-image"><a href="#">
-                
-                    <img class="border border-dark rounded-circle img-fluid mx-auto profile-image" src="{{user.profile_image.url}}" alt="">
-              </a></div>
-              <div class="h2 title">{{user.username}}</div>
+               <form enctype="multipart/form-data" action="{% url 'crop_image' user.id %}" id="image-form" method="POST" class="avatar-upload">
+                  <div class="avatar-edit">
+                      <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg" name="imageUpload" class=" imageUpload" />
+                      <input type="hidden" name="base64image" name="base64image" id="base64image">
+                      <label for="imageUpload"></label>
+                  </div>
+                  <div class="avatar-preview container2">
+                      <div id="imagePreview" style="background-image:url({{user.profile_image.url}});">
+                          {% csrf_token %}
+                          <input type="hidden" name="_token" value="">
+                          <span class="avatar-confirm"  >
+                          <input type="submit"> <i class="fa-solid fa-check"></i>
+                          </span>
+                          <span class="avatar-cancel">
+                          <input type="cancel"> <a href="javascript:window.top.location.reload(true)" class="continue"><i class="fa-solid fa-xmark"></i></a>
+                          </span>
+                      </div>
+                  </div>
+              </form>
             </div>
+            <div class="modal fade bd-example-modal-lg imagecrop" id="model" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+               <div class="modal-dialog modal-lg">
+                 <div class="modal-content">
+                   <div class="modal-header">
+                       <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                         <span aria-hidden="true">&times;</span>
+                       </button>
+                   </div>
+                   <div class="modal-body">
+                       <div class="img-container">
+                           <div class="row">
+                               <div class="col-md-11">
+                                   <img id="image" src="https://avatars0.githubusercontent.com/u/3456749">
+                               </div>
+                           </div>
+                       </div>
+                     </div>
+                     <div class="modal-footer">
+                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                       <button type="button" class="btn btn-primary crop" id="crop">Crop</button>
+                     </div>
+                 </div>
+               </div>
+           </div>
           </div>
 
+   
           <div class="container bootstrap snippets bootdey">
             <div class="row">
               <div class="profile-nav col-md-3">
@@ -151,21 +313,9 @@
                                 <div class="card profile-card">
                                   <div class="card-body">
                                       <div class="d-flex flex-column justify-content-center p-4">
-                                          <div class="mb-2" id="id_image_crop_confirm">
-                                              <span id="id_cancel" class="material-icons"><i class="fa-solid fa-circle-x"></i></span>
-                                              <span id="id_confirm" class="material-icons"><i class="fa-solid fa-check"></i></span>
-                                          </div>
-                                          <div class="image-container" id="id_image_container">
-                                              <img style="max-width:75%;right:30%;" id="id_profile_image_display" src="{{user.profile_image.url}}" alt="">
-                                            <div class="middle" id="id_middle_container">
-                                                <div class="text" id="id_text">Edit</div>
-                                            </div>
-                                          </div>
-                                          <form method="post">
-                                                {% csrf_token %}
-            
-                                                {{form.profile_image}}
-                                        
+                                        <form method="post">
+                                          {% csrf_token %}
+
                                                 {{form.username.label_tag}} 
                                                 {{form.username}}
                             
@@ -424,307 +574,6 @@
 
         </div>
         
-        <script type="text/javascript">
-
-            var cropper;
-            var imageFile;
-            var base64ImageString;
-            var cropX;
-            var cropX;
-            var cropWidth;
-            var cropHeight;
-        
-            enableImageOverlay()
-        
-            function enableImageOverlay(){
-                var text = document.getElementById("id_text")
-                text.style.backgroundColor = "#fbc02d"
-                text.style.color = "white"
-                text.style.fontSize = "12px"
-                text.style.padding = "12px 24px"
-                text.style.cursor = "pointer"
-        
-                var profileImage = document.getElementById("id_profile_image")
-                profileImage.style.opacity = "1"
-                profileImage.style.display = "block"
-                profileImage.style.width = "100%"
-                profileImage.style.height = "auto"
-                profileImage.style.transition = ".5s ease"
-                profileImage.style.backfaceVisibility  = "hidden"
-                profileImage.style.cursor = "pointer"
-        
-                var middleContainer = document.getElementById("id_middle_container")
-                middleContainer.style.transition = ".5s ease"
-                middleContainer.style.opacity = "0"
-                middleContainer.style.position = "absolute"
-                middleContainer.style.top = "50%"
-                middleContainer.style.left = "40%"
-                middleContainer.style.transform = "translate(-50%, -50%)"
-                middleContainer.style.textAlign = "center"
-        
-                var imageContainer = document.getElementById("id_image_container")
-                imageContainer.addEventListener("mouseover", function( event ) { 
-                    profileImage.style.opacity = "0.3"
-                    middleContainer.style.opacity = "1"
-                })
-        
-                imageContainer.addEventListener("mouseout", function( event ) { 
-                    profileImage.style.opacity = "1"
-                    middleContainer.style.opacity = "0"
-                })
-        
-                imageContainer.addEventListener("click", function(event){
-                    document.getElementById('id_profile_image').click();
-                });
-        
-                var cropConfirm = document.getElementById("id_image_crop_confirm")
-                cropConfirm.classList.remove("d-flex")
-                cropConfirm.classList.remove("flex-row")
-                cropConfirm.classList.remove("justify-content-between")
-                cropConfirm.classList.add("d-none")
-                
-            }
-        
-            function disableImageOverlay(){
-                var profileImage = document.getElementById("id_profile_image_display")
-                var middleContainer = document.getElementById("id_middle_container")
-                var imageContainer = document.getElementById("id_image_container")
-                var text = document.getElementById("id_text")
-        
-                imageContainer.removeEventListener("mouseover", function( event ) { 
-                    profileImage.style.opacity = "0.3"
-                    middleContainer.style.opacity = "1"
-                })
-        
-                imageContainer.removeEventListener("mouseout", function( event ) { 
-                    profileImage.style.opacity = "1"
-                    middleContainer.style.opacity = "0"
-                })
-        
-                profileImage.style.opacity = "1"
-                middleContainer.style.opacity = "0"
-                text.style.cursor = "default"
-                text.style.opacity = "0"
-        
-                document.getElementById('id_image_container').removeEventListener("click", function(event){
-                    event.preventDefault();
-                    // do nothing
-                });
-                document.getElementById('id_profile_image').addEventListener("click", function(event){
-                    event.preventDefault();
-                    // do nothing
-                });
-        
-                var cropConfirm = document.getElementById("id_image_crop_confirm")
-                cropConfirm.classList.remove("d-none")
-                cropConfirm.classList.add("d-flex")
-                cropConfirm.classList.add("flex-row")
-                cropConfirm.classList.add("justify-content-between")
-        
-                var confirm = document.getElementById("id_confirm")
-                confirm.addEventListener("click", function(event){
-                    console.log("Sending crop data for processing...")
-                    cropImage(
-                        imageFile, 
-                        cropX, 
-                        cropY, 
-                        cropWidth,
-                        cropHeight
-                    )
-                })
-        
-                var cancel = document.getElementById("id_cancel")
-                cancel.addEventListener("click", function(event){
-                    console.log("Reloading window...")
-                    window.location.reload();
-                })
-            }
-        
-            /* return null if invalid or base64String if valid */
-            function isImageSizeValid(image){
-                //console.log("max size: {{DATA_UPLOAD_MAX_MEMORY_SIZE}}")
-                // console.log(image)
-                var startIndex = image.indexOf("base64,") + 7;
-                var base64str = image.substr(startIndex);
-                var decoded = atob(base64str);
-                console.log("FileSize: " + decoded.length);
-                
-                return base64str
-            }
-        
-            function cropImage(image, x, y, width, height){
-                base64ImageString = isImageSizeValid(image)
-        
-                if(base64ImageString != null){
-                    var requestData = {
-                        "csrfmiddlewaretoken": "{{ csrf_token }}",
-                        "image": base64ImageString,
-                        "cropX": cropX,
-                        "cropY": cropY,
-                        "cropWidth": cropWidth,
-                        "cropHeight": cropHeight
-                    }
-                    displayLoadingSpinner(true)
-                    $.ajax({
-                        type: 'POST',
-                        dataType: "json",
-                        url: "{% url 'crop_image' id=request.user.id %}",
-                        data: requestData,
-                        timeout: 10000,
-                        success: function(data) {
-                            if(data.result == "success"){
-                                document.getElementById("id_cancel").click()
-                            }
-                            else if(data.result == "error"){
-                                alert(data.exception)
-                                document.getElementById("id_cancel").click()
-                            }
-                        },
-                        error: function(data) {
-                            console.error("ERROR...", data)
-                        },
-                        complete: function(data){
-                            displayLoadingSpinner(false)
-                        }
-                    });
-                }
-                else{
-                    alert("Upload an image smaller than 10 MB");
-                    document.getElementById("id_cancel").click()
-                }
-            }
-        
-            /*
-                Called when a new image is selected from file chooser dialog
-            */
-            function readURL(input) {
-                if (input.files && input.files[0]) {
-                    var reader = new FileReader();
-        
-                    reader.onload = function (e) {
-                        disableImageOverlay()
-                        var image = e.target.result
-                        var imageField = document.getElementById('id_profile_image_display')
-                        imageField.src = image
-                        cropper = new Cropper(imageField, {
-                            aspectRatio: 1/1,
-                            crop(event) {
-                                // console.log("CROP START")
-                                // console.log("x: " + event.detail.x);
-                                // console.log("y: " + event.detail.y);
-                                // console.log("width: " + event.detail.width);
-                                // console.log("height: " + event.detail.height);
-                                setImageCropProperties(
-                                    image,
-                                    event.detail.x,
-                                    event.detail.y,
-                                    event.detail.width,
-                                    event.detail.height
-                                )
-                            },
-                        });
-                    };
-                    reader.readAsDataURL(input.files[0]);
-                }
-            };
-        
-            function setImageCropProperties(image, x, y, width, height){
-                imageFile = image
-                cropX = x
-                cropY = y
-                cropWidth = width
-                cropHeight = height
-            }
-        
-        </script>
-        
-        <script type="text/javascript">
-            $(".edit").click(function(){
-                $(".recentactivity").hide()
-                $(".changepassword").hide()
-                $(".myprofile").hide()
-                $(".editprofile").show()
-                $('#editact').addClass('active');
-                $('#profilact').removeClass('active');
-                $('#recentact').removeClass('active');
-                $('#passwordact').removeClass('active');
-            });
-            
-            $(".profile").click(function(){
-                $(".recentactivity").hide()
-               $(".changepassword").hide()
-               $(".editprofile").hide()
-               $(".myprofile").show()
-               $('#profilact').addClass('active');
-               $('#editact').removeClass('active');
-               $('#recentact').removeClass('active');
-               $('#passwordact').removeClass('active');
-            });
-            $(".password").click(function(){
-                $(".recentactivity").hide()
-                $(".editprofile").hide()
-                $(".myprofile").hide()
-                $(".changepassword").show()
-                $('#passwordact').addClass('active');
-                $('#editact').removeClass('active');
-                $('#recentact').removeClass('active');
-                $('#profilact').removeClass('active');
-            });
-            $(".recent").click(function(){
-                $(".changepassword").hide()
-                $(".myprofile").hide()
-                $(".editprofile").hide()
-                $(".recentactivity").show()
-                $('#recentact').addClass('active');
-                $('#editact').removeClass('active');
-                $('#passwordact').removeClass('active');
-                $('#profilact').removeClass('active');
-            });
-
-            $(".blog").click(function(){
-                $(".myteam").hide()
-                $(".myevent").hide()
-                $(".myblog").show()
-            });
-
-            $(".team").click(function(){
-                $(".myevent").hide()
-                $(".myblog").hide()
-                $(".myteam").show()
-            });
-
-            $(".event").click(function(){
-                $(".myblog").hide()
-                $(".myteam").hide()
-                $(".myevent").show()
-            });
-        </script>
-        <script>
-            let modalBtns = [...document.querySelectorAll(".button")];
-            modalBtns.forEach(function (btn) {
-              btn.onclick = function () {
-                let modal = btn.getAttribute("data-modal");
-                document.getElementById(modal).style.display = "block";
-              };
-            });
-            let closeBtns = [...document.querySelectorAll(".h")];
-            closeBtns.forEach(function (btn) {
-              btn.onclick = function () {
-                let modal = btn.closest(".form-popup");
-                modal.style.display = "none";
-              };
-            });
-            
-            window.onclick = function (event) {
-              if (event.target.className === "form-popup") {
-                event.target.style.display = "none";
-              }
-            };  
-            {% comment %} $('.button').click(function(){
-               $('#building-name').html($(this).data('id'));
-              
-           });  {% endcomment %}
-         </script>
 {% endblock content %}
 
 {% comment %} onclick="location.href='{% url 'password_change'  %}';" {% endcomment %}

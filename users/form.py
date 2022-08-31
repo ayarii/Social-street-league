@@ -67,7 +67,6 @@ class AccountUpdateForm(forms.ModelForm):
              'lat':forms.TextInput(attrs={'class':'form-control'}),
              'long': forms.TextInput(attrs={'class':'form-control'}),
              'prefer_activity' : forms.CheckboxSelectMultiple(),
-             'profile_image': forms.FileInput(attrs={'class':'d-none','id':'id_profile_image','onchange':'readURL(this)','name':'profile_image','style':'display: none;'})
          }
     def clean_email(self):
         email = self.cleaned_data['email'].lower()
@@ -97,3 +96,12 @@ class AccountUpdateForm(forms.ModelForm):
         if commit:
             account.save()
         return account
+
+class ImageUpdateForm(forms.ModelForm):
+
+    class Meta:
+        model = User
+        fields = ('profile_image',)
+        widgets = {
+             'profile_image': forms.FileInput(attrs={'class':'image','id':'upload_image','name':'image','style':'display: none;'})
+         }

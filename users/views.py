@@ -1,10 +1,12 @@
 
 import threading
-import cv2
+import base64
+from django.core.files.base import ContentFile
+import uuid
 from django.shortcuts import redirect, render
 from django.contrib.auth import login, authenticate, logout
 from django.views import View
-from users.form import AccountAuthenticationForm, AccountUpdateForm, RegistrationForm
+from users.form import AccountAuthenticationForm, AccountUpdateForm, RegistrationForm,ImageUpdateForm
 from django.conf import settings
 from django.contrib import messages
 from django.http import HttpResponse
@@ -158,6 +160,7 @@ def user(request):
 
 
 def profile_user(request, *args, **kwargs):
+    
     geolocator = Nominatim(user_agent="testproject")
     user_id = kwargs.get("id")
     user=User.objects.get(id=user_id)
@@ -197,7 +200,9 @@ def profile_user(request, *args, **kwargs):
 				}
 			)
         context['form'] = form
+        
     else:
+      
         form = AccountUpdateForm(
 			initial={
 					"id": account.id,
@@ -210,68 +215,29 @@ def profile_user(request, *args, **kwargs):
 				}
 			)
         context['form'] = form
+       
+        
     context['DATA_UPLOAD_MAX_MEMORY_SIZE'] = settings.DATA_UPLOAD_MAX_MEMORY_SIZE
     return render(request, "profile.html", context)
  
-def save_temp_profile_image_from_base64String(imageString, user):
-	INCORRECT_PADDING_EXCEPTION = "Incorrect padding"
-	try:
-		if not os.path.exists(settings.TEMP):
-			os.mkdir(settings.TEMP)
-		if not os.path.exists(settings.TEMP + "/" + str(user.pk)):
-			os.mkdir(settings.TEMP + "/" + str(user.pk))
-		url = os.path.join(settings.TEMP + "/" + str(user.pk),TEMP_PROFILE_IMAGE_NAME)
-		storage = FileSystemStorage(location=url)
-		image = base64.b64decode(imageString)
-		with storage.open('', 'wb+') as destination:
-			destination.write(image)
-			destination.close()
-		return url
-	except Exception as e:
-		print("exception: " + str(e))
-		# workaround for an issue I found
-		if str(e) == INCORRECT_PADDING_EXCEPTION:
-			imageString += "=" * ((4 - len(imageString) % 4) % 4)
-			return save_temp_profile_image_from_base64String(imageString, user)
-	return None
-   
-def crop_image(request, *args, **kwargs):
-	payload = {}
-	user = request.user
-	if request.POST and user.is_authenticated:
-		try:
-			imageString = request.POST.get("profile_image")
-			url = save_temp_profile_image_from_base64String(imageString, user)
-			img = cv2.imread(url)
-
-			cropX = int(float(str(request.POST.get("cropX"))))
-			cropY = int(float(str(request.POST.get("cropY"))))
-			cropWidth = int(float(str(request.POST.get("cropWidth"))))
-			cropHeight = int(float(str(request.POST.get("cropHeight"))))
-			if cropX < 0:
-				cropX = 0
-			if cropY < 0: # There is a bug with cropperjs. y can be negative.
-				cropY = 0
-			crop_img = img[cropY:cropY+cropHeight, cropX:cropX+cropWidth]
-
-			cv2.imwrite(url, crop_img)
-
-			# delete the old image
-			user.profile_image.delete()
-
-			# Save the cropped image to user model
-			user.profile_image.save("profile_image.png", files.File(open(url, 'rb')))
-			user.save()
-
-			payload['result'] = "success"
-			payload['cropped_profile_image'] = user.profile_image.url
-
-			# delete temp file
-			os.remove(url)
-			
-		except Exception as e:
-			print("exception: " + str(e))
-			payload['result'] = "error"
-			payload['exception'] = str(e)
-	return HttpResponse(json.dumps(payload), content_type="application/json")
-
+ 
+def upload_image(request,id):
+    user=User.objects.get(id=id)
+    if request.POST and user.is_authenticated:
+        formImage = ImageUpdateForm(request.POST, request.FILES)
+        if formImage.is_valid:
+            if request.POST.get('base64image',False):
+                data = request.POST.get('base64image',False)
+                image_array_1 = data.split(";base64,")[1]
+                image_array_2 = data.split(";base64,")[0]
+                ext=image_array_2.split('/')[1]
+                data=ContentFile(base64.b64decode(image_array_1))
+                file_name = str(uuid.uuid4()) +"." + ext
+                user.profile_image.save(file_name, data, save=True)
+                return redirect('profile',id=id)
+            else:
+                return redirect('profile',id=id)     
+    return redirect('profile',id=id)
+    
+            
+            
