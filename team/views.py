@@ -42,3 +42,9 @@ def join_team(request,id):
     user= User.objects.get(id=request.user.id)
     team.user_set.add(user)
     return redirect('singleteam' , id )
+
+def leave_team(request,id):
+    team=Team.objects.get(id=id)
+    user= User.objects.get(id=request.user.id)
+    team.user_set.remove(user)
+    return redirect('singleteam' , id )

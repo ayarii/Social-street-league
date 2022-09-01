@@ -1,0 +1,12 @@
+                                            {% for t in data %}
+                                           <div class="col-md-3 column blog-team" style="margin-top:10px;margin-bottom:10px;margin-left:10%;" >
+                                              <div class="team-column style-2" style="width:250px;height:300px;">
+                                                 <img src={{t.team_image.url}} alt="" style="max-width:250px;max-height:400px;">
+                                                 <div class="player-name">
+                                                    <span class="desination-2" onclick="location.href='{% url 'leaveteam' t.id  %}';" style="cursor:pointer;">Want to leave ?</span>
+                                                    <h5>{{t.team_name}}</h5>
+                                                    <span class="player-number">{{t.n_players}}</span>
+                                                 </div>
+                                              </div>
+                                           </div>
+                                           {% endfor %}

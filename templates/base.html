@@ -309,7 +309,128 @@
       $(".myblog").hide()
       $(".myteam").hide()
       $(".myevent").show()
+      $(".eventhide").show()
   });
+
+  
+ 
+
+  $(document).ready(function(){
+    // Product Filter Start
+    $("#showall").on('click',function(){
+      $(".eventhide").hide()
+      var _filterVal=$(this).text(); 
+
+     // Run Ajax
+      $.ajax({
+        url:'/user/filter-data',
+        data:{"filter" : $(this).text() ,
+                 "id" : $(this).attr('user_id') },
+        dataType:'json',
+        success:function(res){
+          console.log(res);
+          $("#filteredEvens").html(res.data);
+        }
+      });
+    });
+
+    $("#passing").on('click',function(){
+      var _filterVal=$(this).text(); 
+     // Run Ajax
+      $.ajax({
+        url:'/user/filter-data',
+        data:{"filter" : $(this).text(),
+        "id" : $(this).attr('user_id')},
+        dataType:'json',
+        success:function(res){
+          console.log(res);
+          $("#filteredEvens").html(res.data);
+        }
+      });
+    });
+
+    $("#comming").on('click',function(){
+      var _filterVal=$(this).text(); 
+     // Run Ajax
+      $.ajax({
+        url:'/user/filter-data',
+        data:{"filter" : $(this).text(),
+        "id" : $(this).attr('user_id')},
+        dataType:'json',
+        success:function(res){
+          console.log(res);
+          $("#filteredEvens").html(res.data);
+        }
+      });
+    });
+  }); 
+
+    $("#loadMorePosts").on('click',function(){
+      var _currentProducts=$(".blog-post").length;
+      var _limit=$(this).attr('data-limit');
+      var _total=$(this).attr('data');
+      // Start Ajax
+      $.ajax({
+        url:'/user/load-more-data-post',
+        data:{
+          "limit":_limit,
+          "offset":_currentProducts,
+          "id" : $(this).attr('user_id')
+        },
+        dataType:'json',
+        beforeSend:function(){
+          $("#loadMorePosts").attr('disabled',true);
+          $(".load-more-icon").addClass('fa-spin');
+        },
+        success:function(res){
+          $("#filteredPosts").append(res.data);
+          $("#loadMorePosts").attr('disabled',false);
+          $(".load-more-icon").removeClass('fa-spin');
+  
+          var _totalShowing=$(".blog-post").length;
+          console.log(_totalShowing,_total)
+          if(_totalShowing==_total){
+            $("#loadMorePosts").remove();
+          }
+        }
+      });
+      // End
+    });
+
+    $("#loadMoreTeams").on('click',function(){
+      var _currentProducts=$(".blog-team").length;
+      var _limit=$(this).attr('data-limit');
+      var _total=$(this).attr('data');
+      // Start Ajax
+      $.ajax({
+        url:'/user/load-more-data-team',
+        data:{
+          "limit":_limit,
+          "offset":_currentProducts,
+          "id" : $(this).attr('user_id')
+        },
+        dataType:'json',
+        beforeSend:function(){
+          $("#loadMoreTeams").attr('disabled',true);
+          $(".load-more-icon").addClass('fa-spin');
+        },
+        success:function(res){
+          $("#filteredTeams").append(res.data);
+          $("#loadMoreTeams").attr('disabled',false);
+          $(".load-more-icon").removeClass('fa-spin');
+  
+          var _totalShowing=$(".blog-team").length;
+          console.log(_totalShowing,_total)
+          if(_totalShowing==_total){
+            $("#loadMoreTeams").remove();
+          }
+        }
+      });
+      // End
+    });
+
+    
+
 </script>
 
 <script>

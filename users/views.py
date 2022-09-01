@@ -1,4 +1,7 @@
-
+from django.template.loader import render_to_string
+from django.http import JsonResponse,HttpResponse
+from datetime import date
+import datetime
 import threading
 import base64
 from django.core.files.base import ContentFile
@@ -27,6 +30,7 @@ from users.models import User
 from post.models import Post
 from geopy.geocoders import Nominatim
 from geopy.point import Point
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # Create your views here.
 
 TEMP_PROFILE_IMAGE_NAME = "default_user.jpg"
@@ -160,16 +164,20 @@ def user(request):
 
 
 def profile_user(request, *args, **kwargs):
-    
     geolocator = Nominatim(user_agent="testproject")
     user_id = kwargs.get("id")
     user=User.objects.get(id=user_id)
+    list = ["Show all Events","Comming Events","Passing Events"]
     context = {}
+    context['list']=list
     context['user']=user
     context['activities']=user.prefer_activity.all()
-    context['events']=user.user_events.all()
-    context['teams']=user.user_teams.all()
-    context['blogs']=Post.objects.filter(user=user)
+    context['events']=user.user_events.all()[:2]
+    context['teams']=user.user_teams.all()[:2]
+    context['blogs']=Post.objects.filter(user=user)[:3]
+    context['postcount']=str(Post.objects.filter(user=user).count())
+    context['eventcount']=str(user.user_events.all().count())
+    context['teamcount']=str(user.user_teams.all().count())
     if not request.user.is_authenticated:
          return redirect("login") 
     account = User.objects.get(id=user_id)
@@ -239,5 +247,63 @@ def upload_image(request,id):
                 return redirect('profile',id=id)     
     return redirect('profile',id=id)
     
+def pagination(page,obj_list):
+    paginator = Paginator(obj_list,12)
+    try:
+        obj = paginator.page(page)
+    except PageNotAnInteger:
+        obj = paginator.page(1)
+    except EmptyPage:
+        obj = paginator.page(paginator.num_pages)
+    return obj          
             
-            
+def filter_data(request):
+    dates=request.GET.get('filter')
+    id=request.GET.get('id')
+    user=User.objects.get(id=id)
+    event=user.user_events.all()
+    events=[]
+    if dates == "Comming Events":
+        for e in event:
+            if (e.event_come):
+                events.append(e)
+    elif dates == "Passing Events":
+        for e in event:
+            if (e.event_pass):
+                events.append(e)
+    else:
+        for e in event:
+            events.append(e)
+    t=render_to_string('eventsfiltre.html',{'data':events})
+    return JsonResponse({'data':t})
+
+def load_more_data_post(request):
+    id=request.GET.get('id')
+    user=User.objects.get(id=id)
+    offset=int(request.GET.get('offset'))
+    limit=int(request.GET.get('limit'))
+    data=Post.objects.filter(user=user)[offset:offset+limit]
+    t=render_to_string('blogsfilter.html',{'data':data})
+    return JsonResponse({'data':t}
+)
+    
+def load_more_data_event(request):
+    id=request.GET.get('id')
+    user=User.objects.get(id=id)
+    offset=int(request.GET.get('offset'))
+    limit=int(request.GET.get('limit'))
+    data=user.user_events.all()[offset:offset+limit]
+    t=render_to_string('eventsfilter.html',{'data':data})
+    return JsonResponse({'data':t}
+)
+    
+def load_more_data_team(request):
+    id=request.GET.get('id')
+    user=User.objects.get(id=id)
+    offset=int(request.GET.get('offset'))
+    limit=int(request.GET.get('limit'))
+    data=user.user_teams.all()[offset:offset+limit]
+    t=render_to_string('teamsfilter.html',{'data':data})
+    return JsonResponse({'data':t}
+)
+    

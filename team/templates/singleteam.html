@@ -37,7 +37,7 @@
                 <div style="float:right;">
                     <div class="full">
                         {% if is_member %}
-                        <a class="btn" style="position:relative;width=100%;float:right;">You Are A Member</a>
+                        <a class="btn" style="position:relative;width=100%;float:right;"  href={% url 'leaveteam' team.id %}>You Are A Member</br>Want To Leave ?</a>
                         {% else %}
                         <a class="btn" href={% url 'jointeam' team.id %} style="position:relative;width=100%;float:right;">Join Now</a>
                         {% endif %}
