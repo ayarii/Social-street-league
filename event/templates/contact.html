@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block header %}{% endblock header %}
+{% block activepage %}
+<div class="inner-information-text">
+    <div class="container">
+       <h3>Event</h3>
+       <ul class="breadcrumb">
+          <li><a href="{% url 'home' %}">Home</a></li>
+          <li class="active">Event</li>
+       </ul>
+    </div>
+ </div>
+ {% endblock activepage%}
+ {% block imagebackground %}
+ <div class="inner-page-banner" style="background-image:url('{% static 'images/about.png' %}');" >
+    <div class="container">
+    </div>
+ </div>
+ {% endblock imagebackground %}
+ {% block content %}
+ <section id="contant" class="contant">
+    <div class="container">
+       <div class="row">
+         <div class="col-lg-9 col-sm-12 col-xs-12">
+            <h4>{{i}}</h4>
+         {% for i in eve  %}
+         
+         <div class="news-post-holder">
+            <div class="col-lg-6 col-sm-6 col-xs-12">
+               <div class="news-post-widget">
+                  <div style="position: absolute;" class="btn-group" >
+                     <button type="button" class="btn dropdown-toggle dropdown-toggle-split" >
+                     <span class="sr-only">Toggle Dropdwon</span>
+                     </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{% url 'updatev' i.id %}">update</a>
+                        <a class="dropdown-item" href="">delete</a>
+                    </div>
+                  </div>
+                 <img  src="{{i.image.url}}" alt=""   height="200px" width="100%"  style="object-fit:cover" >
+                 <div class="news-post-detail">
+                    <span class="date">{{i.date_event}}</span>
+                    <h4>{{i}}</h4>
+                    
+                     <p><a href={% url 'even' i.id %}> {{i.description_event}} </a></p>
+                    
+                 </div>
+               </div>
+              </div>
+           </div>
+                   
+          {% endfor %}
+          {% endblock content %}

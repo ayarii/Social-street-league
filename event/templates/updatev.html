@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block header %}{% endblock header %}
+{% block activepage %}
+<div class="inner-information-text">
+    <div class="container">
+       <h3>Event</h3>
+       <ul class="breadcrumb">
+          <li><a href="{% url 'home' %}">Home</a></li>
+          <li class="active">Event</li>
+       </ul>
+    </div>
+ </div>
+ {% endblock activepage%}
+ {% block imagebackground %}
+ <div class="inner-page-banner" style="background-image:url('{% static 'images/about.png' %}');" >
+    <div class="container">
+    </div>
+ </div>
+ {% endblock imagebackground %}
+ {% block content %}
+
+ <div class="container center" >
+    <form method="Post">
+       {% csrf_token %}
+        <div class="card-body" >
+          {{form}}
+       </div>
+       <div class="card-footer">
+        <a class="btn" type="submit" value="POST" href="{% url 'event' %}" >Add Event</a>
+       </div>
+       
+    </form>
+    </div> 
+    
+
+ {% endblock content %}
