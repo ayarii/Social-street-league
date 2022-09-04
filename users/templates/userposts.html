@@ -1,0 +1,85 @@
+{% for p in data %}
+{% if p.post_image %}
+ <div class="feature-post small-blog blog-post" >
+   <div class="col-md-5">
+      <div class="feature-img">
+         <img src={{p.post_image.url}} class="img-responsive" alt="#" style="max-width:100%;max-height:100%;" />
+      </div>
+   </div>
+   <div class="col-md-7">
+      <div class="feature-cont">
+         
+         <div class="post-info">
+            <img src={{p.user.profile_image.url}} alt="#" style="max-width:100%;max-height:100%;"/>
+            <span>
+               <h4>by {{p.user.username}}</h4>
+               <h5>{{p.time_ago}}</h5>
+            </span>
+         </div>
+         <div class="post-heading">
+            <h3>{{p.post_title}}</h3>
+            <p>{{p.post_description}}</p>
+            
+            {% if p.user.id == request.user.id %}
+            <div style="float:top;width: 100%;margin: 0;padding: 0; ">
+               <div class="deleteupdate" style="position:absolute;right:0%; top :0%;">
+                  <span onclick="location.href='{% url 'updatepost' p.id %}';" style="float:right; justify-content: space-between;padding: 10px;position:relative;" >
+                  <i class="fa-solid fa-pencil"></i>
+                 </span>
+                 <span  hx-delete="{% url 'deleteuserpost' p.id p.user.id %}" hx-target="#filteredPosts" hx-confirm="Are sure to delete this blog ?" style="cursor:pointer;float:right; justify-content: space-between;padding: 10px;position:relative;">
+                   <i class="fa-regular fa-trash-can"></i>
+                 </span>
+               </div> 
+            </div>
+            {% endif %}
+         </div>
+      </div>
+   </div>
+   <div class="full">
+      <a class="btn" href="#"style="position:relative;width=100%;float:right;margin:10px">Participate</a>
+   </div>
+</div>
+
+{% else %}
+
+<div class="feature-post blog-post" >
+   <div class="feature-img">
+   </div>
+   <div class="feature-cont">
+      <div class="post-people">
+         {% if p.user.id == request.user.id %}
+         <div class="deleteupdate" style="position:absolute;right:0%;">
+            <span onclick="location.href='{% url 'updatepost' p.id %}';" style="float:right; justify-content: space-between;padding: 10px;position:relative;" >
+            <i class="fa-solid fa-pencil"></i>
+           </span>
+           <span  hx-delete="{% url 'deleteuserpost' p.id p.user.id %}" hx-target="#filteredPosts" hx-confirm="Are sure to delete this blog ?" style="cursor:pointer;float:right; justify-content: space-between;padding: 10px;position:relative;">
+             <i class="fa-regular fa-trash-can"></i>
+            <div id="result"></div>
+           </span>
+          </div>
+          {% endif %}
+         <div class="left-profile">
+            <div class="post-info">
+               <img src={{p.user.profile_image.url}}  alt="#" style="max-width:100%;max-height:100%;"/>
+               <span>
+                  <h4>by {{p.user.username}}</h4>
+                  <h5>{{p.time_ago}}</h5>
+               </span>
+            </div>
+            <span class="share"></span>
+         </div>
+      </div>
+      <div class="post-heading">
+         <h3> {{p.post_title}} </h3>
+         <p> {{p.post_description}}
+         </p>
+      </div>
+   </div>
+   <div class="full">
+      <a class="btn" href="#" style="position:relative;width=100%;float:right;margin:10px;margin-bottom:30px;margin-top:0px;">Participate </a>
+   </div>
+</div>
+  
+{% endif %}
+
+{% endfor %}

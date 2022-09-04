@@ -4,4 +4,5 @@ urlpatterns = [
   path('', views.display,name='team'),
   path('singleteam/<int:id>', views.team_detail,name='singleteam'),
   path('jointeam/<int:id>', views.join_team,name='jointeam'),
+  path('leaveteam/<int:id>', views.leave_team,name='leaveteam'),
 ]

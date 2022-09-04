@@ -188,6 +188,7 @@
     <h1>Login</h1>
     <form method="POST">
       {% csrf_token %}
+      {% block message %}<p></p>{% endblock message %} 
       {% for field in authenticateform %}
       <div class="txt_field">
         {{field}}
@@ -195,10 +196,14 @@
         <label>{{field.label}}</label>
       </div>
       {% endfor %}
+      <span style="position: absolute;right: 15px;transform: translate(0,-50%);top:48%;cursor: pointer;">
+        <i style ="font-size: 20px;color: #7a797e;" class="fa fa-eye" id="eye" onclick="toggle()">
+        </i>
+       </span>
       {% for field in authenticateform %}
       <p>
-      {% for error in field.errors %}
-      <p style="color: red">{{ error }}</p>
+      {% for message in messages %}
+      <p style="color: red">{{ message }}</p>
       {% endfor %}
       </p>
       {% endfor %}
@@ -208,7 +213,7 @@
       </div>
 
       {% endif %}
-      <div class="pass">Forgot Password?</div>
+      <div class="pass" ><a href="{% url 'password_reset' %}">Forgot Password?</a></div>
       <input type="submit" value="Login">
       <div class="signup_link">
         Not a member? <a href="#">Signup</a>

@@ -1,7 +1,7 @@
 from django.db import models
 from distutils.command import upload
 from email.mime import image
-from datetime import datetime
+from datetime import date, datetime
 
 from activity.models import Activity, Category
 
@@ -26,4 +26,10 @@ class Event(models.Model):
 
     def __str__(self):
         return self.title_event
-   
+    @property
+    def event_pass(self):
+        return date.today() > self.date_event.date()
+
+    @property
+    def event_come(self):
+        return date.today() < self.date_event.date()

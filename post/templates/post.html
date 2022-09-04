@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-
+{% load widget_tweaks %}
 {% block header %}{% endblock header %}
 
 {% block activepage %}
@@ -28,13 +28,14 @@
    .open-button:hover {
      opacity: 1;
    } 
+
 </style>
 
 <section id="contant" class="contant main-heading team">
    <div class="row">
       <div class="container">
          
-         <div class="col-md-9">
+         <div class="col-md-9" id="posts">
             {% for p in posts %}
             {% if p.post_image %}
              <div class="feature-post small-blog">
@@ -55,15 +56,16 @@
                      </div>
                      <div class="post-heading">
                         <h3>{{p.post_title}}</h3>
+                        <h5>{{p.post_date}} in {{p.post_location}}</h5>
                         <p>{{p.post_description}}</p>
                         
                         {% if p.user.id == request.user.id %}
                         <div style="float:top;width: 100%;margin: 0;padding: 0; ">
                            <div class="deleteupdate" style="position:absolute;right:0%; top :0%;">
-                              <span onclick="location.href='{% url 'updatepost' p.id %}';" style="float:right; justify-content: space-between;padding: 10px;position:relative;" >
+                              <span onclick="location.href='{% url 'updatepost' p.id %}';" style="cursor:pointer;float:right; justify-content: space-between;padding: 10px;position:relative;" >
                               <i class="fa-solid fa-pencil"></i>
                              </span>
-                             <span class="button" data-toggle="modal" data-target="#building-modal" id="delete-object" data-modal="modalOne" data-id="{{ p.id }}"  style="float:right; justify-content: space-between;padding: 10px;position:relative;">
+                             <span data-toggle="modal" data-target="#exampleModal" style="cursor:pointer;float:right; justify-content: space-between;padding: 10px;position:relative;">
                               <i class="fa-regular fa-trash-can"></i>
                              </span>
                            </div> 
@@ -73,7 +75,12 @@
                   </div>
                </div>
                <div class="full">
-                  <a class="btn" href="#"style="position:relative;width=100%;float:right;margin:10px">Participate</a>
+                  {% if p.is_participated  %}
+                  <input class="btn disabled" type="button" id="participate" data="{{p.id}}" style="position:relative;width=100%;float:right;margin:10px" value="you have participated"></input>
+                  {% else %}
+                  <input class="btn" type="button" id="participate" data="{{p.id}}" style="position:relative;width=100%;float:right;margin:10px" value="Participate"></input>
+                  {% endif %}
+                  <p style="position:absolute;bottom:20%;left:2%;font-weight:bold;" >{{p.participants}} participants</p>
                </div>
             </div>
 
@@ -86,10 +93,10 @@
                   <div class="post-people">
                      {% if p.user.id == request.user.id %}
                      <div class="deleteupdate" style="position:absolute;right:0%;">
-                        <span onclick="location.href='{% url 'updatepost' p.id %}';" style="float:right; justify-content: space-between;padding: 10px;position:relative;" >
+                        <span onclick="location.href='{% url 'updatepost' p.id %}';" style="cursor:pointer;float:right; justify-content: space-between;padding: 10px;position:relative;" >
                         <i class="fa-solid fa-pencil"></i>
                        </span>
-                       <span  class="button" data-toggle="modal" data-target="#building-modal" id="delete-object" data-modal="modalOne" data-id="{{ p.id }}" style="float:right; justify-content: space-between;padding: 10px;position:relative;">
+                       <span data-toggle="modal" data-target="#exampleModal" style="cursor:pointer;float:right; justify-content: space-between;padding: 10px;position:relative;">
                         <i class="fa-regular fa-trash-can"></i>
                         <div id="result"></div>
                        </span>
@@ -108,29 +115,44 @@
                   </div>
                   <div class="post-heading">
                      <h3> {{p.post_title}} </h3>
-                     <p> {{p.post_description}}
+                     <h5>{{p.post_date}} in {{p.post_location}}</h5>
+                     <p>{{p.post_description}}
                      </p>
                   </div>
                </div>
                <div class="full">
-                  <a class="btn" href="#" style="position:relative;width=100%;float:right;margin:10px;margin-bottom:30px;margin-top:0px;">Participate </a>
+                  {% if p.is_participated  %}
+                  <input class="btn disabled" type="button"  id="participate" data="{{p.id}}" style="position:relative;width=100%;float:right;margin:10px;margin-bottom:30px;margin-top:0px;" value="you have participated"></input>
+                  {% else %}
+                  <input class="btn" type="button"  id="participate" data="{{p.id}}" style="position:relative;width=100%;float:right;margin:10px;margin-bottom:30px;margin-top:0px;" value="Participate"></input>
+                  {% endif %}
+                  <p style="position:absolute;bottom:40%;left:5%;font-weight:bold;">{{p.participants}} participants</p>
                </div>
+               
             </div>
               
             {% endif %}
 
-            <div class="login-popup" style="position:relative;text-align: center;width: 100%;">
-               <div id="modalOne" class= "form-popup" style="display: none;position: fixed;left:45%;top:20%;transform: translate(-45%,20%);border: 2px solid #666;z-index: 9;">
-                 <form method="POST" action="{% url 'deletepost' p.id %}" class="form-container" style=" max-width: 600px; padding: 20px; background-color: #fff;height:150px;">
-                  {% csrf_token %}
-                  <h2>Want to delete this blog?</h2>
-                    <div style = "display:flex;justify-content: space-around;right:50%;" >
-                    <button id="building-name" type="submit" class="btn" style=" background-color: #cc0000;color: #fff;position: fixed ;left:60%;top:50%;width: 30%">delete</button>
-                    <a class="h"><button type="button" class="btn cancel" style="background-color: #8ebf42;position: fixed ;left:10%;top:50%;width:30%">back</button></a>
-                   </div>
-                 </form>
-               </div>
-            </div>
+            <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title" id="exampleModalLabel" style="color:#ec1c24;"><i class="fa-solid fa-triangle-exclamation" style="color:#ec1c24;"></i> Warning Message </h5>
+            <button style="position:absolute;right:5%;top:10%;" type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Are You sure to delete this blog ?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" style="background-color:#54c473;float:none;">Close</button>
+            <a class="btn btn-sm btn-danger" style="float:none;" href="{% url 'deletepost' p.id %}">Delete</a>
+          </div>
+        </div>
+      </div>
+    </div>
 
           {% endfor %}
          </div>
@@ -314,32 +336,8 @@
          </ul>
        {% endif %}
    </center>
+   
 </section>
 
-<script>
-   let modalBtns = [...document.querySelectorAll(".button")];
-   modalBtns.forEach(function (btn) {
-     btn.onclick = function () {
-       let modal = btn.getAttribute("data-modal");
-       document.getElementById(modal).style.display = "block";
-     };
-   });
-   let closeBtns = [...document.querySelectorAll(".h")];
-   closeBtns.forEach(function (btn) {
-     btn.onclick = function () {
-       let modal = btn.closest(".form-popup");
-       modal.style.display = "none";
-     };
-   });
-   
-   window.onclick = function (event) {
-     if (event.target.className === "form-popup") {
-       event.target.style.display = "none";
-     }
-   };  
-   {% comment %} $('.button').click(function(){
-      $('#building-name').html($(this).data('id'));
-     
-  });  {% endcomment %}
-</script>
+
 {% endblock content %}

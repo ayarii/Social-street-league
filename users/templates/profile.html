@@ -23,49 +23,253 @@
 
 {% block content %}
 
+<style type="text/css">
+    .form-signin {
+        width: 100%;
+        max-width: 330px;
+        padding: 15px;
+        margin: auto;
+      }
+      .form-signin .checkbox {
+        font-weight: 400;
+      }
+      .form-signin .form-control {
+        position: relative;
+        box-sizing: border-box;
+        height: auto;
+        padding: 10px;
+        font-size: 16px;
+      }
+      .form-signin .form-control:focus {
+        z-index: 2;
+      }
+      .form-signin input[type="password"] {
+        margin-bottom: 10px;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+      .h3{
+        text-align: center;
+      }
+
+       .avatar-upload {
+         position: relative;
+         max-width: 205px;
+         margin: 50px auto;
+       }
+       .avatar-upload .avatar-edit {
+         position: absolute;
+         right: 14px;
+         z-index: 1;
+         top: 10px;
+       }
+       .avatar-upload .avatar-edit input {
+         display: none;
+       }
+       .avatar-upload .avatar-edit input + label {
+         display: inline-block;
+         width: 34px;
+         height: 34px;
+         margin-bottom: 0;
+         border-radius: 100%;
+         background: #FFFFFF;
+         border: 1px solid transparent;
+         box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.12);
+         cursor: pointer;
+         font-weight: normal;
+         transition: all 0.2s ease-in-out;
+       }
+       .avatar-upload .avatar-edit input + label:hover {
+         background: #f1f1f1;
+         border-color: #d6d6d6;
+       }
+       .avatar-upload .avatar-edit input + label:after {
+         content: "\f040";
+         font-family: 'FontAwesome';
+         color: #757575;
+         position: absolute;
+         top: 5px;
+         left: 0;
+         right: 0;
+         text-align: center;
+         margin: auto;
+       }
+       .avatar-upload .avatar-preview {
+         width: 192px;
+         height: 192px;
+         position: relative;
+         border-radius: 100%;
+         border: 6px solid #F8F8F8;
+         box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.1);
+       }
+       .avatar-upload .avatar-preview > div {
+         width: 100%;
+         height: 100%;
+         border-radius: 100%;
+         background-size: cover;
+         background-repeat: no-repeat;
+         background-position: center;
+       }
+       .container2 .btn {
+           position: absolute;
+           top: 90%;
+           left: 50%;
+           transform: translate(-50%, -50%);
+           -ms-transform: translate(-50%, -50%);
+         
+           color: white;
+           font-size: 16px;
+           border: none;
+           cursor: pointer;
+           border-radius: 5px;
+           text-align: center;
+       }
+       #image {
+         display: block;
+         max-width: 100%;
+     }
+
+
+     .avatar-confirm  {
+      position: absolute;
+      right: 10px;
+      z-index: 1;
+      bottom: 10px;
+    }
+   
+    .avatar-confirm input {
+      display: inline-block;
+      width: 34px;
+      height: 34px;
+      margin-bottom: 0;
+      border-radius: 100%;
+      background: #FFFFFF;
+      border: 1px solid transparent;
+      box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.12);
+      cursor: pointer;
+      font-weight: normal;
+      transition: all 0.2s ease-in-out;
+    }
+    .avatar-confirm input:hover {
+      border-color: #d6d6d6;
+    }
+    .avatar-confirm i {
+      content: "\f00c";
+      font-family: 'FontAwesome';
+      color: #21a400;
+      position: absolute;
+      top: 10px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      margin: auto;
+    }
+
+    .avatar-cancel  {
+      position: absolute;
+      left: 8px;
+      z-index: 1;
+      bottom: 10px;
+    }
+   
+    .avatar-cancel input {
+      display: inline-block;
+      width: 34px;
+      height: 34px;
+      margin-bottom: 0;
+      border-radius: 100%;
+      background: #FFFFFF;
+      border: 1px solid transparent;
+      box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.12);
+      cursor: pointer;
+      font-weight: normal;
+      transition: all 0.2s ease-in-out;
+    }
+    .avatar-cancel input:hover {
+      border-color: #d6d6d6;
+    }
+    .avatar-cancel i {
+      content: "\f00d";
+      font-family: 'FontAwesome';
+      color: #d8302f;
+      position: absolute;
+      top: 10px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      margin: auto;
+    }
+       
+</style>	
 
 <link rel="stylesheet" href="{% static 'css/profile.css' %}">
 
-
-           
-
-          <div class="container"  >
+        <div class="container"  >
             <div class="content-center">
-              <div class="cc-profile-image"><a href="#">
-                <div class="mb-2" id="id_image_crop_confirm">
-                    <span id="id_cancel" class="material-icons">cancel</span>
-                    <span id="id_confirm" class="material-icons">check</span>
-                </div>
-                <div class="image-container" id="id_image_container">
-                    <img class="border border-dark rounded-circle img-fluid mx-auto profile-image" id="id_profile_image_display" src="{{user.profile_image.url}}" alt="codingwithmitch logo">
-                  <div class="middle" id="id_middle_container">
-                      <div class="text" id="id_text">Edit</div>
+               <form enctype="multipart/form-data" action="{% url 'crop_image' user.id %}" id="image-form" method="POST" class="avatar-upload">
+                  <div class="avatar-edit">
+                      <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg" name="imageUpload" class=" imageUpload" />
+                      <input type="hidden" name="base64image" name="base64image" id="base64image">
+                      <label for="imageUpload"></label>
                   </div>
-                </div>
-              </a></div>
-              <div class="h2 title">{{user.username}}</div>
+                  <div class="avatar-preview container2">
+                      <div id="imagePreview" style="background-image:url({{user.profile_image.url}});">
+                          {% csrf_token %}
+                          <input type="hidden" name="_token" value="">
+                          <span class="avatar-confirm"  >
+                          <input type="submit"> <i class="fa-solid fa-check"></i>
+                          </span>
+                          <span class="avatar-cancel">
+                          <input type="cancel"> <a href="javascript:window.top.location.reload(true)" class="continue"><i class="fa-solid fa-xmark"></i></a>
+                          </span>
+                      </div>
+                  </div>
+              </form>
             </div>
+            <div class="modal fade bd-example-modal-lg imagecrop" id="model" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+               <div class="modal-dialog modal-lg">
+                 <div class="modal-content">
+                   <div class="modal-header">
+                       <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                         <span aria-hidden="true">&times;</span>
+                       </button>
+                   </div>
+                   <div class="modal-body">
+                       <div class="img-container">
+                           <div class="row">
+                               <div class="col-md-11">
+                                   <img id="image" src="https://avatars0.githubusercontent.com/u/3456749">
+                               </div>
+                           </div>
+                       </div>
+                     </div>
+                     <div class="modal-footer">
+                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                       <button type="button" class="btn btn-primary crop" id="crop">Crop</button>
+                     </div>
+                 </div>
+               </div>
+           </div>
           </div>
 
-
-
+   
           <div class="container bootstrap snippets bootdey">
             <div class="row">
               <div class="profile-nav col-md-3">
                   <div class="panel">
                          <ul class="nav nav-stacked">
-                          <li class="active"><a href="#"> <i class="fa fa-user"></i> Profile</a></li>
-                          <li><a href="#"> <i class="fa fa-calendar"></i> Recent Activity <span class="label label-warning pull-right r-activity">9</span></a></li>
-                          <li><a href={% url 'updateprofile' user.id %}> <i class="fa fa-edit"></i> Edit profile</a></li>
+                          <li class="active profile" id="profilact" style="cursor:pointer;"><a> <i class="fa fa-user"></i> Profile</a></li>
+                          <li class="recent" id="recentact" style="cursor:pointer;"><a> <i class="fa fa-calendar recent"></i> Recent Activity <span class="label label-warning pull-right r-activity">9</span></a></li>
+                          <li class="edit" id="editact" style="cursor:pointer;"><a > <i class="fa fa-edit "></i> Edit profile</a></li>
+                          <li class="password" id="passwordact" style="cursor:pointer;"><a> <i class="fa-solid fa-key"></i> Change Password</a></li>
                       </ul>
                   </div>
               </div>
             
-              <div class="profile-info col-md-9">
-                  {% comment %} <div class="panel">
-                      
-                  </div> {% endcomment %}
+               <div class="profile-info col-md-9">
                   <div class="panel">
+                    <div class="myprofile">
                       <div class="bio-graph-heading">
                           Complete your profile 
                       </div>
@@ -82,7 +286,7 @@
                                   <p><span>Address : </span> {{user.address}}</p>
                               </div>
                               <div class="bio-row">
-                                  <p><span>Birthday : </span>{{user.age}}</p>
+                                  <p><span>Age : </span>{{user.user_age}}</p>
                               </div>
                               <div class="bio-row">
                                   <p><span>Disponibility : </span>{{user.disponibility}}</p>
@@ -96,16 +300,325 @@
                             </div>
                           </div>
                       </div>
+                    </div>
+                    <div class="editprofile" style="display:none;">
+                        <div class="bio-graph-heading">
+                            Edit your profile 
+                        </div>
+                        <div class="container-fluid">
+                            <div class="row justify-content-center">
+                                <div class="card profile-card">
+                                  <div class="card-body">
+                                      <div class="d-flex flex-column content-center p-4">
+                                        <form method="post">
+                                          {% csrf_token %}
+                                            
+                                                {{form.username.label_tag}} 
+                                                {{form.username}}
+                                            
+                                            
+                                                {{form.email.label_tag}} 
+                                                {{form.email}}
+                                            
+                                            
+                                                {{form.birth_date.label_tag}} 
+                                                {{form.birth_date}}
+                                                
+                                                {{form.user_disponibility.label_tag}}
+                                                {% for checkbox in form.user_disponibility %}
+                                                  <label >
+                                                  {{ checkbox.tag }} {{ checkbox.choice_label }}
+                                                  </label>
+                                                {% endfor %}
+                                               
+                                                
+                            
+                                                <input type="text" name="lat" id="lat" size=12 value="" style="display:none;">
+                                                <input type="text" name="long" id="long" size=12 value="" style="display:none;">
+                                                <div id="usermap" style="width:800px;height:200px;"></div>
+                                              
+                                                {{form.prefer_activity.label_tag}} 
+                                  
+                                                {% for checkbox in form.prefer_activity %}
+                                                  <label >
+                                                  {{ checkbox.tag }} {{ checkbox.choice_label }}
+                                                  </label>
+                                                {% endfor %}
+                                              
+                                              
+                                            {% for field in form %}
+                                            <p>
+                                            {% for error in field.errors %}
+                                            <p style="color: red">{{ error }}</p>
+                                            {% endfor %}
+                                            </p>
+                                            {% endfor %}
+                                            {% if form.non_field_errors %}
+                                            <div style="color: red">
+                                            <p>{{form.non_field_errors}}</p>
+                                            </div>
+                            
+                                            {% endif %}
+                                            <div style=" height: 45px; margin: 35px 0;">
+                                            <input style="height: 100%;
+                                            width: 100%;
+                                            border-radius: 5px;
+                                            border: none;
+                                            color: #fff;
+                                            font-size: 18px;
+                                            font-weight: 500;
+                                            letter-spacing: 1px;
+                                            cursor: pointer;
+                                            transition: all 0.3s ease;
+                                            background: linear-gradient(135deg, #ffcb05, #ec1c24);" type="submit" value="Edit">
+                                            </div>
+                                            
+                                        </form>
+                        
+                                      </div>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="changepassword" style="display:none;height:350px;" >
+                        <form id="id_password_change_form" method="POST" class="form-signin" action="{% url 'password_change'%}">{% csrf_token %}
+                            <h1 class="h3 mb-3 font-weight-normal">Change password</h1>
+                              <input name="old_password" class="form-control" placeholder="Old password" type="password" id="id_old_password" required="true">
+                              <span style="position: absolute;right: 22%;transform: translate(0,-50%);top:30%;cursor: pointer;">
+                                <i style ="font-size: 20px;color: #7a797e;" class="fa fa-eye" id="oldeye" onclick="toggleold()">
+                                </i>
+                               </span>
+                              <input name="new_password1" class="form-control" placeholder="New password" type="password" id="id_new_password1" required="true">
+                              <span style="position: absolute;right: 22%;transform: translate(0,-50%);top:46%;cursor: pointer;">
+                                <i style ="font-size: 20px;color: #7a797e;" class="fa fa-eye" id="eye_new1" onclick="toggle_new1()">
+                                </i>
+                               </span>
+                              <input name="new_password2" class="form-control" placeholder="Confirm password" type="password" id="id_new_password2" required="true">
+                              <span style="position: absolute;right: 22%;transform: translate(0,-50%);top:62%;cursor: pointer;">
+                                <i style ="font-size: 20px;color: #7a797e;" class="fa fa-eye" id="eye_new2" onclick="toggle_new2()">
+                                </i>
+                               </span>
+                          
+                              {% for field in form %}
+                                {% for error in field.errors %}
+                                  <p style="color: red">{{ error }}</p>
+                                {% endfor %}
+                              {% endfor %}
+                          
+                            <button id="id_submit_btn" class="btn btn-lg btn-primary btn-block" style="height:15%;
+                            width: 100%;
+                            border-radius: 5px;
+                            border: none;
+                            color: #fff;
+                            font-size: 18px;
+                            font-weight: 500;
+                            letter-spacing: 1px;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                            background: linear-gradient(135deg, #ffcb05, #ec1c24);" type="submit">Update</button>  
+                        </form>
+                    </div>
+                    <div class="recentactivity" style="display:none;">
+                        <ul class="nav nav-tabs">
+                            <li class="active blog">
+                              <a href="#tab1" data-toggle="tab">Blogs</a>
+                            </li>
+                            <li class="team">
+                              <a href="#tab1" data-toggle="tab">Teams</a>
+                            </li>
+                            <li class="event" >
+                              <a href="#tab1" data-toggle="tab">Events</a>
+                            </li>
+                        </ul>
+                        <div class="myblog" >
+                            <section id="contant" class="contant main-heading">
+                                <div class="row">
+                                   <div class="container">
+                                      <div class="col-md-9" id="filteredPosts">
+                                         {% for p in blogs %}
+                                         {% if p.post_image %}
+                                          <div class="feature-post small-blog blog-post" >
+                                            <div class="col-md-5">
+                                               <div class="feature-img">
+                                                  <img src={{p.post_image.url}} class="img-responsive" alt="#" style="max-width:100%;max-height:100%;" />
+                                               </div>
+                                            </div>
+                                            <div class="col-md-7">
+                                               <div class="feature-cont">
+                                                  
+                                                  <div class="post-info">
+                                                     <img src={{p.user.profile_image.url}} alt="#" style="max-width:100%;max-height:100%;"/>
+                                                     <span>
+                                                        <h4>by {{p.user.username}}</h4>
+                                                        <h5>{{p.time_ago}}</h5>
+                                                     </span>
+                                                  </div>
+                                                  <div class="post-heading">
+                                                     <h3>{{p.post_title}}</h3>
+                                                     <h5>{{p.post_date}} in {{p.post_location}}</h5>
+                                                     <p>{{p.post_description}}</p>
+                                                     
+                                                     
+                                                     <div style="float:top;width: 100%;margin: 0;padding: 0; ">
+                                                        <div class="deleteupdate" style="position:absolute;right:0%; top :0%;">
+                                                           <span onclick="location.href='{% url 'updatepost' p.id %}';" style="float:right; justify-content: space-between;padding: 10px;position:relative;" >
+                                                           <i class="fa-solid fa-pencil"></i>
+                                                          </span>
+                                                          <span  hx-delete="{% url 'deletepost' p.id %}" hx-target="#posts" hx-confirm="Are sure to delete this blog ?" style="cursor:pointer;float:right; justify-content: space-between;padding: 10px;position:relative;">
+                                                            <i class="fa-regular fa-trash-can"></i>
+                                                          </span>
+                                                        </div> 
+                                                     </div>
+                                                     
+                                                  </div>
+                                               </div>
+                                            </div>
+                                            <div class="full">
+                                              <h5 style="position:absolute;bottom:20%;right:2%;font-weight:bold;" >{{p.participants}} participants</h5>
+                                            </div>
+                                         </div>
+                             
+                                         {% else %}
+                             
+                                         <div class="feature-post blog-post" >
+                                            <div class="feature-img">
+                                            </div>
+                                            <div class="feature-cont">
+                                               <div class="post-people">
+                                                  
+                                                  <div class="deleteupdate" style="position:absolute;right:0%;">
+                                                     <span onclick="location.href='{% url 'updatepost' p.id %}';" style="float:right; justify-content: space-between;padding: 10px;position:relative;" >
+                                                     <i class="fa-solid fa-pencil"></i>
+                                                    </span>
+                                                    <span  hx-delete="{% url 'deletepost' p.id  %}" hx-target="#posts" hx-confirm="Are sure to delete this blog ?" style="cursor:pointer;float:right; justify-content: space-between;padding: 10px;position:relative;">
+                                                      <i class="fa-regular fa-trash-can"></i>
+                                                     <div id="result"></div>
+                                                    </span>
+                                                   </div>
+                                                   
+                                                  <div class="left-profile">
+                                                     <div class="post-info">
+                                                        <img src={{p.user.profile_image.url}}  alt="#" style="max-width:100%;max-height:100%;"/>
+                                                        <span>
+                                                           <h4>by {{p.user.username}}</h4>
+                                                           <h5>{{p.time_ago}}</h5>
+                                                        </span>
+                                                     </div>
+                                                     <span class="share"></span>
+                                                  </div>
+                                               </div>
+                                               <div class="post-heading">
+                                                  <h3> {{p.post_title}} </h3>
+                                                  <h5>{{p.post_date}} in {{p.post_location}}</h5>
+                                                  <p> {{p.post_description}}
+                                                  </p>
+                                               </div>
+                                            </div>
+                                            <div class="full">
+                                              <h5 style="position:absolute;bottom:20%;right:2%;font-weight:bold;" >{{p.participants}} participants</h5>
+                                            </div>
+                                         </div>
+                                           
+                                         {% endif %}
+                             
+                                      
+                                       {% endfor %}
+                                      </div>
+                                   </div>
+                                   <button style="background-color:#8ebf42;left:200px;float:none;" id="loadMorePosts" user_id="{{user.id}}"  data-limit="3" class="btn btn-dark btn-sm" data="{{postcount}}">Load More <i class="fa fa-sync load-more-icon"></i></button>
+
+                                </div>
+                             </section>    
+                        </div>
+                        <div class="myteam" style="display:none;width:100%;">
+                            <section id="contant" class="contant main-heading team">
+                                <div class="row">
+                                  <div class="container">
+                                     <div id="team-slider" >
+                                        <div class="container" id="filteredTeams">
+                                           {% for t in teams %} 
+                                           <div class="col-md-3 column blog-team" style="margin-top:10px;margin-bottom:10px;margin-left:10%;" >
+                                              <div class="team-column style-2" style="width:250px;height:300px;">
+                                                 <img src={{t.team.team_image.url}} alt="" style="max-width:250px;max-height:400px;">
+                                                 <div class="player-name">
+                                                    <span class="desination-2" onclick="location.href='{% url 'leaveteam' t.team.id  %}';" style="cursor:pointer;">Want to leave ?</span>
+                                                    <h5>{{t.team.team_name}}</h5>
+                                                    <span class="player-number">{{t.team.n_players}}</span>
+                                                 </div>
+                                              </div>
+                                           </div>
+                                           {% endfor %}
+                                        </div>  
+                                     </div>
+                                  </div>
+                                </div>
+                                <button style="background-color:#8ebf42;float:none;position:relative;bottom:5px;" id="loadMoreTeams" user_id="{{user.id}}"  data-limit="2" class="btn btn-dark btn-sm" data="{{teamcount}}">Load More <i class="fa fa-sync load-more-icon"></i></button>
+                              </section>
+                        </div>
+                        <div class="myevent" style="display:none;" >
+                          <section id="contant" class="contant" >
+                            
+                              <ul class="navbar-nav mr-auto mt-2 mt-lg-0" style=" position:relative; left:25%; top:0%; ">
+                                
+                                <li class="nav-item " >
+                                  <a id="showall" user_id={{user.id}} value="Show All" data-filter="filter" class="nav-link bg-primary" style= "background-color:#F26B5E;margin: 10px 30px 20px 0; border-color:#F26B5E; border-style: solid; border-width: 0px 10px;" href="#">Show All Events</a>
+                                </li>
+                                
+                                <li class="nav-item comming" >
+                                  <a id="comming" user_id={{user.id}}  value="Show All" data-filter="filter" class="nav-link bg-primary" style= "background-color:#F26B5E;margin: 10px 30px 20px 0; border-color:#F26B5E; border-style: solid; border-width: 0px 10px;" href="#">Comming Events</a>
+                                </li>
+                
+                                <li class="nav-item passing" >
+                                  <a id="passing" user_id={{user.id}} value="Show All" data-filter="filter" class="nav-link bg-primary" style= "background-color:#F26B5E;margin: 10px 30px 20px 0; border-color:#F26B5E; border-style: solid; border-width: 0px 10px;" href="#">Passing Events</a>
+                                </li>
+                                
+                              </ul>
+                            
+                                <div class="container" style="position:relative;top:70px;">
+                                   <div class="row" style="margin-bottom:25px;margin-right:7px;">
+                                     <div class="col-lg-9 col-sm-12 col-xs-12" id="filteredEvens">
+                                      <div class="eventhide" style="display:none;">
+                                     {% for e in events  %}
+                                     <div class="news-post-holder blog-event">
+                                        <div class="col-lg-6 col-sm-6 col-xs-12">
+                                           <div class="news-post-widget">
+                                             <img  src="{{e.image.url}}" alt=""   height="200px" width="100%"  style="object-fit:cover" >
+                                             <div class="news-post-detail">
+                                                <span class="date">{{e.date_event}}</span>
+                                                <h2><a href="">{{e.title_event}}</a></h2>
+                                                <p><h5>Location : {{e.location_event}}</h5></p>
+                                             </div>
+                                           </div>
+                                        </div>
+                                    </div>  
+                                          
+                                    {% endfor %}
+                                  </div> 
+                                   </div>
+ 
+                                  </div>
+                                </div> 
+
+                            </section>
+                            <button style="background-color:#8ebf42;left:40%;float:none;position:relative;bottom:5px;" id="loadMoreEvents" user_id="{{user.id}}"  data-limit="3" class="btn btn-dark btn-sm" data="{{eventcount}}">Load More <i class="fa fa-sync load-more-icon"></i></button>
+
+                        </div>
+                    </div>
                   </div>
-                  <div>
-                     
-                  </div>
-              </div>
+                  
+               </div>
               
-              </div>
+               
+              
+             
 
             </div>
 
-  
+        </div>
+    
+        
+
 {% endblock content %}
 
+{% comment %} onclick="location.href='{% url 'password_change'  %}';" {% endcomment %}

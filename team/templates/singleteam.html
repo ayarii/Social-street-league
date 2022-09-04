@@ -36,15 +36,18 @@
              <div class="col-md-4 col-sm-4 col-xs-10">
                 <div style="float:right;">
                     <div class="full">
-                        {% if is_member %}
-                        <a class="btn" style="position:relative;width=100%;float:right;">You Are A Member</a>
+                        {% if not is_member  and members|length < team.n_players %}
+                        <a class="btn" data-toggle="modal" data-target="#exampleModal"  style="position:relative;width=100%;float:right;">Join Now</a>
+                        {% elif members|length >= team.n_players %}
+                        <a class="btn disabled" style="position:relative;width=100%;float:right;">Full Team </br>Sorry you can't join</a>
+                        {% elif is_approved %}
+                        <a class="btn" style="position:relative;width=100%;float:right;"  href={% url 'leaveteam' team.id %}>You Are A Member</br>Want To Leave ?</a>
                         {% else %}
-                        <a class="btn" href={% url 'jointeam' team.id %} style="position:relative;width=100%;float:right;">Join Now</a>
+                        <a class="btn disabled"  style="position:relative;width=100%;float:right;">Wait the admin approval</a>
                         {% endif %}
                     </div>
                 </div>
              </div>
-
           </div>
        </div>
     </div>
@@ -61,6 +64,7 @@
                    <h3>About Us </h3>
                    <p>{{team.team_about}}
                    </p>  
+                   
                 </div>
              </div>
              <div class="col-md-4 col-sm-4 col-xs-10">
@@ -84,9 +88,9 @@
             {% for m in members  %}
             <div class="col-md-3 column" Style="max-width:20%;max-height:20%;">
                <div class="card" >
-                  <img class="img-responsive" src={{m.profile_image.url}} alt="John" style="width:100%">
+                  <img class="img-responsive" src={{m.user.profile_image.url}} alt="John" style="width:100%">
                   <div class="" style="margin:10px;">
-                     <h5>{{m.username}}</h5>
+                     <h5>{{m.user.username}}</h5>
                   </div>
                </div>
             </div>
@@ -94,4 +98,24 @@
          </div>
     </div>
  </section>
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+     <div class="modal-content">
+       <div class="modal-header">
+         <h3 class="modal-title" id="exampleModalLabel" style="color:#54c473;"><i class="fa-solid fa-user-gear" style="color:#54c473;" ></i> Need admin approval</h5>
+         <button style="position:absolute;right:5%;top:10%;" type="button" class="close" data-dismiss="modal" aria-label="Close">
+           <span aria-hidden="true">&times;</span>
+         </button>
+       </div>
+       <div class="modal-body">
+         If you are sure of this, press OK and wait until your request is approved. <i class="fa-regular fa-face-grin-hearts"></i>
+       </div>
+       <div class="modal-footer">
+         <button type="button" class="btn btn-secondary" data-dismiss="modal" style="background-color:#54c473;float:none;">Cancel</button>
+         <a class="btn btn-sm btn-danger" style="float:none;" href={% url 'jointeam' team.id %} >OK</a>
+       </div>
+     </div>
+   </div>
+ </div>
 {% endblock content %}

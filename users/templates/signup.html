@@ -194,8 +194,15 @@
         <span></span>
         <label>{{field.label}}</label>
       </div>
-      
       {% endfor %}
+      <span style="position: absolute;right: 15px;transform: translate(0,-50%);top:52%;cursor: pointer;">
+        <i style ="font-size: 20px;color: #7a797e;" class="fa fa-eye" id="eye" onclick="toggle()">
+        </i>
+       </span>
+       <span style="position: absolute;right: 15px;transform: translate(0,-50%);top:65%;cursor: pointer;">
+        <i style ="font-size: 20px;color: #7a797e;" class="fa fa-eye" id="eye2" onclick="toggle2()">
+        </i>
+       </span>
       {% for field in registration_form %}
       <p>
       {% for error in field.errors %}

@@ -1,0 +1,19 @@
+                                   {% for e in data  %}
+                                     <div class="news-post-holder blog-event">
+                                        <div class="col-lg-6 col-sm-6 col-xs-12">
+                                           <div class="news-post-widget">
+                                             <img  src="{{e.image.url}}" alt=""   height="200px" width="100%"  style="object-fit:cover" >
+                                             <div class="news-post-detail">
+                                                <span class="date">{{e.date_event}}</span>
+                                                <h2><a href="">{{e.title_event}}</a></h2>
+                                                <p><h5>Location : {{e.location_event}}</h5></p>
+                                             </div>
+                                           </div>
+                                        </div>
+                                    </div>  
+                        
+                                    {% endfor %} 
+
+									
+
+								
