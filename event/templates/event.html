@@ -22,6 +22,8 @@
  <section id="contant" class="contant">
     <div class="container">
        <div class="row">
+         
+
          <div class="col-lg-9 col-sm-12 col-xs-12">
             <h4>{{i}}</h4>
          {% for i in events  %}
@@ -29,6 +31,15 @@
          <div class="news-post-holder">
             <div class="col-lg-6 col-sm-6 col-xs-12">
                <div class="news-post-widget">
+                   <div style="position: absolute;" class="btn-group" >
+                     <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                     <span class="sr-only">Toggle Dropdwon</span>
+                     ></button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href={% url 'updatev' i.id %}>update</a>
+                        
+                    </div>
+                  </div>
                  <img  src="{{i.image.url}}" alt=""   height="200px" width="100%"  style="object-fit:cover" >
                  <div class="news-post-detail">
                   {% if idd == i.id  %}
@@ -55,28 +66,31 @@ Current_Page: {{ events.number }}<br/>
 Number of Pages: {{ events.paginator.num_pages }}<br/>
 <hr><br/><br/>
 -->
+
 </div>
 <div class="col-lg-3 col-sm-6 col-xs-12">
    <div class="content-widget top-story" style="background: url(images/top-story-bg.jpg);">
       <div class="top-stroy-header">
-         <h2>Top Event <a href="#" class="fa fa-fa fa-angle-right"></a></h2>
-         <span class="date">July 05, 2017</span>
-         <h2>Other Events</h2>
+         
+         <h2>Categories</h2>
       </div>
-      {% for i in events  %}
-     <ul class="other-stroies">
-        <li><a href={% url 'even' i.id %}>{{ i.title_event }}</a></li>
-     </ul>
-     {% endfor %}
+      {% for i in category  %}
+      <ul class="other-stroies">
+         <li><a href={% url 'even' i.id %}>{{ i.category_name }}</a></li>
+      </ul>
+      {% endfor %}
+      <li><a class="btn" href={% url 'addev' %} positian="center" >Add event</a>
+      </li>
    </div>
    
 </div>
 
+
 </div>
+
 
 </div> 
 
-<li><a href="{% url 'addev' %}">Add Event</a></li>
 
 <div class="container center" >
 <center><nav aria-label="Page navigation example">

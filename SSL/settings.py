@@ -42,8 +42,8 @@ AUTHENTICATION_BACKENDS = (
     )
 
 
-GDAL_LIBRARY_PATH = r'D:\stage\SSL\Lib\site-packages\osgeo\gdal304.dll'
-GEOS_LIBRARY_PATH = r'D:\stage\SSL\Lib\site-packages\osgeo\geos_c.dll'
+GDAL_LIBRARY_PATH = r'C:\Users\iheb\Desktop\TTT\Lib\site-packages\osgeo\gdal304.dll'
+GEOS_LIBRARY_PATH = r'C:\Users\iheb\Desktop\TTT\Lib\site-packages\osgeo\geos_c.dll'
 
 # Application definition
 
@@ -170,7 +170,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 #map setting run pip install django-location-field
 
 
-
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER =  'socialstreetleague@gmail.com'
@@ -178,3 +177,4 @@ EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'socialstreetleague@gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_PASSWORD = 'ksizsxorvstapzkx'
+
