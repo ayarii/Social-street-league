@@ -30,11 +30,11 @@
               
                     <ul class="login">
                         <li class="login-modal">
-                            <a href="" class="login"><i class="fa fa-user"></i>Return</a>
+                            <a href="{% url 'home'  %}" class="login"><i class="fa-solid fa-arrow-left"></i> Return to home</a>
                         </li>
                         <li>
                             <div class="cart-option">
-                            <a href="{% url 'signup'  %}"><i class="fa fa-shopping-cart"></i>Register</a>
+                            <a href="{% url 'login' %}"><i class="fa fa-user"></i> Login</a>
                             </div>
                         </li>
                     </ul>
@@ -219,7 +219,7 @@
       
       <input type="submit" value="Register">
       <div class="signup_link">
-        Already have an account ? <a href="#">Login</a>
+        Already have an account ? <a href="{% url 'login' %}">Login</a>
       </div>
     </form>
   </div>

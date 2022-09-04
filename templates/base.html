@@ -313,7 +313,16 @@
       $(".myevent").show()
       $(".eventhide").show()
   });
+  
+  $(".showmy").click(function(){
+    $(".partblog").hide()
+    $(".userblog").show()
+  });
 
+  $(".showpart").click(function(){
+    $(".userblog").hide()
+    $(".partblog").show()
+  });
   
  
 
@@ -431,7 +440,38 @@
       // End
     });
 
-    
+    $("#loadMorePostspart").on('click',function(){
+      var _currentProducts=$(".blog-post-part").length;
+      var _limit=$(this).attr('data-limit');
+      var _total=$(this).attr('data');
+      // Start Ajax
+      $.ajax({
+        url:'/user/load-more-data-post-part',
+        data:{
+          "limit":_limit,
+          "offset":_currentProducts,
+          "id" : $(this).attr('user_id')
+        },
+        dataType:'json',
+        beforeSend:function(){
+          $("#loadMorePostspart").attr('disabled',true);
+          $(".load-more-icon").addClass('fa-spin');
+        },
+        success:function(res){
+          $("#posts").append(res.data);
+          $("#loadMorePostspart").attr('disabled',false);
+          $(".load-more-icon").removeClass('fa-spin');
+  
+          var _totalShowing=$(".blog-post-part").length;
+          console.log(_totalShowing,_total)
+          if(_totalShowing==_total){
+            $("#loadMorePostspart").remove();
+          }
+        }
+      });
+      // End
+    });
+
     var state= false;
     function toggle(){
         if(state){
@@ -584,16 +624,17 @@
 </script>
 
 <script type="text/javascript">
+
   const initialText = 'Participate';
 
   $(document).on('click','#participate',function(){
    
     const btn = document.getElementById('participate');
+    
+    var i_dp = $(this).attr('data');
+    console.log(i_dp);  
     $(this).val('you have participated');
     $(this).prop('disabled', true);
-    var i_dp = $(this).attr('data');
-    console.log(i_dp);
-  
       $.ajax({
           url:'{% url 'participate' %}' ,
           data:
@@ -602,32 +643,16 @@
           },
           dataType:'json',
           beforeSend:function(){
-           
+            
           },
           success:function(res){
-
+            
             $("#posts").html(res.data);
           }
           
           });
        
   });
-  {% comment %} $("#participate").on('click',function(){
-    var i_dp = $(this).attr('data');
-    if(btn.value === 'Participate'){
-    $.ajax({
-        url:'{% url 'participate' %}' ,
-        data:
-        {
-          'id_p': i_dp
-        },
-        success:function(){
-              btn.value = 'you have participated';
-              }
-        });
-    }
-    }); {% endcomment %}
-
-
+  
 </script>
 

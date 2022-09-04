@@ -9,6 +9,7 @@ urlpatterns = [
     #path('updateprofile/<int:id>', views.profile_update,name='updateprofile'),
     path('filter-data',views.filter_data,name='filter_data'),
     path('load-more-data-post',views.load_more_data_post,name='load_more_data-post'),
+    path('load-more-data-post-part',views.load_more_data_post_part,name='load_more_data-post-part'),
     path('load-more-data-event',views.load_more_data_event,name='load_more_data-event'),
     path('load-more-data-team',views.load_more_data_team,name='load_more_data-team'),
     path('profile/<int:id>/cropImage', views.upload_image, name='crop_image'),

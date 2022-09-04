@@ -433,8 +433,24 @@
                         </ul>
                         <div class="myblog" >
                             <section id="contant" class="contant main-heading">
-                                <div class="row">
-                                   <div class="container">
+                              <ul class="navbar-nav mr-auto mt-2 mt-lg-0" style=" position:relative; left:25%; top:0%; ">
+                                
+                                <li class="nav-item " >
+                                  <a id="addmy" href="{% url 'addpost' %}" value="Add blog"  class="nav-link bg-primary" style= "background-color:#F26B5E;margin: 10px 30px 20px 0; border-color:#F26B5E; border-style: solid; border-width: 0px 10px;">Add blog</a>
+                                </li>
+                                
+                                <li class="nav-item showmy" >
+                                  <a id="showmy" value="my own blogs " class="nav-link bg-primary" style= "background-color:#F26B5E;margin: 10px 30px 20px 0; border-color:#F26B5E; border-style: solid; border-width: 0px 10px;" href="#">my own blogs</a>
+                                </li>
+                
+                                <li class="nav-item showpart" >
+                                  <a id="showpart" value="participated blog" data-filter="filter" class="nav-link bg-primary" style= "background-color:#F26B5E;margin: 10px 30px 20px 0; border-color:#F26B5E; border-style: solid; border-width: 0px 10px;" href="#">participated blog</a>
+                                </li>
+                                
+                              </ul>
+                              <div class="userblog" style="position:relative;top:40px;">
+                                <div class="row "  >
+                                   <div class="container" >
                                       <div class="col-md-9" id="filteredPosts">
                                          {% for p in blogs %}
                                          {% if p.post_image %}
@@ -462,10 +478,10 @@
                                                      
                                                      <div style="float:top;width: 100%;margin: 0;padding: 0; ">
                                                         <div class="deleteupdate" style="position:absolute;right:0%; top :0%;">
-                                                           <span onclick="location.href='{% url 'updatepost' p.id %}';" style="float:right; justify-content: space-between;padding: 10px;position:relative;" >
+                                                           <span onclick="location.href='{% url 'updatepost' p.id %}';" style="cursor:pointer;float:right; justify-content: space-between;padding: 10px;position:relative;" >
                                                            <i class="fa-solid fa-pencil"></i>
                                                           </span>
-                                                          <span  hx-delete="{% url 'deletepost' p.id %}" hx-target="#posts" hx-confirm="Are sure to delete this blog ?" style="cursor:pointer;float:right; justify-content: space-between;padding: 10px;position:relative;">
+                                                          <span data-toggle="modal" data-target="#exampleModal" style="cursor:pointer;float:right; justify-content: space-between;padding: 10px;position:relative;">
                                                             <i class="fa-regular fa-trash-can"></i>
                                                           </span>
                                                         </div> 
@@ -488,10 +504,10 @@
                                                <div class="post-people">
                                                   
                                                   <div class="deleteupdate" style="position:absolute;right:0%;">
-                                                     <span onclick="location.href='{% url 'updatepost' p.id %}';" style="float:right; justify-content: space-between;padding: 10px;position:relative;" >
+                                                     <span onclick="location.href='{% url 'updatepost' p.id %}';" style="cursor:pointer;float:right; justify-content: space-between;padding: 10px;position:relative;" >
                                                      <i class="fa-solid fa-pencil"></i>
                                                     </span>
-                                                    <span  hx-delete="{% url 'deletepost' p.id  %}" hx-target="#posts" hx-confirm="Are sure to delete this blog ?" style="cursor:pointer;float:right; justify-content: space-between;padding: 10px;position:relative;">
+                                                    <span data-toggle="modal" data-target="#exampleModal" style="cursor:pointer;float:right; justify-content: space-between;padding: 10px;position:relative;">
                                                       <i class="fa-regular fa-trash-can"></i>
                                                      <div id="result"></div>
                                                     </span>
@@ -522,14 +538,134 @@
                                            
                                          {% endif %}
                              
-                                      
+                                          <!-- Modal -->
+                                            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                              <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                  <div class="modal-header">
+                                                    <h3 class="modal-title" id="exampleModalLabel" style="color:#ec1c24;"><i class="fa-solid fa-triangle-exclamation" style="color:#ec1c24;"></i> Warning Message </h5>
+                                                    <button style="position:absolute;right:5%;top:10%;" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                      <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                  </div>
+                                                  <div class="modal-body">
+                                                    Are You sure to delete this blog ?
+                                                  </div>
+                                                  <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal" style="background-color:#54c473;float:none;">Close</button>
+                                                    <a class="btn btn-sm btn-danger" style="float:none;" href="{% url 'deletepost' p.id %}">Delete</a>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
                                        {% endfor %}
                                       </div>
-                                   </div>
-                                   <button style="background-color:#8ebf42;left:200px;float:none;" id="loadMorePosts" user_id="{{user.id}}"  data-limit="3" class="btn btn-dark btn-sm" data="{{postcount}}">Load More <i class="fa fa-sync load-more-icon"></i></button>
 
+                                   </div>
                                 </div>
-                             </section>    
+                                <button style="background-color:#8ebf42;left:200px;float:none;" id="loadMorePosts" user_id="{{user.id}}"  data-limit="2" class="btn btn-dark btn-sm" data="{{postcount}}">Load More <i class="fa fa-sync load-more-icon"></i></button>
+
+                              </div>
+                              <div class="partblog" style="display:none;position:relative;top:40px;">
+                              <div class="row "  >
+                                  <div class="container">
+                                     
+                                     <div class="col-md-9" id="posts">
+                                        {% for p in partblogs %}
+                                        {% if p.post_id.post_image %}
+                                         <div class="feature-post small-blog blog-post-part">
+                                           <div class="col-md-5">
+                                              <div class="feature-img">
+                                                 <img src={{p.post_id.post_image.url}} class="img-responsive" alt="#" style="max-width:100%;max-height:100%;" />
+                                              </div>
+                                           </div>
+                                           <div class="col-md-7">
+                                              <div class="feature-cont">
+                                                 
+                                                 <div class="post-info">
+                                                    <img src={{p.post_id.user.profile_image.url}} alt="#" style="max-width:100%;max-height:100%;"/>
+                                                    <span>
+                                                       <h4>by {{p.post_id.user.username}}</h4>
+                                                       <h5>{{p.post_id.time_ago}}</h5>
+                                                    </span>
+                                                 </div>
+                                                 <div class="post-heading">
+                                                    <h3>{{p.post_id.post_title}}</h3>
+                                                    <h5>{{p.post_id.post_date}} in {{p.post_location}}</h5>
+                                                    <p>{{p.post_id.post_description}}</p>
+                                                  
+                                                 </div>
+                                              </div>
+                                           </div>
+                                           <div class="full">
+                                           {% if request.user.is_authenticated %}
+                                              {% if p.post_id.is_participated  %}
+                                              <input class="btn disabled" type="button" id="participate" data="{{p.post_id.id}}" style="position:relative;width=100%;float:right;margin:10px" value="you have participated"></input>
+                                              {% else %}
+                                              <input class="btn" type="button" id="participate" data="{{p.post_id.id}}" style="position:relative;width=100%;float:right;margin:10px" value="Participate"></input>
+                                              {% endif %}
+                                           {% else %}
+                                              <input class="btn" type="button" onclick="location.href='{% url 'login' %}';"  style="position:relative;width=100%;float:right;margin:10px" value="Participate"></input>
+                                           {% endif %}
+                                              <p style="position:absolute;bottom:20%;left:2%;font-weight:bold;" >{{p.post_id.participants}} participants</p>
+                                           </div>
+                                        </div>
+                            
+                                        {% else %}
+                            
+                                        <div class="feature-post blog-post-part">
+                                           <div class="feature-img">
+                                           </div>
+                                           <div class="feature-cont">
+                                              <div class="post-people">
+    
+                                                 <div class="left-profile">
+                                                    <div class="post-info">
+                                                       <img src={{p.post_id.user.profile_image.url}}  alt="#" style="max-width:100%;max-height:100%;"/>
+                                                       <span>
+                                                          <h4>by {{p.post_id.user.username}}</h4>
+                                                          <h5>{{p.post_id.time_ago}}</h5>
+                                                       </span>
+                                                    </div>
+                                                    <span class="share"></span>
+                                                 </div>
+                                              </div>
+                                              <div class="post-heading">
+                                                 <h3> {{p.post_id.post_title}} </h3>
+                                                 <h5>{{p.post_id.post_date}} in {{p.post_id.post_location}}</h5>
+                                                 <p>{{p.post_id.post_description}}
+                                                 </p>
+                                              </div>
+                                           </div>
+                                           <div class="full">
+                                           {% if request.user.is_authenticated %}
+                                              {% if p.post_id.is_participated  %}
+                                              <input class="btn disabled" type="button"  id="participate" data="{{p.post_id.id}}" style="position:relative;width=100%;float:right;margin:10px;margin-bottom:30px;margin-top:0px;" value="you have participated"></input>
+                                              {% else %}
+                                              <input class="btn" type="button"  id="participate" data="{{p.post_id.id}}" style="position:relative;width=100%;float:right;margin:10px;margin-bottom:30px;margin-top:0px;" value="Participate"></input>
+                                              {% endif %}
+                                           {% else %}
+                                              <input class="btn" type="button" onclick="location.href='{% url 'login' %}';"  style="position:relative;width=100%;float:right;margin:10px;margin-bottom:30px;margin-top:0px;" value="Participate"></input>
+                                           {% endif %}
+                            
+                                              <p style="position:absolute;bottom:40%;left:5%;font-weight:bold;">{{p.post_id.participants}} participants</p>
+                                           
+                                           </div>
+                                           
+                                        </div>
+                                          
+                                        {% endif %}
+                            
+                                      {% endfor %}
+                                     </div>
+                                    
+                                                               
+                                  </div>
+
+                              </div>
+                              <button style="background-color:#8ebf42;left:200px;float:none;" id="loadMorePostspart" user_id="{{user.id}}"  data-limit="2" class="btn btn-dark btn-sm" data="{{partpostcount}}">Load More <i class="fa fa-sync load-more-icon"></i></button>
+                              </div>
+                            </section>    
                         </div>
                         <div class="myteam" style="display:none;width:100%;">
                             <section id="contant" class="contant main-heading team">

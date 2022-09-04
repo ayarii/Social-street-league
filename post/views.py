@@ -11,7 +11,8 @@ from django.http import JsonResponse,HttpResponse
 from django.template.loader import render_to_string
 # Create your views here.
 def display(request):
-    post_list=Post.objects.all()
+    post_list=Post.objects.all().order_by('-created_at')
+
     page = request.GET.get('page', 1)
     paginator = Paginator(post_list,5)
     try:

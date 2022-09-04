@@ -1,4 +1,4 @@
-                                        {% for p in data %}
+                                       {% for p in data %}
                                          {% if p.post_image %}
                                           <div class="feature-post small-blog blog-post" >
                                             <div class="col-md-5">
@@ -24,10 +24,10 @@
                                                      
                                                      <div style="float:top;width: 100%;margin: 0;padding: 0; ">
                                                         <div class="deleteupdate" style="position:absolute;right:0%; top :0%;">
-                                                           <span onclick="location.href='{% url 'updatepost' p.id %}';" style="float:right; justify-content: space-between;padding: 10px;position:relative;" >
+                                                           <span onclick="location.href='{% url 'updatepost' p.id %}';" style="cursor:pointer;float:right; justify-content: space-between;padding: 10px;position:relative;" >
                                                            <i class="fa-solid fa-pencil"></i>
                                                           </span>
-                                                          <span  hx-delete="{% url 'deletepost' p.id %}" hx-target="posts" hx-confirm="Are sure to delete this blog ?" style="cursor:pointer;float:right; justify-content: space-between;padding: 10px;position:relative;">
+                                                          <span data-toggle="modal" data-target="#exampleModal" style="cursor:pointer;float:right; justify-content: space-between;padding: 10px;position:relative;">
                                                             <i class="fa-regular fa-trash-can"></i>
                                                           </span>
                                                         </div> 
@@ -37,7 +37,7 @@
                                                </div>
                                             </div>
                                             <div class="full">
-                                               <a class="btn" href="#"style="position:relative;width=100%;float:right;margin:10px">Participate</a>
+                                              <h5 style="position:absolute;bottom:20%;right:2%;font-weight:bold;" >{{p.participants}} participants</h5>
                                             </div>
                                          </div>
                              
@@ -50,15 +50,15 @@
                                                <div class="post-people">
                                                   
                                                   <div class="deleteupdate" style="position:absolute;right:0%;">
-                                                     <span onclick="location.href='{% url 'updatepost' p.id %}';" style="float:right; justify-content: space-between;padding: 10px;position:relative;" >
+                                                     <span onclick="location.href='{% url 'updatepost' p.id %}';" style="cursor:pointer;float:right; justify-content: space-between;padding: 10px;position:relative;" >
                                                      <i class="fa-solid fa-pencil"></i>
                                                     </span>
-                                                    <span  hx-delete="{% url 'deletepost' p.id %}" hx-target="posts" hx-confirm="Are sure to delete this blog ?" style="cursor:pointer;float:right; justify-content: space-between;padding: 10px;position:relative;">
+                                                    <span data-toggle="modal" data-target="#exampleModal" style="cursor:pointer;float:right; justify-content: space-between;padding: 10px;position:relative;">
                                                       <i class="fa-regular fa-trash-can"></i>
                                                      <div id="result"></div>
                                                     </span>
                                                    </div>
-                                                 
+                                                   
                                                   <div class="left-profile">
                                                      <div class="post-info">
                                                         <img src={{p.user.profile_image.url}}  alt="#" style="max-width:100%;max-height:100%;"/>
@@ -78,10 +78,30 @@
                                                </div>
                                             </div>
                                             <div class="full">
-                                               <a class="btn" href="#" style="position:relative;width=100%;float:right;margin:10px;margin-bottom:30px;margin-top:0px;">Participate </a>
+                                              <h5 style="position:absolute;bottom:20%;right:2%;font-weight:bold;" >{{p.participants}} participants</h5>
                                             </div>
                                          </div>
                                            
                                          {% endif %}
                              
-                                         {% endfor %}
+                                          <!-- Modal -->
+                                            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                              <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                  <div class="modal-header">
+                                                    <h3 class="modal-title" id="exampleModalLabel" style="color:#ec1c24;"><i class="fa-solid fa-triangle-exclamation" style="color:#ec1c24;"></i> Warning Message </h5>
+                                                    <button style="position:absolute;right:5%;top:10%;" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                      <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                  </div>
+                                                  <div class="modal-body">
+                                                    Are You sure to delete this blog ?
+                                                  </div>
+                                                  <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal" style="background-color:#54c473;float:none;">Close</button>
+                                                    <a class="btn btn-sm btn-danger" style="float:none;" href="{% url 'deletepost' p.id %}">Delete</a>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                       {% endfor %}

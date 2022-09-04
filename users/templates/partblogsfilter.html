@@ -1,0 +1,86 @@
+                                    {% for p in data %}
+                                        {% if p.post_id.post_image %}
+                                         <div class="feature-post small-blog blog-post-part">
+                                           <div class="col-md-5">
+                                              <div class="feature-img">
+                                                 <img src={{p.post_id.post_image.url}} class="img-responsive" alt="#" style="max-width:100%;max-height:100%;" />
+                                              </div>
+                                           </div>
+                                           <div class="col-md-7">
+                                              <div class="feature-cont">
+                                                 
+                                                 <div class="post-info">
+                                                    <img src={{p.post_id.user.profile_image.url}} alt="#" style="max-width:100%;max-height:100%;"/>
+                                                    <span>
+                                                       <h4>by {{p.post_id.user.username}}</h4>
+                                                       <h5>{{p.post_id.time_ago}}</h5>
+                                                    </span>
+                                                 </div>
+                                                 <div class="post-heading">
+                                                    <h3>{{p.post_id.post_title}}</h3>
+                                                    <h5>{{p.post_id.post_date}} in {{p.post_location}}</h5>
+                                                    <p>{{p.post_id.post_description}}</p>
+                                                  
+                                                 </div>
+                                              </div>
+                                           </div>
+                                           <div class="full">
+                                           {% if request.user.is_authenticated %}
+                                              {% if p.post_id.is_participated  %}
+                                              <input class="btn disabled" type="button" id="participate" data="{{p.post_id.id}}" style="position:relative;width=100%;float:right;margin:10px" value="you have participated"></input>
+                                              {% else %}
+                                              <input class="btn" type="button" id="participate" data="{{p.post_id.id}}" style="position:relative;width=100%;float:right;margin:10px" value="Participate"></input>
+                                              {% endif %}
+                                           {% else %}
+                                              <input class="btn" type="button" onclick="location.href='{% url 'login' %}';"  style="position:relative;width=100%;float:right;margin:10px" value="Participate"></input>
+                                           {% endif %}
+                                              <p style="position:absolute;bottom:20%;left:2%;font-weight:bold;" >{{p.post_id.participants}} participants</p>
+                                           </div>
+                                        </div>
+                            
+                                        {% else %}
+                            
+                                        <div class="feature-post blog-post-part">
+                                           <div class="feature-img">
+                                           </div>
+                                           <div class="feature-cont">
+                                              <div class="post-people">
+    
+                                                 <div class="left-profile">
+                                                    <div class="post-info">
+                                                       <img src={{p.post_id.user.profile_image.url}}  alt="#" style="max-width:100%;max-height:100%;"/>
+                                                       <span>
+                                                          <h4>by {{p.post_id.user.username}}</h4>
+                                                          <h5>{{p.post_id.time_ago}}</h5>
+                                                       </span>
+                                                    </div>
+                                                    <span class="share"></span>
+                                                 </div>
+                                              </div>
+                                              <div class="post-heading">
+                                                 <h3> {{p.post_id.post_title}} </h3>
+                                                 <h5>{{p.post_id.post_date}} in {{p.post_id.post_location}}</h5>
+                                                 <p>{{p.post_id.post_description}}
+                                                 </p>
+                                              </div>
+                                           </div>
+                                           <div class="full">
+                                           {% if request.user.is_authenticated %}
+                                              {% if p.post_id.is_participated  %}
+                                              <input class="btn disabled" type="button"  id="participate" data="{{p.post_id.id}}" style="position:relative;width=100%;float:right;margin:10px;margin-bottom:30px;margin-top:0px;" value="you have participated"></input>
+                                              {% else %}
+                                              <input class="btn" type="button"  id="participate" data="{{p.post_id.id}}" style="position:relative;width=100%;float:right;margin:10px;margin-bottom:30px;margin-top:0px;" value="Participate"></input>
+                                              {% endif %}
+                                           {% else %}
+                                              <input class="btn" type="button" onclick="location.href='{% url 'login' %}';"  style="position:relative;width=100%;float:right;margin:10px;margin-bottom:30px;margin-top:0px;" value="Participate"></input>
+                                           {% endif %}
+                            
+                                              <p style="position:absolute;bottom:40%;left:5%;font-weight:bold;">{{p.post_id.participants}} participants</p>
+                                           
+                                           </div>
+                                           
+                                        </div>
+                                          
+                                        {% endif %}
+                            
+                                    {% endfor %}

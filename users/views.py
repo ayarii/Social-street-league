@@ -26,11 +26,12 @@ import json
 import base64
 from django.core import files
 from users.models import Joined_team, User
-from post.models import Post
+from post.models import Post, Post_Participants
 from team.models import Team
 from geopy.geocoders import Nominatim
 from geopy.point import Point
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.auth.decorators import login_required
+
 # Create your views here.
 
 TEMP_PROFILE_IMAGE_NAME = "default_user.jpg"
@@ -145,6 +146,7 @@ def login_user(request):
         context={'authenticateform':AccountAuthenticationForm()}
         return render(request,'login.html',context)
 
+@login_required(login_url='login')
 def logout_user(request,id):
      logout(request)
      return redirect('home')
@@ -152,19 +154,20 @@ def logout_user(request,id):
 def user(request):
     return render(request,'users.html')
 
+@login_required(login_url='login')
 def profile_user(request, *args, **kwargs):
     geolocator = Nominatim(user_agent="testproject")
     user_id = kwargs.get("id")
     user=User.objects.get(id=user_id)
-    list = ["Show all Events","Comming Events","Passing Events"]
     context = {}
-    context['list']=list
     context['user']=user
     context['activities']=user.prefer_activity.all()
     context['events']=user.user_events.all()[:2]
     context['teams']=Joined_team.objects.filter(user_id=user_id)[:2]
-    context['blogs']=Post.objects.filter(user=user)[:3]
+    context['blogs']=Post.objects.filter(user=user)[:2]
+    context['partblogs']=Post_Participants.objects.all().filter(user_id=user)[:2]
     context['postcount']=str(Post.objects.filter(user=user).count())
+    context['partpostcount']=str(Post_Participants.objects.all().filter(user_id=user).count())
     context['eventcount']=str(user.user_events.all().count())
     context['teamcount']=str(Joined_team.objects.filter(user_id=user_id).count())
     if not request.user.is_authenticated:
@@ -266,6 +269,16 @@ def load_more_data_post(request):
     limit=int(request.GET.get('limit'))
     data=Post.objects.filter(user=user)[offset:offset+limit]
     t=render_to_string('blogsfilter.html',{'data':data})
+    return JsonResponse({'data':t}
+)
+    
+def load_more_data_post_part(request):
+    id=request.GET.get('id')
+    user=User.objects.get(id=id)
+    offset=int(request.GET.get('offset'))
+    limit=int(request.GET.get('limit'))
+    data=Post_Participants.objects.all().filter(user_id=user)[offset:offset+limit]
+    t=render_to_string('partblogsfilter.html',{'data':data})
     return JsonResponse({'data':t}
 )
     

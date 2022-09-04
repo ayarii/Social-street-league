@@ -12,6 +12,7 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.conf import settings
 from email.mime.image import MIMEImage
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 def display(request):
     team_list=Team.objects.all()
@@ -48,7 +49,7 @@ def team_detail(request,id):
     
     return render(request,'singleteam.html',context)
 
-
+@login_required(login_url='login')
 def join_team(request,id):
     team=Team.objects.get(id=id)
     user= User.objects.get(id=request.user.id)

@@ -75,11 +75,17 @@
                   </div>
                </div>
                <div class="full">
+            {% if not p.user.id == request.user.id %}
+               {% if request.user.is_authenticated %}
                   {% if p.is_participated  %}
                   <input class="btn disabled" type="button" id="participate" data="{{p.id}}" style="position:relative;width=100%;float:right;margin:10px" value="you have participated"></input>
                   {% else %}
                   <input class="btn" type="button" id="participate" data="{{p.id}}" style="position:relative;width=100%;float:right;margin:10px" value="Participate"></input>
                   {% endif %}
+               {% else %}
+                  <input class="btn" type="button" onclick="location.href='{% url 'login' %}';"  style="position:relative;width=100%;float:right;margin:10px" value="Participate"></input>
+               {% endif %}
+            {% endif %}  
                   <p style="position:absolute;bottom:20%;left:2%;font-weight:bold;" >{{p.participants}} participants</p>
                </div>
             </div>
@@ -121,12 +127,19 @@
                   </div>
                </div>
                <div class="full">
+               {% if not p.user.id == request.user.id %}
+               {% if request.user.is_authenticated %}
                   {% if p.is_participated  %}
                   <input class="btn disabled" type="button"  id="participate" data="{{p.id}}" style="position:relative;width=100%;float:right;margin:10px;margin-bottom:30px;margin-top:0px;" value="you have participated"></input>
                   {% else %}
                   <input class="btn" type="button"  id="participate" data="{{p.id}}" style="position:relative;width=100%;float:right;margin:10px;margin-bottom:30px;margin-top:0px;" value="Participate"></input>
                   {% endif %}
+               {% else %}
+                  <input class="btn" type="button" onclick="location.href='{% url 'login' %}';"  style="position:relative;width=100%;float:right;margin:10px;margin-bottom:30px;margin-top:0px;" value="Participate"></input>
+               {% endif %}
+               {% endif %}
                   <p style="position:absolute;bottom:40%;left:5%;font-weight:bold;">{{p.participants}} participants</p>
+               
                </div>
                
             </div>

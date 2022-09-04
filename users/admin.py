@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin 
 from users.models import Disponibility, User,Banned_User
@@ -6,7 +7,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
-
+from django.contrib.sessions.models import Session
 def ban_users(self,request, queryset):
     queryset.update(is_active = False)
     banned_user = Banned_User.objects.create(User=request.user,banned_reason="")
@@ -28,6 +29,8 @@ def ban_users(self,request, queryset):
         email.content_subtype = 'html'
         email.mixed_subtype = 'related'
         email.send()
+        [s.delete() for s in Session.objects.all() if s.get_decoded().get('_auth_user_hash') == obj.get_session_auth_hash()]
+        
     banned_user.save()
     self.message_user(request, "User banned")
     
@@ -57,13 +60,15 @@ def remove_ban(self, request, queryset):
 class AccountAdmin(UserAdmin):
 	list_display = ('email','username','date_joined', 'last_login', 'is_admin','is_active',)
 	search_fields = ('email','username',)
-	readonly_fields=('id', 'date_joined', 'last_login','email','username','profile_image','birth_date','user_disponibility','address','prefer_activity','password',)
-
+	readonly_fields=('id', 'date_joined', 'last_login','email','username','profile_image','birth_date','user_disponibility','address','prefer_activity','password','user_events')
 	actions = [ban_users, remove_ban]
 	
 	filter_horizontal = ()
 	list_filter = ()
-	fieldsets = ()
+	fieldsets = (('Important Actions', {'fields': ('is_admin','is_active')}),
+               ('User Details',{'fields':('id', 'email','username','profile_image','birth_date','address','user_disponibility','prefer_activity','user_events')}),
+              ('Important dates', {'fields': ('date_joined', 'last_login')}),
+              )
 
 admin.site.register(User,AccountAdmin)
 admin.site.register(Disponibility)
