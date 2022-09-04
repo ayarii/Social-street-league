@@ -1,7 +1,6 @@
 from django.template.loader import render_to_string
 from django.http import JsonResponse,HttpResponse
-from datetime import date
-import datetime
+from django.core.mail import EmailMultiAlternatives
 import threading
 import base64
 from django.core.files.base import ContentFile
@@ -26,8 +25,9 @@ import os
 import json
 import base64
 from django.core import files
-from users.models import User
+from users.models import Joined_team, User
 from post.models import Post
+from team.models import Team
 from geopy.geocoders import Nominatim
 from geopy.point import Point
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -37,55 +37,47 @@ TEMP_PROFILE_IMAGE_NAME = "default_user.jpg"
 
 class EmailThread(threading.Thread):
 
-    def __init__(self, email):
-        self.email = email
+    def __init__(self, email_message):
+        self.email_message = email_message
         threading.Thread.__init__(self)
 
     def run(self):
-        self.email.send()
-
+        self.email_message.send()
+        
 def signup_user(request):
     if request.user.is_authenticated:
          return redirect('home')
-    #username = request.POST.get('username',False)
-    #email = request.POST.get('email',False)  
+    username = request.POST.get('username',False)
+    email = request.POST.get('email',False) 
+    password =request.POST.get('password')
     context = {}
     if request.POST:
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            #user = User.objects.create_user(username=username, email=email)
-            form.save()
-            # current_site = get_current_site(request)
-            # email_body = {
-            #         'user': user,
-            #         'domain': current_site.domain,
-            #         'uid': urlsafe_base64_encode(force_bytes(user.id)),
-            #         'token': account_activation_token.make_token(user),
-            # }
+            user = form.save(commit=False)
+            user.is_active = False
+            user.save()
+            current_site = get_current_site(request)
+            message = render_to_string('activate.html',
+                                   {
+                                       'user': user,
+                                       'domain': current_site.domain,
+                                       'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                                       'token': account_activation_token.make_token(user)
+                                   }
+                                   ).strip()
 
-            # link = reverse('activate', kwargs={
-            #                    'uidb64': email_body['uid'], 'token': email_body['token']})
+            email_message = EmailMultiAlternatives(
+                'Active your Account',
+                message,
+                settings.EMAIL_HOST_USER,
+                [email]
+                )
+            email_message.content_subtype = 'html'
+            email_message.mixed_subtype = 'related'
+            EmailThread(email_message).start()
 
-            # email_subject = 'Activate your account'
-
-            # activate_url = 'http://'+current_site.domain+link
-
-            # email = EmailMessage(
-            #         email_subject,
-            #         'Hi '+user.username + ', Please the link below to activate your account \n'+activate_url,
-            #         'socialstreetleague@gmail.com',
-            #         [email],
-            #     )
-            # EmailThread(email).start()
-            # email.send(fail_silently=False)
-            # messages.success(request, 'Account successfully created')
-            # return render(request, 'signup.html')
-            email = form.cleaned_data.get('email').lower()
-            raw_password = form.cleaned_data.get('password1')
-            account = authenticate(email=email, password=raw_password)
-            login(request, account)
-
-            return redirect('home')
+            return render(request,'activate_mail_done.html')
         else:
             context = {
                 'registration_form':RegistrationForm(request.POST),
@@ -107,7 +99,6 @@ class VerificationView(View):
 
             if not account_activation_token.check_token(user, token):
                 return redirect('login'+'?message='+'User already activated')
-
             if user.is_active:
                 return redirect('login')
             user.is_active = True
@@ -120,7 +111,7 @@ class VerificationView(View):
             pass
 
         return redirect('login')
-  
+    
 
 
 def login_user(request):
@@ -137,8 +128,16 @@ def login_user(request):
             user=authenticate(request,email=email,password=password)
             
             if user is not None :
-                login(request,user)
-                return redirect('home')
+                if user.is_active:
+                    login(request,user)
+                    if user.is_admin :
+                        return redirect('admin:index')
+                    else:
+                        return redirect('home')
+                else:
+                    return render(request,'ban.html')
+                    
+                    
             else:
                 messages.info(request,'invalid password or email')
                 return redirect('login')
@@ -153,16 +152,6 @@ def logout_user(request,id):
 def user(request):
     return render(request,'users.html')
 
-# def profile_user(request,id):
-#     user = User.objects.get(id=id)
-#     activities=user.prefer_activity.all()
-#     context = {
-#                 'user':User.objects.get(id=id),
-#                 'activities':activities
-#             }
-#     return render(request,'profile.html',context)
-
-
 def profile_user(request, *args, **kwargs):
     geolocator = Nominatim(user_agent="testproject")
     user_id = kwargs.get("id")
@@ -173,11 +162,11 @@ def profile_user(request, *args, **kwargs):
     context['user']=user
     context['activities']=user.prefer_activity.all()
     context['events']=user.user_events.all()[:2]
-    context['teams']=user.user_teams.all()[:2]
+    context['teams']=Joined_team.objects.filter(user_id=user_id)[:2]
     context['blogs']=Post.objects.filter(user=user)[:3]
     context['postcount']=str(Post.objects.filter(user=user).count())
     context['eventcount']=str(user.user_events.all().count())
-    context['teamcount']=str(user.user_teams.all().count())
+    context['teamcount']=str(Joined_team.objects.filter(user_id=user_id).count())
     if not request.user.is_authenticated:
          return redirect("login") 
     account = User.objects.get(id=user_id)
@@ -202,9 +191,9 @@ def profile_user(request, *args, **kwargs):
 					"username": account.username,
 					"profile_image": account.profile_image,
 					"birth_date":account.birth_date,
-                    "disponibility":account.disponibility,
+                    "user_disponibility":account.user_disponibility.all(),
                     "address":account.address,
-                    
+                    "prefer_activity":account.prefer_activity.all(),
 				}
 			)
         context['form'] = form
@@ -218,8 +207,9 @@ def profile_user(request, *args, **kwargs):
 					"username": account.username,
 					"profile_image": account.profile_image,
 					"birth_date":account.birth_date,
-                    "disponibility":account.disponibility,
+                    "user_disponibility":account.user_disponibility.all(),
                     "address":account.address,
+                    "prefer_activity":account.prefer_activity.all(),
 				}
 			)
         context['form'] = form
@@ -247,15 +237,7 @@ def upload_image(request,id):
                 return redirect('profile',id=id)     
     return redirect('profile',id=id)
     
-def pagination(page,obj_list):
-    paginator = Paginator(obj_list,12)
-    try:
-        obj = paginator.page(page)
-    except PageNotAnInteger:
-        obj = paginator.page(1)
-    except EmptyPage:
-        obj = paginator.page(paginator.num_pages)
-    return obj          
+       
             
 def filter_data(request):
     dates=request.GET.get('filter')
@@ -302,7 +284,7 @@ def load_more_data_team(request):
     user=User.objects.get(id=id)
     offset=int(request.GET.get('offset'))
     limit=int(request.GET.get('limit'))
-    data=user.user_teams.all()[offset:offset+limit]
+    data=Joined_team.objects.filter(user_id=id)[offset:offset+limit]
     t=render_to_string('teamsfilter.html',{'data':data})
     return JsonResponse({'data':t}
 )

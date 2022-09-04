@@ -113,6 +113,8 @@
   }
 </script>
 
+<script src="https://unpkg.com/htmx.org@1.8.0" integrity="sha384-cZuAZ+ZbwkNRnrKi05G/fjBX+azI9DNOkNYysZ0I/X5ZFgsmMiBXgDZof30F5ofc" crossorigin="anonymous"></script>
+
 <!-- leaflet js  -->
 {% leaflet_js plugins="forms" %}
 {% leaflet_js plugins="ALL" %}
@@ -430,34 +432,82 @@
     });
 
     
+    var state= false;
+    function toggle(){
+        if(state){
+      document.getElementById("id_password").setAttribute("type","password");
+      document.getElementById("eye").style.color='#7a797e';
+      state = false;
+         }
+         else{
+      document.getElementById("id_password").setAttribute("type","text");
+      document.getElementById("eye").style.color='#5887ef';
+      state = true;
+         }
+    }
+
+    var state= false;
+    function toggle2(){
+        if(state){
+      document.getElementById("id_password2").setAttribute("type","password");
+      document.getElementById("eye2").style.color='#7a797e';
+      state = false;
+         }
+         else{
+      document.getElementById("id_password2").setAttribute("type","text");
+      document.getElementById("eye2").style.color='#5887ef';
+      state = true;
+         }
+    }
+
+    var state= false;
+    function toggleold(){
+        if(state){
+      document.getElementById("id_old_password").setAttribute("type","password");
+      document.getElementById("oldeye").style.color='#7a797e';
+      state = false;
+         }
+         else{
+      document.getElementById("id_old_password").setAttribute("type","text");
+      document.getElementById("oldeye").style.color='#5887ef';
+      state = true;
+         }
+    }
+
+    var state= false;
+    function toggle_new1(){
+        if(state){
+      document.getElementById("id_new_password1").setAttribute("type","password");
+      document.getElementById("eye_new1").style.color='#7a797e';
+      state = false;
+         }
+         else{
+      document.getElementById("id_new_password1").setAttribute("type","text");
+      document.getElementById("eye_new1").style.color='#5887ef';
+      state = true;
+         }
+    }
+
+    var state= false;
+    function toggle_new2(){
+        if(state){
+      document.getElementById("id_new_password2").setAttribute("type","password");
+      document.getElementById("eye_new2").style.color='#7a797e';
+      state = false;
+         }
+         else{
+      document.getElementById("id_new_password2").setAttribute("type","text");
+      document.getElementById("eye_new2").style.color='#5887ef';
+      state = true;
+         }
+    }
 
 </script>
 
 <script>
-  let modalBtns = [...document.querySelectorAll(".button")];
-  modalBtns.forEach(function (btn) {
-    btn.onclick = function () {
-      let modal = btn.getAttribute("data-modal");
-      document.getElementById(modal).style.display = "block";
-    };
-  });
-  let closeBtns = [...document.querySelectorAll(".h")];
-  closeBtns.forEach(function (btn) {
-    btn.onclick = function () {
-      let modal = btn.closest(".form-popup");
-      modal.style.display = "none";
-    };
-  });
-  
-  window.onclick = function (event) {
-    if (event.target.className === "form-popup") {
-      event.target.style.display = "none";
-    }
-  };  
-  {% comment %} $('.button').click(function(){
-     $('#building-name').html($(this).data('id'));
-    
- });  {% endcomment %}
+  document.body.addEventListener('htmx:configRequest', function(evt) {
+    evt.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';// add a new header into the request
+   });
 </script>
 
 <script>
@@ -532,3 +582,52 @@
     }
     
 </script>
+
+<script type="text/javascript">
+  const initialText = 'Participate';
+
+  $(document).on('click','#participate',function(){
+   
+    const btn = document.getElementById('participate');
+    $(this).val('you have participated');
+    $(this).prop('disabled', true);
+    var i_dp = $(this).attr('data');
+    console.log(i_dp);
+  
+      $.ajax({
+          url:'{% url 'participate' %}' ,
+          data:
+          {
+            'id_p': i_dp
+          },
+          dataType:'json',
+          beforeSend:function(){
+           
+          },
+          success:function(res){
+
+            $("#posts").html(res.data);
+          }
+          
+          });
+       
+  });
+  {% comment %} $("#participate").on('click',function(){
+    var i_dp = $(this).attr('data');
+    if(btn.value === 'Participate'){
+    $.ajax({
+        url:'{% url 'participate' %}' ,
+        data:
+        {
+          'id_p': i_dp
+        },
+        success:function(){
+              btn.value = 'you have participated';
+              }
+        });
+    }
+    }); {% endcomment %}
+
+
+</script>
+

@@ -196,6 +196,10 @@
         <label>{{field.label}}</label>
       </div>
       {% endfor %}
+      <span style="position: absolute;right: 15px;transform: translate(0,-50%);top:48%;cursor: pointer;">
+        <i style ="font-size: 20px;color: #7a797e;" class="fa fa-eye" id="eye" onclick="toggle()">
+        </i>
+       </span>
       {% for field in authenticateform %}
       <p>
       {% for message in messages %}
