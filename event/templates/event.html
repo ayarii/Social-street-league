@@ -22,7 +22,7 @@
  <section id="contant" class="contant">
     <div class="container">
        <div class="row">
-         <li><a href="{% url 'addev' %}">Add Event</a></li>
+         
 
          <div class="col-lg-9 col-sm-12 col-xs-12">
             <h4>{{i}}</h4>
@@ -61,12 +61,12 @@ Current_Page: {{ events.number }}<br/>
 Number of Pages: {{ events.paginator.num_pages }}<br/>
 <hr><br/><br/>
 -->
+
 </div>
 <div class="col-lg-3 col-sm-6 col-xs-12">
    <div class="content-widget top-story" style="background: url(images/top-story-bg.jpg);">
       <div class="top-stroy-header">
-         <h2>Top Event <a href="#" class="fa fa-fa fa-angle-right"></a></h2>
-         <span class="date">July 05, 2017</span>
+         
          <h2>Categories</h2>
       </div>
       {% for i in category  %}
@@ -74,11 +74,15 @@ Number of Pages: {{ events.paginator.num_pages }}<br/>
          <li><a href={% url 'even' i.id %}>{{ i.category_name }}</a></li>
       </ul>
       {% endfor %}
+      <li><a class="btn" href={% url 'addev' %} positian="center" >Add event</a>
+      </li>
    </div>
    
 </div>
 
+
 </div>
+
 
 </div> 
 
