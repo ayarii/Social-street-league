@@ -1,5 +1,6 @@
 from asyncio.windows_events import NULL
 import email
+from django.http import JsonResponse
 import os
 import string
 from django.contrib.sites.shortcuts import get_current_site
@@ -13,6 +14,7 @@ from django.utils.html import strip_tags
 from django.conf import settings
 from email.mime.image import MIMEImage
 from django.contrib.auth.decorators import login_required
+from django.views.generic import ListView
 # Create your views here.
 def display(request):
     team_list=Team.objects.all()
@@ -83,3 +85,34 @@ def leave_team(request,id):
     team= Joined_team.objects.filter(team_id=id).filter(user_id=request.user.id)
     team.delete()
     return redirect('singleteam' , id )
+
+# class InfoListView(ListView):
+#     model = Team
+#     template_name = 'team.html'
+    
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context["qs_json"] = json.dumps(list(Team.objects.values('team_name','n_players','team_image')))
+#         return context
+
+def Search_ajax(request):
+    if request.is_ajax():
+        res=None
+        team=request.POST.get('team')
+        qs=Team.objects.all().filter(team_name=team)
+        if len(qs) > 0 and len(team) > 0 :
+            data =[]
+            for pos in qs:
+                item ={
+                    'id' : pos.id,
+                    'team_name':pos.team_name,
+                    'n_players':pos.n_players,
+                    'team_image':str(pos.team_image.url),
+                }
+                data.append(item)
+            res=data
+        else:
+            res = 'No results found...'
+        
+        return JsonResponse({'data':res})
+    return JsonResponse({})

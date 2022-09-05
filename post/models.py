@@ -49,7 +49,7 @@ class Post(models.Model):
     def participants(self):
         np=Post_Participants.objects.all().filter(post_id=self.id).count()
         return np      
-        
+    participants = property(participants)   
     
 class Post_Participants(models.Model):
     post_id= models.ForeignKey(Post, on_delete=models.CASCADE ,null=True, blank=True)

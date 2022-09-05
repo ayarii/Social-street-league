@@ -9,10 +9,13 @@ from geopy.geocoders import Nominatim
 from geopy.point import Point
 from django.http import JsonResponse,HttpResponse
 from django.template.loader import render_to_string
+from django.db.models import F
 # Create your views here.
 def display(request):
-    post_list=Post.objects.all().order_by('-created_at')
-
+    post_list=Post.objects.all()
+    post_list= sorted (post_list, key = lambda p : p.participants, reverse=True)
+    post_list= sorted (post_list, key = lambda p : p.created_at, reverse=True)
+    #Post.objects.annotate(reputation=(Post_Participants.objects.all().filter(post_id=id).count())).order_by("-reputation")           
     page = request.GET.get('page', 1)
     paginator = Paginator(post_list,5)
     try:
@@ -98,7 +101,26 @@ def participate_post(request):
     t=render_to_string('post.html',{'posts':posts})
     return JsonResponse({'posts':t})
     
+def sort(array):
 
+    left = []
+    equal = []
+    right = []
+
+    if len(array) > 1:
+        pivot = array[0]
+        for x in array:
+            if x < pivot:
+                left.append(x)
+            elif x == pivot:
+                equal.append(x)
+            elif x > pivot:
+                right.append(x)
+
+        return sort(left) + equal + sort(right) #recursive calling of the sort() function
+    
+    else:  # return the array, when it contains only 1 element
+        return array
           
     
 

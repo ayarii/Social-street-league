@@ -545,9 +545,61 @@
 </script>
 
 <script>
-  document.body.addEventListener('htmx:configRequest', function(evt) {
-    evt.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';// add a new header into the request
-   });
+  const url= window.location.href
+  const SearchForm = document.getElementById('search-form')
+  const SearchInput = document.getElementById('search_here')
+  const box = document.getElementById('box')
+  const csrf=document.getElementsByName('csrfmiddlewaretoken')[0].value
+  console.log(csrf)
+  
+  const sendSearchData = (e) => {
+       
+       $.ajax({
+         type : 'POST',
+         url:'{% url 'Search_ajax' %}',
+         data:{
+          'csrfmiddlewaretoken':csrf,
+          'team':e,
+         },
+         success : (res) => {
+            console.log(res.data)
+            const data = res.data
+            if(Array.isArray(data)){
+              box.innerHTML =""
+              data.forEach(team=>{
+                box.innerHTML += `<div class="col-md-3" style="margin-top:10px;margin-bottom:10px;">
+                  <div class="team-column style-2" style="width:250px;height:300px;">
+                     <img src="${team.team_image}" alt="" style="max-width:250px;max-height:400px;">
+                     <div class="player-name">
+                        <span class="desination-2" onclick="location.href='/team/singleteam/${team.id}';" style="cursor:pointer;">Want to join ?</span>
+                        <h5>${team.team_name}</h5>
+                        <span class="player-number">${team.n_players}</span>
+                     </div>
+                  </div>
+               </div>`
+              })
+            }else {
+              if(SearchInput.value.length > 0){
+                box.innerHTML = `<b>${data}</b>`
+              }else{
+                $(".container").show()
+              }
+            }
+         },
+         error : (err)=>{
+            console.log(err)
+         }
+
+       })
+
+  }
+
+  SearchInput.addEventListener('keyup', (e)=>{
+    console.log(e.target.value)
+  
+      sendSearchData(e.target.value)
+  
+  })
 </script>
 
 <script>

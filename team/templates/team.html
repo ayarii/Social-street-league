@@ -22,12 +22,16 @@
 
 {% block content %}
  <section id="contant" class="contant main-heading team">
+   
     <div class="row">
       <div class="container">
-         
+         <form id="search-form" autocomplete="off">
+            {% csrf_token %}
+         <input id="search_here" class="form-control mb-2" placeholder="type name of team here to search.." />
+         </form>
          <div id="team-slider">
            
-            <div class="container">
+            <div class="container" id="box">
                {% for t in teams %}
                <div class="col-md-3" style="margin-top:10px;margin-bottom:10px;">
                   <div class="team-column style-2" style="width:250px;height:300px;">
