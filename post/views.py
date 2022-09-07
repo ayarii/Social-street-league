@@ -9,13 +9,12 @@ from geopy.geocoders import Nominatim
 from geopy.point import Point
 from django.http import JsonResponse,HttpResponse
 from django.template.loader import render_to_string
-from django.db.models import F
+from activity.models import Category
 # Create your views here.
 def display(request):
     post_list=Post.objects.all()
     post_list= sorted (post_list, key = lambda p : p.participants, reverse=True)
     post_list= sorted (post_list, key = lambda p : p.created_at, reverse=True)
-    #Post.objects.annotate(reputation=(Post_Participants.objects.all().filter(post_id=id).count())).order_by("-reputation")           
     page = request.GET.get('page', 1)
     paginator = Paginator(post_list,5)
     try:
@@ -26,6 +25,7 @@ def display(request):
         posts = paginator.page(paginator.num_pages)
     context = {
                 'posts':posts,
+                'categories':Category.objects.all()
             }
     return render(request,'post.html',context)
 
@@ -38,18 +38,28 @@ def add_post(request):
             Latitude = request.POST.get('lat',False)
             Longitude = request.POST.get('long',False)
             location = geolocator.reverse(Point(Latitude , Longitude))
+            tags = request.POST.get('tags',False)
+            if tags[0]==","and tags[-1]=="," :
+                tags=tags[1:-1]
+            elif tags[-1]==",":
+                tags=tags[:-1]
+            elif tags[0]==",":
+                tags=tags[1:]
             post = form.save(commit=False)
             post.post_location = location.raw['display_name']
             post.user = request.user
+            post.tags = tags
             post.save()
             return redirect('post')
     else:
         context = {
                 'form':post_form(),
+                'categories':Category.objects.all()
             }
         return render(request,'addpost.html',context)
     context = {
                 'form':post_form(),
+                'categories':Category.objects.all()
             }
     return render(request,'addpost.html',context)
 
@@ -101,30 +111,19 @@ def participate_post(request):
     t=render_to_string('post.html',{'posts':posts})
     return JsonResponse({'posts':t})
     
-def sort(array):
-
-    left = []
-    equal = []
-    right = []
-
-    if len(array) > 1:
-        pivot = array[0]
-        for x in array:
-            if x < pivot:
-                left.append(x)
-            elif x == pivot:
-                equal.append(x)
-            elif x > pivot:
-                right.append(x)
-
-        return sort(left) + equal + sort(right) #recursive calling of the sort() function
-    
-    else:  # return the array, when it contains only 1 element
-        return array
-          
-    
-
-    
-    
-
-   
+def filter_data(request):
+    id_cat=str(request.GET.get('filter'))
+    posts =[]
+    if id_cat :
+        category=Category.objects.get(id=int(id_cat))
+        cat=category.category_name
+        posts=Post.objects.filter(tags__contains=cat)
+    # post=Post.objects.all()
+    # res=None
+    # data =[]
+    # for p in post:
+    #     if p.tags.contains(cat):
+    #         data.append(p)
+                
+    t=render_to_string('blogcategory.html',{'data':posts},request)
+    return JsonResponse({'data':t})

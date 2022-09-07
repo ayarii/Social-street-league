@@ -99,20 +99,39 @@ def Search_ajax(request):
     if request.is_ajax():
         res=None
         team=request.POST.get('team')
-        qs=Team.objects.all().filter(team_name=team)
-        if len(qs) > 0 and len(team) > 0 :
-            data =[]
-            for pos in qs:
-                item ={
-                    'id' : pos.id,
-                    'team_name':pos.team_name,
-                    'n_players':pos.n_players,
-                    'team_image':str(pos.team_image.url),
-                }
-                data.append(item)
-            res=data
+        type=request.POST.get('type')
+        if type == "profile":
+            qs=Joined_team.objects.filter(user_id=request.user.id)
+            if len(qs) > 0 and len(team) > 0 :
+                data =[]
+                for pos in qs:
+                    if pos.team.team_name == team :
+                        item ={
+                            'id' : pos.id,
+                            'team_name':pos.team.team_name,
+                            'n_players':pos.team.n_players,
+                            'team_image':str(pos.team.team_image.url),
+                        }
+                        data.append(item)
+                res=data
+            else:
+                res = 'No results found...'
+            return JsonResponse({'data':res})
         else:
-            res = 'No results found...'
+            qs=Team.objects.all().filter(team_name=team)
+            if len(qs) > 0 and len(team) > 0 :
+                data =[]
+                for pos in qs:
+                    item ={
+                        'id' : pos.id,
+                        'team_name':pos.team_name,
+                        'n_players':pos.n_players,
+                        'team_image':str(pos.team_image.url),
+                    }
+                    data.append(item)
+                res=data
+            else:
+                res = 'No results found...'
         
-        return JsonResponse({'data':res})
+            return JsonResponse({'data':res})
     return JsonResponse({})

@@ -9,7 +9,7 @@ from .models import Post
 class post_form(forms.ModelForm):
     class Meta:
         model = Post 
-        fields = ['post_title','post_description','post_date' ,'post_image','lat','long']
+        fields = ['post_title','post_description','post_date' ,'post_image','lat','long','tags']
         widgets= {
             'post_title':forms.TextInput(attrs={'class':'form-control'}),
             'post_description': forms.Textarea(attrs={'class':'form-control', "rows":4 ,}),
@@ -18,5 +18,6 @@ class post_form(forms.ModelForm):
             'post_location': forms.TextInput(attrs={'class':'form-control','style':'display:none;','title':'Your website'}),
             'lat':forms.TextInput(attrs={'class':'form-control'}),
             'long': forms.TextInput(attrs={'class':'form-control'}),
+            'tags' :forms.Textarea(attrs={'class':'form-control'}),
         }
       

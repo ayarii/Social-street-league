@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load filter_tags %}
 {% load widget_tweaks %}
 {% block header %}{% endblock header %}
 
@@ -35,10 +36,10 @@
    <div class="row">
       <div class="container">
          
-         <div class="col-md-9" id="posts">
+         <div class="col-md-9" id="posts" class="posts">
             {% for p in posts %}
             {% if p.post_image %}
-             <div class="feature-post small-blog">
+            <div class="feature-post small-blog">
                <div class="col-md-5">
                   <div class="feature-img">
                      <img src={{p.post_image.url}} class="img-responsive" alt="#" style="max-width:100%;max-height:100%;" />
@@ -56,6 +57,16 @@
                      </div>
                      <div class="post-heading">
                         <h3>{{p.post_title}}</h3>
+                        {% if p.tags %}
+                           <div style="display: flex;flex-direction: row;">
+                              {% with p.tags|split:"," as tags%}
+                                 {% for tag in tags %}
+                                    <p style="background-color:#e4b000;color: #ffffff; border-radius:4px;flex:initial;font-size:10px;padding:5px;margin:3px;display:inline-block;width:17%;" align="justify">
+                                    <b>{{tag}}</b></p>
+                                 {% endfor %}
+                              {% endwith %}
+                           </div>
+                        {% endif %}
                         <h5>{{p.post_date}} in {{p.post_location}}</h5>
                         <p>{{p.post_description}}</p>
                         
@@ -75,17 +86,17 @@
                   </div>
                </div>
                <div class="full">
-            {% if not p.user.id == request.user.id %}
-               {% if request.user.is_authenticated %}
-                  {% if p.is_participated  %}
-                  <input class="btn disabled" type="button" id="participate" data="{{p.id}}" style="position:relative;width=100%;float:right;margin:10px" value="you have participated"></input>
-                  {% else %}
-                  <input class="btn" type="button" id="participate" data="{{p.id}}" style="position:relative;width=100%;float:right;margin:10px" value="Participate"></input>
-                  {% endif %}
-               {% else %}
-                  <input class="btn" type="button" onclick="location.href='{% url 'login' %}';"  style="position:relative;width=100%;float:right;margin:10px" value="Participate"></input>
-               {% endif %}
-            {% endif %}  
+                  {% if not p.user.id == request.user.id %}
+                     {% if request.user.is_authenticated %}
+                        {% if p.is_participated  %}
+                        <input class="btn disabled" type="button" id="participate" data="{{p.id}}" style="position:relative;width=100%;float:right;margin:10px" value="you have participated"></input>
+                        {% else %}
+                        <input class="btn" type="button" id="participate" data="{{p.id}}" style="position:relative;width=100%;float:right;margin:10px" value="Participate"></input>
+                        {% endif %}
+                     {% else %}
+                        <input class="btn" type="button" onclick="location.href='{% url 'login' %}';"  style="position:relative;width=100%;float:right;margin:10px" value="Participate"></input>
+                     {% endif %}
+                  {% endif %}  
                   <p style="position:absolute;bottom:20%;left:2%;font-weight:bold;" >{{p.participants}} participants</p>
                </div>
             </div>
@@ -121,6 +132,16 @@
                   </div>
                   <div class="post-heading">
                      <h3> {{p.post_title}} </h3>
+                     {% if p.tags %}
+                     <div style="display: flex;flex-direction: row;">
+                        {% with p.tags|split:"," as tags%}
+                           {% for tag in tags %}
+                              <p style="background-color:#e4b000;color: #ffffff; border-radius:4px;flex:initial;font-size:10px;padding:5px;margin:3px;display:inline-block;width:17%;" align="justify">
+                              <b>{{tag}}</b></p>
+                            {% endfor %}
+                        {% endwith %}
+                     </div>
+                     {% endif %}
                      <h5>{{p.post_date}} in {{p.post_location}}</h5>
                      <p>{{p.post_description}}
                      </p>
@@ -184,14 +205,9 @@
                <h4 class="heading">Top Categories</h4>
                <div class="category-menu">
                   <ul>
-                     <li><a href="#">Cricket</a></li>
-                     <li><a href="#">Football</a></li>
-                     <li><a href="#">Hockey</a></li>
-                     <li><a href="#">Tennis</a></li>
-                     <li><a href="#">Basketball</a></li>
-                     <li><a href="#">Golf</a></li>
-                     <li><a href="#">Cycling</a></li>
-                     <li><a href="#">Motorsports</a></li>
+                     {% for c in categories %}
+                     <li><a id="catpostfilter" cat-id="{{c.id}}" style="cursor:pointer;">{{c}}</a></li>
+                     {% endfor %}
                   </ul>
                </div>
             </div>
@@ -351,6 +367,22 @@
    </center>
    
 </section>
+<script>
+   $(document).on('click','#catpostfilter',function(){
+      var _filterVal=$(this).attr('cat-id'); 
+      console.log(_filterVal)
+     // Run Ajax
+     $.ajax({
+      url:'/post/filter-data',
+      data:{"filter" : _filterVal},
+      dataType:'json',
+      success:function(res){
+        console.log("done");
+        $("#posts").html(res.data);
+      }
+    });
+    });
+</script>
 
 
 {% endblock content %}

@@ -164,7 +164,7 @@ def profile_user(request, *args, **kwargs):
     context['activities']=user.prefer_activity.all()
     context['events']=user.user_events.all()[:2]
     context['teams']=Joined_team.objects.filter(user_id=user_id)[:2]
-    context['blogs']=Post.objects.filter(user=user)[:2]
+    context['blogs']=Post.objects.filter(user=user).order_by('-created_at')[:2]
     context['partblogs']=Post_Participants.objects.all().filter(user_id=user)[:2]
     context['postcount']=str(Post.objects.filter(user=user).count())
     context['partpostcount']=str(Post_Participants.objects.all().filter(user_id=user).count())

@@ -33,6 +33,7 @@
    <script src="https://kit.fontawesome.com/4e45933f98.js" crossorigin="anonymous"></script>
    <link href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
    <!-- end font family -->
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.css"/>
    <link rel="stylesheet" href="https://unpkg.com/dropzone/dist/dropzone.css" />
    <!-- leaflet css  -->
    {% leaflet_css plugins="ALL" %} 
@@ -98,8 +99,11 @@
 <script src="{% static 'cropperjs/dist/cropper.min.js' %}"></script>
 <script src="{% static 'js/all.js' %}"></script>
 <script src="https://unpkg.com/dropzone"></script>
-<!-- ALL PLUGINS -->
 <script src="{% static 'js/custom.js' %}"></script>
+<script src="{% static 'js/script.js' %}"></script>
+<script src="{% static 'js/multi-input.js' %}"></script>
+<!-- ALL PLUGINS -->
+
 <script type="module" src="{% static 'cropperjs/dist/cropper.min.js' %}"></script>
 <script type="text/javascript">
   function displayLoadingSpinner(isDisplayed){
@@ -426,7 +430,7 @@
           $(".load-more-icon").addClass('fa-spin');
         },
         success:function(res){
-          $("#filteredTeams").append(res.data);
+          $(".filteredTeams").append(res.data);
           $("#loadMoreTeams").attr('disabled',false);
           $(".load-more-icon").removeClass('fa-spin');
   
@@ -550,7 +554,8 @@
   const SearchInput = document.getElementById('search_here')
   const box = document.getElementById('box')
   const csrf=document.getElementsByName('csrfmiddlewaretoken')[0].value
-  console.log(csrf)
+  const thisurl=SearchInput.getAttribute('datasearch')
+  console.log(thisurl)
   
   const sendSearchData = (e) => {
        
@@ -560,6 +565,7 @@
          data:{
           'csrfmiddlewaretoken':csrf,
           'team':e,
+          'type':thisurl,
          },
          success : (res) => {
             console.log(res.data)
@@ -595,10 +601,10 @@
   }
 
   SearchInput.addEventListener('keyup', (e)=>{
-    console.log(e.target.value)
-  
+      console.log(e.target.value)
+      
       sendSearchData(e.target.value)
-  
+      $("#loadMoreTeams").hide()
   })
 </script>
 
@@ -644,7 +650,7 @@
             height: 400,
         });
         canvas.toBlob(function(blob) {
-            url = URL.createObjectURL(blob);
+            //url = URL.createObjectURL(blob);
             var reader = new FileReader();
             reader.readAsDataURL(blob);
             reader.onloadend = function() {
@@ -706,5 +712,39 @@
        
   });
   
+</script>
+
+<script type="text/javascript">
+  const tagbox = document.getElementById('tagbox')
+  tagbox.innerHTML =""
+  myselect=document.getElementById("tag")
+  myselect.onchange=function () {
+
+      var index=this.selectedIndex;
+      var text=this.options[index].text;
+      console.log(text)
+      document.getElementById('tags').value += text + ",";
+      tagbox.innerHTML +=` <p id="${index}" data="${index}" style="background-color:#e4b000;color: #ffffff; border-radius: 4px;flex:initial;
+      font-size:12px;padding:8px;margin:5px;display:inline-block;width:18%;" align="justify">
+          <b>${text}</b><i class="fa-solid fa-xmark" style="margin-left:7px;cursor:pointer;float:right;" onclick="Remove(${index})" ></i></p>`;
+      
+  } 
+
+  function Remove(index){
+            
+    var a=document.getElementById("tag").options[index].text
+    var b = document.getElementById('tags').value
+    
+    b=b.replace(a,'')
+    b=b.replace(',,',',')
+    document.getElementById('tags').value = b
+    
+    c=document.getElementById(index);
+
+    $(c).remove()
+  }
+
+ 
+
 </script>
 

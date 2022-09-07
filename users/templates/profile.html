@@ -223,8 +223,10 @@
                           <input type="cancel"> <a href="javascript:window.top.location.reload(true)" class="continue"><i class="fa-solid fa-xmark"></i></a>
                           </span>
                       </div>
+                      
                   </div>
               </form>
+              <div class="h2 title" style="position:relative;text-align: center;margin-bottom:5%;">{{user.username}}</div> 
             </div>
             <div class="modal fade bd-example-modal-lg imagecrop" id="model" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
                <div class="modal-dialog modal-lg">
@@ -440,11 +442,11 @@
                                 </li>
                                 
                                 <li class="nav-item showmy" >
-                                  <a id="showmy" value="my own blogs " class="nav-link bg-primary" style= "background-color:#F26B5E;margin: 10px 30px 20px 0; border-color:#F26B5E; border-style: solid; border-width: 0px 10px;" href="#">my own blogs</a>
+                                  <a id="showmy" value="my own blogs " class="nav-link bg-primary" style= "background-color:#F26B5E;margin: 10px 30px 20px 0; border-color:#F26B5E; border-style: solid; border-width: 0px 10px;cursor:pointer;" >my own blogs</a>
                                 </li>
                 
                                 <li class="nav-item showpart" >
-                                  <a id="showpart" value="participated blog" data-filter="filter" class="nav-link bg-primary" style= "background-color:#F26B5E;margin: 10px 30px 20px 0; border-color:#F26B5E; border-style: solid; border-width: 0px 10px;" href="#">participated blog</a>
+                                  <a id="showpart" value="participated blog" data-filter="filter" class="nav-link bg-primary" style= "background-color:#F26B5E;margin: 10px 30px 20px 0; border-color:#F26B5E; border-style: solid; border-width: 0px 10px;cursor:pointer;" >participated blog</a>
                                 </li>
                                 
                               </ul>
@@ -669,10 +671,16 @@
                         </div>
                         <div class="myteam" style="display:none;width:100%;">
                             <section id="contant" class="contant main-heading team">
+                              <form id="search-form" style="position:relative;width:40%;left:54%;" autocomplete="off">
+                                {% csrf_token %}
+                                <input id="search_here" class="form-control mb-2" placeholder="type name of team here to search.." datasearch="profile"/>
+                                <i class="fa-solid fa-magnifying-glass fa-xl" aria-hidden="true" style="position:absolute;right:0;top:8px;padding:8px;"></i>
+                              </form>
                                 <div class="row">
                                   <div class="container">
+                              
                                      <div id="team-slider" >
-                                        <div class="container" id="filteredTeams">
+                                        <div class="container filteredTeams" id="box">
                                            {% for t in teams %} 
                                            <div class="col-md-3 column blog-team" style="margin-top:10px;margin-bottom:10px;margin-left:10%;" >
                                               <div class="team-column style-2" style="width:250px;height:300px;">
@@ -698,15 +706,15 @@
                               <ul class="navbar-nav mr-auto mt-2 mt-lg-0" style=" position:relative; left:25%; top:0%; ">
                                 
                                 <li class="nav-item " >
-                                  <a id="showall" user_id={{user.id}} value="Show All" data-filter="filter" class="nav-link bg-primary" style= "background-color:#F26B5E;margin: 10px 30px 20px 0; border-color:#F26B5E; border-style: solid; border-width: 0px 10px;" href="#">Show All Events</a>
+                                  <a id="showall" user_id={{user.id}} value="Show All" data-filter="filter" class="nav-link bg-primary" style= "background-color:#F26B5E;margin: 10px 30px 20px 0; border-color:#F26B5E; border-style: solid; border-width: 0px 10px;cursor:pointer;">Show All Events</a>
                                 </li>
                                 
                                 <li class="nav-item comming" >
-                                  <a id="comming" user_id={{user.id}}  value="Show All" data-filter="filter" class="nav-link bg-primary" style= "background-color:#F26B5E;margin: 10px 30px 20px 0; border-color:#F26B5E; border-style: solid; border-width: 0px 10px;" href="#">Comming Events</a>
+                                  <a id="comming" user_id={{user.id}}  value="Show All" data-filter="filter" class="nav-link bg-primary" style= "background-color:#F26B5E;margin: 10px 30px 20px 0; border-color:#F26B5E; border-style: solid; border-width: 0px 10px;cursor:pointer;">Comming Events</a>
                                 </li>
                 
                                 <li class="nav-item passing" >
-                                  <a id="passing" user_id={{user.id}} value="Show All" data-filter="filter" class="nav-link bg-primary" style= "background-color:#F26B5E;margin: 10px 30px 20px 0; border-color:#F26B5E; border-style: solid; border-width: 0px 10px;" href="#">Passing Events</a>
+                                  <a id="passing" user_id={{user.id}} value="Show All" data-filter="filter" class="nav-link bg-primary" style= "background-color:#F26B5E;margin: 10px 30px 20px 0; border-color:#F26B5E; border-style: solid; border-width: 0px 10px;cursor:pointer;">Passing Events</a>
                                 </li>
                                 
                               </ul>

@@ -25,12 +25,12 @@
    
     <div class="row">
       <div class="container">
-         <form id="search-form" autocomplete="off">
+         <form id="search-form" autocomplete="off" style="position:relative;width:40%;left:60%;">
             {% csrf_token %}
-         <input id="search_here" class="form-control mb-2" placeholder="type name of team here to search.." />
+         <input id="search_here" class="form-control mb-2" datasearch="team" placeholder="type name of team here to search.." />
+         <i class="fa-solid fa-magnifying-glass fa-xl" aria-hidden="true" style="position:absolute;right:0;top:8px;padding:8px;"></i>
          </form>
          <div id="team-slider">
-           
             <div class="container" id="box">
                {% for t in teams %}
                <div class="col-md-3" style="margin-top:10px;margin-bottom:10px;">

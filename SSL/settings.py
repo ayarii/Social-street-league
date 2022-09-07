@@ -95,9 +95,10 @@ TEMPLATES = [
                 'django.template.context_processors.i18n',
                 'django.template.context_processors.media',
                 'django.template.context_processors.static',
-                
-    
             ],
+            'libraries': { # <----- add this
+                'filter_tags': 'post.filter' # switch with your app name
+            }
         },
     },
 ]

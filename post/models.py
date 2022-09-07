@@ -1,6 +1,7 @@
 from asyncio.windows_events import NULL
 import datetime
 from telnetlib import AUTHENTICATION
+from activity.models import Category
 from django.db import models
 from django.forms import CharField
 from location_field.models.plain import PlainLocationField
@@ -16,6 +17,7 @@ class Post(models.Model):
     long = models.CharField(max_length=256,null=True,blank=True)
     post_image = models.ImageField(max_length=255, upload_to='posts_photo/', null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE ,null=True, blank=True)
+    tags=models.TextField(max_length=1000,null=True,blank=True)
     created_at	= models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated_at= models.DateTimeField(auto_now=True)
     def __str__(self):

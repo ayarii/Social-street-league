@@ -40,6 +40,28 @@
    /* transform: scale(0.99); */
    background: linear-gradient(-135deg,  #ffcb05, #ec1c24);
    }
+   #tagbox {
+      display: flex;
+      flex-direction: row;
+    }
+    .my-custom-select [slot='button'] {
+      display: flex;
+      align-content: center;
+    }
+    .my-custom-select button {
+      padding: 5px;
+      border: none;
+      background: #f06;
+      border-radius: 5px 0 0 5px;
+      color: white;
+      font-weight: bold;
+    }
+    .my-custom-select .label {
+      padding: 5px;
+      border: 1px solid #f06;
+      border-radius: 0 5px 5px 0;
+    }
+     
 </style>
 
 <section id="contant" class="contant main-heading team">
@@ -71,6 +93,21 @@
 
                      {{form.label_tag.post_description}} 
                      {{form.post_description}}
+                      
+                           <div id="tagbox">
+                            
+                           </div><br/>
+                        
+                                <label>Add Tags:</label><br/>
+                             
+                                <select name="tag" id="tag" class="tm-input form-control tm-input-info">
+                                  {% for c in categories  %}
+                                    <option value={{c}}>{{c}}</option>
+                                  {% endfor %}
+                                </select>
+
+                                <input type="text" name="tags" id="tags" size=50 value="" style="display:none;">
+                     
 
                      {{form.label_tag.post_date}} 
                      {{form.post_date}}
