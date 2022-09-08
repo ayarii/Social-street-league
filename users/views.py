@@ -1,3 +1,4 @@
+from multiprocessing import context
 from django.template.loader import render_to_string
 from django.http import JsonResponse,HttpResponse
 from django.core.mail import EmailMultiAlternatives
@@ -151,8 +152,7 @@ def logout_user(request,id):
      logout(request)
      return redirect('home')
 
-def user(request):
-    return render(request,'users.html')
+
 
 @login_required(login_url='login')
 def profile_user(request, *args, **kwargs):

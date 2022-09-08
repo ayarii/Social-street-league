@@ -59,13 +59,14 @@ class AccountUpdateForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'profile_image','birth_date','prefer_activity','user_disponibility')
+        fields = ('username', 'email', 'profile_image','birth_date','prefer_activity','user_disponibility','address')
         widgets = {
-             'email':forms.EmailInput(attrs={'class':'form-control'}),
-             'username': forms.TextInput(attrs={'class':'form-control'}),
-             'birth_date':forms.DateInput(attrs={'class': 'form-control ' }),
+             'email':forms.EmailInput(attrs={'class':'form-control','id':"inputEmail4",'placeholder':'Email'}),
+             'username': forms.TextInput(attrs={'class':'form-control','placeholder':'Username'}),
+             'birth_date':forms.DateInput(attrs={'class': 'form-control ','type': 'date' }),
              'lat':forms.TextInput(attrs={'class':'form-control'}),
              'long': forms.TextInput(attrs={'class':'form-control'}),
+             'address':forms.TextInput(attrs={'class':'form-control', 'id':'inputAddress' ,'placeholder':'1234 Main St'}),
              'prefer_activity' : forms.CheckboxSelectMultiple(attrs={'class':'checkbox-inline'}),
              'user_disponibility':forms.CheckboxSelectMultiple(attrs={'class':'checkbox-inline'}),
          }

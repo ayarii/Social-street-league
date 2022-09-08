@@ -307,81 +307,101 @@
                         <div class="bio-graph-heading">
                             Edit your profile 
                         </div>
+                       <div class="panel-body bio-graph-info">
                         <div class="container-fluid">
                             <div class="row justify-content-center">
                                 <div class="card profile-card">
                                   <div class="card-body">
                                       <div class="d-flex flex-column content-center p-4">
+                                        
                                         <form method="post">
                                           {% csrf_token %}
-                                            
-                                                {{form.username.label_tag}} 
-                                                {{form.username}}
-                                            
-                                            
-                                                {{form.email.label_tag}} 
-                                                {{form.email}}
-                                            
-                                            
-                                                {{form.birth_date.label_tag}} 
-                                                {{form.birth_date}}
-                                                
-                                                {{form.user_disponibility.label_tag}}
-                                                {% for checkbox in form.user_disponibility %}
-                                                  <label >
-                                                  {{ checkbox.tag }} {{ checkbox.choice_label }}
-                                                  </label>
-                                                {% endfor %}
-                                               
-                                                
-                            
-                                                <input type="text" name="lat" id="lat" size=12 value="" style="display:none;">
-                                                <input type="text" name="long" id="long" size=12 value="" style="display:none;">
-                                                <div id="usermap" style="width:800px;height:200px;"></div>
-                                              
-                                                {{form.prefer_activity.label_tag}} 
-                                  
-                                                {% for checkbox in form.prefer_activity %}
-                                                  <label >
-                                                  {{ checkbox.tag }} {{ checkbox.choice_label }}
-                                                  </label>
-                                                {% endfor %}
-                                              
-                                              
-                                            {% for field in form %}
-                                            <p>
-                                            {% for error in field.errors %}
-                                            <p style="color: red">{{ error }}</p>
-                                            {% endfor %}
-                                            </p>
-                                            {% endfor %}
-                                            {% if form.non_field_errors %}
-                                            <div style="color: red">
-                                            <p>{{form.non_field_errors}}</p>
+                                          <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                              <label for="inputEmail4">{{form.email.label_tag}} </label>
+                                              {{form.email}}
                                             </div>
-                            
-                                            {% endif %}
-                                            <div style=" height: 45px; margin: 35px 0;">
-                                            <input style="height: 100%;
-                                            width: 100%;
-                                            border-radius: 5px;
-                                            border: none;
-                                            color: #fff;
-                                            font-size: 18px;
-                                            font-weight: 500;
-                                            letter-spacing: 1px;
-                                            cursor: pointer;
-                                            transition: all 0.3s ease;
-                                            background: linear-gradient(135deg, #ffcb05, #ec1c24);" type="submit" value="Edit">
+                                            <div class="form-group col-md-6"> 
+                                                  
+                                              <label for="inputPassword4">{{form.username.label_tag}}</label>
+                                              {{form.username}}
                                             </div>
-                                            
+                                          </div>
+                                          <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                              <label >{{form.birth_date.label_tag}} </label>
+                                              {{form.birth_date}}
+                                            </div>
+                                            <div class="form-group col-md-6" > 
+                                              <input type="text" name="lat" id="lat" size=12 value="" style="display:none;">
+                                              <input type="text" name="long" id="long" size=12 value="" style="display:none;">
+                                            </div>
+                                          </div>
+                                          <div id="usermap" style="width:94%;height:250px;margin-left:3%;"></div>
+                                          <div class="form-group">
+                                            <div class="form-check">
+                                              {% comment %} <input class="form-check-input" type="checkbox" id="gridCheck"> {% endcomment %}
+                                              <label class="form-check-label" for="gridCheck" style="margin-left:2%;">
+                                                  Your disponibilities :
+                                              </label>
+                                              
+                                              {% for checkbox in form.user_disponibility %}
+                                                <label style="margin:8px;">
+                                                {{ checkbox.tag }} {{ checkbox.choice_label }}
+                                                </label>
+                                              {% endfor %}
+                                            </div>
+                                          </div>
+                                          <div class="form-group">
+                                              <div class="form-check">
+                                                {% comment %} <input class="form-check-input" type="checkbox" id="gridCheck"> {% endcomment %}
+                                                <label class="form-check-label" for="gridCheck" style="margin-left:2%;">
+                                                  {{form.prefer_activity.label_tag}}
+                                                </label>
+                                                
+                                              {% for checkbox in form.prefer_activity %}
+                                                <label style="margin:8px;" >
+                                                {{ checkbox.tag }} {{ checkbox.choice_label }}
+                                                </label>
+                                              {% endfor %}
+                                              </div>
+                                          </div>
+
+                                          {% for field in form %}
+                                          <p>
+                                          {% for error in field.errors %}
+                                          <p style="color: red">{{ error }}</p>
+                                          {% endfor %}
+                                          </p>
+                                          {% endfor %}
+                                          {% if form.non_field_errors %}
+                                          <div style="color: red">
+                                          <p>{{form.non_field_errors}}</p>
+                                          </div>
+                          
+                                          {% endif %}
+                                          <div style=" height: 45px; margin: 35px 0;">
+                                          <input style="height: 100%;
+                                          margin-left:10%;
+                                          width: 80%;
+                                          border-radius: 5px;
+                                          border: none;
+                                          color: #fff;
+                                          font-size: 18px;
+                                          font-weight: 500;
+                                          letter-spacing: 1px;
+                                          cursor: pointer;
+                                          transition: all 0.3s ease;
+                                          background: linear-gradient(135deg, #ffcb05, #ec1c24);" type="submit" value="Edit">
+                                          </div>
+
                                         </form>
-                        
                                       </div>
                                   </div>
                                 </div>
                             </div>
                         </div>
+                       </div> 
                     </div>
                     <div class="changepassword" style="display:none;height:350px;" >
                         <form id="id_password_change_form" method="POST" class="form-signin" action="{% url 'password_change'%}">{% csrf_token %}
@@ -753,10 +773,6 @@
                   
                </div>
               
-               
-              
-             
-
             </div>
 
         </div>
