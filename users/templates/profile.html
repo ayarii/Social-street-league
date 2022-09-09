@@ -273,7 +273,7 @@
                   <div class="panel">
                     <div class="myprofile">
                       <div class="bio-graph-heading">
-                          Complete your profile 
+                           your profile 
                       </div>
                       <div class="panel-body bio-graph-info">
                           <h1>Personnel Information</h1>
@@ -291,7 +291,10 @@
                                   <p><span>Age : </span>{{user.user_age}}</p>
                               </div>
                               <div class="bio-row">
-                                  <p><span>Disponibility : </span>{{user.disponibility}}</p>
+                                  <p><span>Disponibility : </span></p>
+                                  {% for d in disponibilities %}
+                                    {{d.disponibility_name}}
+                                  {% endfor %}
                               </div>
                               <div class="bio-row">
                                 <p><span>Prefer_Activities</span> 
@@ -379,7 +382,7 @@
                                           <p>{{form.non_field_errors}}</p>
                                           </div>
                           
-                                          {% endif %}
+                                          {% endif %} 
                                           <div style=" height: 45px; margin: 35px 0;">
                                           <input style="height: 100%;
                                           margin-left:10%;

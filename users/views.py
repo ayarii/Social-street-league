@@ -160,8 +160,9 @@ def profile_user(request, *args, **kwargs):
     user_id = kwargs.get("id")
     user=User.objects.get(id=user_id)
     context = {}
-    context['user']=user
+    context['user']=user 
     context['activities']=user.prefer_activity.all()
+    context['disponibilities']=user.user_disponibility.all()
     context['events']=user.user_events.all()[:2]
     context['teams']=Joined_team.objects.filter(user_id=user_id)[:2]
     context['blogs']=Post.objects.filter(user=user).order_by('-created_at')[:2]
