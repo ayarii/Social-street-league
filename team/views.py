@@ -100,26 +100,38 @@ def Search_ajax(request):
         res=None
         team=request.POST.get('team')
         type=request.POST.get('type')
+        if len(team) <= 0:
+            if type == "profile":
+                res=Joined_team.objects.filter(user_id=request.user.id)
+            else:
+                res=Team.objects.all().filter(team_name=team)
+                 
         if type == "profile":
             qs=Joined_team.objects.filter(user_id=request.user.id)
-            if len(qs) > 0 and len(team) > 0 :
+            if len(qs) > 0 and len(team) > 0:
                 data =[]
                 for pos in qs:
                     if pos.team.team_name == team :
                         item ={
-                            'id' : pos.id,
-                            'team_name':pos.team.team_name,
-                            'n_players':pos.team.n_players,
-                            'team_image':str(pos.team.team_image.url),
-                        }
+                                'id' : pos.id,
+                                'team_name':pos.team.team_name,
+                                'n_players':pos.team.n_players,
+                                'team_image':str(pos.team.team_image.url),
+                                'status':'leave'
+                            }
                         data.append(item)
                 res=data
             else:
                 res = 'No results found...'
+          
             return JsonResponse({'data':res})
         else:
-            qs=Team.objects.all().filter(team_name=team)
-            if len(qs) > 0 and len(team) > 0 :
+            if len(team) > 0 :
+                qs=Team.objects.all().filter(team_name=team)
+            else:
+               qs=Team.objects.all()
+            
+            if len(qs) > 0 :
                 data =[]
                 for pos in qs:
                     item ={
@@ -127,6 +139,7 @@ def Search_ajax(request):
                         'team_name':pos.team_name,
                         'n_players':pos.n_players,
                         'team_image':str(pos.team_image.url),
+                        'status':'join'
                     }
                     data.append(item)
                 res=data

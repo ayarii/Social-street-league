@@ -7,19 +7,20 @@ from django.shortcuts import render, redirect
 from .models import Event,Activity, Category
 from .models import Event
 from post.models import Post
-
+from users.models import User
+from django.template.loader import render_to_string
 from django.core.paginator import Paginator
 import folium
 from .forms import EventForm
 from django.core.mail import send_mail
-
-
+from django.core.mail import EmailMultiAlternatives
 from django.http import FileResponse
 import io
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
-from django.conf import settings
+from django.conf import settings 
+
 
 #def Display(request):
     #return render(request,'event.html' ,{'ev' : Event.objects.all()} )
@@ -135,22 +136,35 @@ def recommandationf(request):
 
 def contact(request):
     if request.method== "POST":
-         message_name = request .POST['name']
-         
-         message_email = request.POST['email']
-         message = request.POST['message']
+         subject= request.POST['subject']
+         msg = request.POST['message']
+         useremail = request.user.email
+         name= request.user.username
+         admin_list=User.objects.filter(is_admin=True)
+         admin_emails=[]
+         admin_emails.append(settings.EMAIL_HOST_USER)
+         for i in admin_list:
+                admin_emails.append(i.email)    
+        #send an email
+         message = render_to_string('emailcontact.html',
+                                   {
+                                    'msg':msg,
+                                    'username':useremail
+                                   }
+                                   ).strip()
 
-         #send an email
-
-         send_mail(
-            message_name,
-            message,
-            settings.EMAIL_HOST_USER,
-            [message_email],       
-         )
+         email_message = EmailMultiAlternatives(
+                subject,
+                message,
+                useremail,
+                admin_emails
+                )
+         email_message.content_subtype = 'html'
+         email_message.mixed_subtype = 'related'
+         email_message.send()
         
 
-         return render(request, 'contact.html', {'name': message_name})
+         return render(request, 'contact.html')
     else:
         return render (request, 'contact.html', {})
     return render (request, 'contact.html', {})

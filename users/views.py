@@ -166,7 +166,7 @@ def profile_user(request, *args, **kwargs):
     context['events']=user.user_events.all()[:2]
     context['teams']=Joined_team.objects.filter(user_id=user_id)[:2]
     context['blogs']=Post.objects.filter(user=user).order_by('-created_at')[:2]
-    context['partblogs']=Post_Participants.objects.all().filter(user_id=user)[:2]
+    context['partblogs']=Post_Participants.objects.all().order_by('-created_at').filter(user_id=user)[:2]
     context['postcount']=str(Post.objects.filter(user=user).count())
     context['partpostcount']=str(Post_Participants.objects.all().filter(user_id=user).count())
     context['eventcount']=str(user.user_events.all().count())
@@ -269,7 +269,7 @@ def load_more_data_post(request):
     offset=int(request.GET.get('offset'))
     limit=int(request.GET.get('limit'))
     data=Post.objects.filter(user=user)[offset:offset+limit]
-    t=render_to_string('blogsfilter.html',{'data':data})
+    t=render_to_string('blogsfilter.html',{'data':data},request)
     return JsonResponse({'data':t}
 )
     
@@ -278,8 +278,8 @@ def load_more_data_post_part(request):
     user=User.objects.get(id=id)
     offset=int(request.GET.get('offset'))
     limit=int(request.GET.get('limit'))
-    data=Post_Participants.objects.all().filter(user_id=user)[offset:offset+limit]
-    t=render_to_string('partblogsfilter.html',{'data':data})
+    data=Post_Participants.objects.all().order_by('-created_at').filter(user_id=user)[offset:offset+limit]
+    t=render_to_string('partblogsfilter.html',{'data':data},request)
     return JsonResponse({'data':t}
 )
     

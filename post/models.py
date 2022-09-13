@@ -56,6 +56,7 @@ class Post(models.Model):
 class Post_Participants(models.Model):
     post_id= models.ForeignKey(Post, on_delete=models.CASCADE ,null=True, blank=True)
     user_id= models.ManyToManyField(User)
+    created_at=models.DateTimeField(auto_now_add=True, null=True, blank=True)
     
         
     

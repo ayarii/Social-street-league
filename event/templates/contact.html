@@ -56,11 +56,10 @@
              <div class="col-md-6">
                 <div class="contact-us">
                     
-                   <form action="{% url 'contact' %}" method="post" ">
+                   <form action="{% url 'contact' %}" method="post" >
                     {% csrf_token %}                
                     <ul>       
-                         <li><input type="text" id="name" name="name" class="required" placeholder="Name *">{{message_name}}</li>
-                         <li><input type="text" id="email" name="email" class="required email" placeholder="Email *"></li>
+                         <li><input type="text" id="subject" name="subject" class="required" placeholder="Subject *"></li>
                          <li><textarea name="message" id="message" placeholder="Add your message"></textarea></li>
                          <button class="btn" type="submit" value="send" >Send</button>
                       </ul>

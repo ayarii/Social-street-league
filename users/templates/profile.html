@@ -458,7 +458,7 @@
                         </ul>
                         <div class="myblog" >
                             <section id="contant" class="contant main-heading">
-                              <ul class="navbar-nav mr-auto mt-2 mt-lg-0" style=" position:relative; left:25%; top:0%; ">
+                              <ul class="navbar-nav mr-auto mt-2 mt-lg-0" style="position:relative;left:25%;top:0%; ">
                                 
                                 <li class="nav-item " >
                                   <a id="addmy" href="{% url 'addpost' %}" value="Add blog"  class="nav-link bg-primary" style= "background-color:#F26B5E;margin: 10px 30px 20px 0; border-color:#F26B5E; border-style: solid; border-width: 0px 10px;">Add blog</a>
@@ -595,7 +595,7 @@
                               <div class="row "  >
                                   <div class="container">
                                      
-                                     <div class="col-md-9" id="posts">
+                                     <div class="col-md-9" id="partposts">
                                         {% for p in partblogs %}
                                         {% if p.post_id.post_image %}
                                          <div class="feature-post small-blog blog-post-part">
@@ -688,22 +688,22 @@
                                   </div>
 
                               </div>
-                              <button style="background-color:#8ebf42;left:200px;float:none;" id="loadMorePostspart" user_id="{{user.id}}"  data-limit="2" class="btn btn-dark btn-sm" data="{{partpostcount}}">Load More <i class="fa fa-sync load-more-icon"></i></button>
+                              <button style="background-color:#8ebf42;left:200px;float:none;" id="loadMorePostspart" user_id="{{user.id}}"  data-limit-part="2" class="btn btn-dark btn-sm" data-part="{{partpostcount}}">Load More <i class="fa fa-sync load-more-icon"></i></button>
                               </div>
                             </section>    
                         </div>
                         <div class="myteam" style="display:none;width:100%;">
-                            <section id="contant" class="contant main-heading team">
+                            <section id="contant" class="contant main-heading team teamcontainer" >
                               <form id="search-form" style="position:relative;width:40%;left:54%;" autocomplete="off">
                                 {% csrf_token %}
                                 <input id="search_here" class="form-control mb-2" placeholder="type name of team here to search.." datasearch="profile"/>
                                 <i class="fa-solid fa-magnifying-glass fa-xl" aria-hidden="true" style="position:absolute;right:0;top:8px;padding:8px;"></i>
                               </form>
-                                <div class="row">
-                                  <div class="container">
-                              
+                                <div class="row" >
+                                  <div class="container" >
+                  
                                      <div id="team-slider" >
-                                        <div class="container filteredTeams" id="box">
+                                        <div class="container filteredTeams" id="box" >
                                            {% for t in teams %} 
                                            <div class="col-md-3 column blog-team" style="margin-top:10px;margin-bottom:10px;margin-left:10%;" >
                                               <div class="team-column style-2" style="width:250px;height:300px;">
