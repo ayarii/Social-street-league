@@ -78,7 +78,16 @@ def update_post(request,id):
             posts.save()
             return redirect('post')
     else:
-        form = post_form(instance=post)
+        form = post_form(instance=post, 
+                initial={
+                    'post_title' : post.post_title ,
+                    'post_description' : post.post_description,
+                    'post_date' : post.post_date,
+                    'lat' : post.lat,
+                    'long' : post.long,
+                    'post_image' : post.post_image,
+                    'tags' : post.tags,
+                })
        
     context = {
                 'form':form,

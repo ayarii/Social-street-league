@@ -2,6 +2,7 @@ from multiprocessing import context
 from event.models import Event
 from team.models import Team
 from post.models import Post
+from sponsor.models import Sponsor
 from django.shortcuts import render
 
 # Create your views here.
@@ -15,6 +16,7 @@ def home(request):
         'events':events[1:4],
         'teams':Team.objects.all()[0:4],
         'blogs':posts,
+        'sponsors':Sponsor.objects.all()[0:4],
     }
     return render(request,'home.html',context)
 

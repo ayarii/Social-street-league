@@ -21,13 +21,13 @@
  {% block content %}
 
  <div class="container center" >
-    <form method="Post">
+    <form method="Post" enctype="multipart/form-data" >
        {% csrf_token %}
         <div class="card-body" >
           {{form}}
        </div>
        <div class="card-footer">
-        <a class="btn" type="submit" value="POST" href="{% url 'event' %}" >Add Event</a>
+        <input class="btn" type="submit" value="Update Event">
        </div>
        
     </form>

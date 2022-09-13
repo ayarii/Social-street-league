@@ -146,6 +146,8 @@
                      <p>{{p.post_description}}
                      </p>
                   </div>
+                  <p style="position:absolute;top:100%;left:5%;font-weight:bold;">{{p.participants}} participants</p>
+
                </div>
                <div class="full">
                {% if not p.user.id == request.user.id %}
@@ -159,7 +161,6 @@
                   <input class="btn" type="button" onclick="location.href='{% url 'login' %}';"  style="position:relative;width=100%;float:right;margin:10px;margin-bottom:30px;margin-top:0px;" value="Participate"></input>
                {% endif %}
                {% endif %}
-                  <p style="position:absolute;bottom:40%;left:5%;font-weight:bold;">{{p.participants}} participants</p>
                
                </div>
                

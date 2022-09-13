@@ -37,9 +37,16 @@
                    </ul>
                 </div>
              </div>
+             {% if object.affiche %}
+             <div class="col-md-5 col-sm-5 col-xs-12">
+               <img src="{{object.affiche.url}}"  height="200px" width="100%"  style="object-fit:cover" />
+             </div>
+             <h1><a href = "{{object.affiche.url}}" download="{{object.affiche.url}}">Download Affiche</a> </h1>
+             {% else %}
              <div class="col-md-5 col-sm-5 col-xs-12">
                <img src="{{object.image.url}}"  height="200px" width="100%"  style="object-fit:cover" />
              </div>
+             {% endif %}
           </div>
        </div>
     </div>

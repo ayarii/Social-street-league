@@ -1,6 +1,7 @@
 from difflib import context_diff
 import email
 from http.client import HTTPResponse
+from django.http import HttpResponse , Http404
 from multiprocessing import context
 from unicodedata import category
 from django.shortcuts import render, redirect
@@ -20,6 +21,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
 from django.conf import settings 
+import os 
 
 
 #def Display(request):
@@ -211,13 +213,13 @@ def event_pdf(request):
     return FileResponse(buf, as_attachment=True, filename='event_pdf')
 
 def addev(request):
-
     if request.method == 'POST':
         form = EventForm(request.POST, request.FILES)
-        if  form.is_valid():
-            form.save()
-            return redirect ('/addev?submitted=True')
-        else:
+        if  form.is_valid:
+            event = form.save(commit=False)
+            event.save()
+            return redirect ('event')
+        else: 
             context = {
                 'form': EventForm,
             }
@@ -276,11 +278,25 @@ def updatev(request, id):
         event_save = EventForm(request.POST, request.FILES, instance=event_id)
         if event_save.is_valid():
             event_save.save()
+            return redirect('event')
+        else:
+            event_save = EventForm(instance=event_id)
+        context = {
+        'form':event_save,
+        }
     else:
         event_save = EventForm(instance=event_id)
     context = {
         'form':event_save,
     }
-    return render(request, 'event/updatev.html', context)
+    return render(request, 'updatev.html', context)
 
+def download(request, path):
+    file_path=os.path.join(settings.MEDIA_ROOT, path)
+    if os.path.exists(file_path):
+        with open(file_path, 'rb')as fh:
+            response = HttpResponse(fh.red(), cotent_type="application/image")
+            response['Content-Disposition']='inline;filnemae'+os.path.basename(file_path)
+            return response  
+    raise Http404
 

@@ -21,15 +21,17 @@
  {% block content %}
 
  <div class="container center" >
-    <form method="Post">
+    <form method="POST" enctype="multipart/form-data">
        {% csrf_token %}
         <div class="card-body" >
-          {{form}}
+          {% for f in form  %}
+          {{f.label_tag}}
+            {{f}}
+          {% endfor %}
        </div>
        <div class="card-footer">
-        <a class="btn" type="submit" value="POST" href="{% url 'event' %}" >Add Event</a>
-       </div>
-       
+         <input class="btn" type="submit" value="Add Event" >
+       </div>     
     </form>
     </div> 
     

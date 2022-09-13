@@ -62,39 +62,61 @@
                     </div>
                  </div>
                  <div class="post-heading">
-                 <form method="POST" style="position:right;" enctype="multipart/form-data">
-                  {% csrf_token %}
+                  <form method="POST" style="position:right;" enctype="multipart/form-data">
+                     {% csrf_token %}
+                     
+                       <div class="form-group" style="width:50%;margin-left:15px;" >
+                         <div class="text-left"><label  >Title :</label></div>
+                         {{form.post_title}}
+                       </div>
+                       
+                    
+                     
+                     <div class="form-group" style="margin-left:15px;">
+                         <div class="text-left"><label for="inputAddress2">Description :</label></div>
+                         {{form.post_description}}
+                     </div>
+ 
+                     <div  class="form-group" style="margin-left:15px;">
+                         
+                           <div id="tagbox">
+                             
+                            </div><br/>
+                         
+                         
+                             <label>Add Tags :</label><br/>
+                              
+                             <select name="tag" id="tag" class="tm-input form-control tm-input-info">
+                               {% for c in categories  %}
+                                 <option value={{c}}>{{c}}</option>
+                               {% endfor %}
+                             </select>
+ 
+                             <input type="text" name="tags" id="tags" size=50 value="" style="display:none;">
                   
-                     {{form.label_tag.post_title}} 
-                     {{form.post_title}}
-
-                     {{form.label_tag.post_description}} 
-                     {{form.post_description}}
-
-                     {{form.label_tag.post_date}} 
-                     {{form.post_date}}
-
-                     {{form.label_tag.post_image}} 
-                     {{form.post_image}}
-                     
-                     
-                     <input type="text" name="lat" id="lat" size=12 value="" style="display:none;">
-                     <input type="text" name="long" id="long" size=12 value="" style="display:none;">
-
+                         
+                       </div>
+ 
+                     <div class="form-row">
+                       <div class="form-group col-md-6">
+                         <div class="text-left"><label  >Date :</label></div>
+                         {{form.post_date}}
+                       </div>
+                       <div class="form-group col-md-6" >
+                         <div class="text-left"><label  >Image :</label></div>
+                         {{form.post_image}}
+                       </div>
+                     </div>
+                     <div class="form-group col-md-8" >
+                        {{form.lat}}
+                        {{form.long}}
+                      </div>
                      <div id="postmap" style="width:750px;height:400px;"></div>
-                 <div style=" height: 45px; margin: 35px 0;">
-                  <input style="height: 100%;
-                  width: 100%;
-                  border-radius: 5px;
-                  border: none;
-                  color: #fff;
-                  font-size: 18px;
-                  font-weight: 500;
-                  letter-spacing: 1px;
-                  cursor: pointer;
-                  transition: all 0.3s ease;
-                  background: linear-gradient(135deg, #ffcb05, #ec1c24);" type="submit" value="POST">
-                </div>
+                     
+                     <div style=" height: 45px; margin: 35px 0;">
+                   
+                         <input style="height: 100%;width: 100%;border-radius: 5px;border: none;color: #fff;font-size: 18px;font-weight: 500;letter-spacing: 1px;cursor: pointer;transition: all 0.3s ease;background: linear-gradient(135deg, #ffcb05, #ec1c24);" type="submit" value="POST">
+                       </div>
                  </form>
                 </div>
               </div>
