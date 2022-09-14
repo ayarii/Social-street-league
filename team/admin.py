@@ -12,5 +12,7 @@ class joined_team(admin.TabularInline):
 @admin.register(Team)
 class Team_admin(admin.ModelAdmin):
     inlines= [joined_team]
+    list_display = ('team_name','n_players','created_at',)
+    search_fields = ('team_name',)
     
 # admin.site.register(Team,joined_team)

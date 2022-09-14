@@ -19,6 +19,15 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls import url
 from django.views.static import serve
+from django.conf.urls import url
+from django.contrib import admin
+
+admin.site.site_header = 'Social Street League admin'
+admin.site.site_title = 'Social Street League admin'
+#admin.site.site_url = 'http://Social-Street-League.com/'
+admin.site.index_title = 'Social Street League administration'
+admin.empty_value_display = '**Empty**'
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('home.urls')),

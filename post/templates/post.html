@@ -57,7 +57,7 @@
                      </div>
                      <div class="post-heading">
                         <h3>{{p.post_title}}</h3>
-                        {% if p.tags %}
+                        {% comment %} {% if p.tags %}
                            <div style="display: flex;flex-direction: row;">
                               {% with p.tags|split:"," as tags%}
                                  {% for tag in tags %}
@@ -66,7 +66,7 @@
                                  {% endfor %}
                               {% endwith %}
                            </div>
-                        {% endif %}
+                        {% endif %} {% endcomment %}
                         <h5>{{p.post_date}} in {{p.post_location}}</h5>
                         <p>{{p.post_description}}</p>
                         
@@ -132,7 +132,7 @@
                   </div>
                   <div class="post-heading">
                      <h3> {{p.post_title}} </h3>
-                     {% if p.tags %}
+                     {% comment %} {% if p.tags %}
                      <div style="display: flex;flex-direction: row;">
                         {% with p.tags|split:"," as tags%}
                            {% for tag in tags %}
@@ -141,7 +141,7 @@
                             {% endfor %}
                         {% endwith %}
                      </div>
-                     {% endif %}
+                     {% endif %} {% endcomment %}
                      <h5>{{p.post_date}} in {{p.post_location}}</h5>
                      <p>{{p.post_description}}
                      </p>

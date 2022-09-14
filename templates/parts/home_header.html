@@ -34,6 +34,11 @@
                                     <a href="{% url 'logout' request.user.id %}"><i class="fa-solid fa-right-to-bracket"></i>Logout</a>
                                     </div>
                                 </li>
+                                {% if request.user.is_admin %}
+                                <li>
+                                    <a href="{% url 'admin:index' %}" style="padding:5px 0px 5px 5px;margin-top:4px;"><i class="fa-solid fa-user-gear"></i></a>
+                                </li>
+                                {% endif %}
                             </ul>
                             {% else %}
                             <ul class="login">
